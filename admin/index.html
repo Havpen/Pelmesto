@@ -1,0 +1,319 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex,nofollow" />
+    <title>ПельМесто — админка</title>
+    <link rel="stylesheet" href="/admin/admin.css?v=7" />
+    <style>
+      #app-view[hidden],
+      #login-view[hidden] {
+        display: none !important;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="admin-bg" aria-hidden="true"></div>
+
+    <section class="login" id="login-view">
+      <div class="login__card glass">
+        <p class="eyebrow">ПельМесто</p>
+        <h1 class="login__title">Админ-панель</h1>
+        <p class="login__hint">
+          После входа откроются три вкладки: «Заказы», «Меню» и «Акции / новости».
+        </p>
+        <label class="field">
+          <span>Пароль</span>
+          <input id="login-password" type="password" autocomplete="current-password" />
+        </label>
+        <p class="form-error" id="login-error" hidden></p>
+        <button class="btn btn--dark" type="button" id="login-btn">Войти</button>
+      </div>
+    </section>
+
+    <div class="shell" id="app-view" hidden>
+      <header class="top">
+        <div class="top__brand">
+          <p class="eyebrow">ПельМесто</p>
+          <h1 class="top__title">Админка</h1>
+        </div>
+        <div class="top__actions">
+          <a class="btn btn--glass" href="/">На сайт</a>
+          <button class="btn btn--dark" type="button" id="logout-btn">Выйти</button>
+        </div>
+      </header>
+
+      <nav class="tabs" aria-label="Разделы">
+        <button class="tabs__btn is-active" type="button" data-tab="orders">
+          Заказы<span class="tabs__badge" id="orders-badge" hidden>0</span>
+        </button>
+        <button class="tabs__btn" type="button" data-tab="menu">Меню</button>
+        <button class="tabs__btn" type="button" data-tab="promos">Акции / новости</button>
+      </nav>
+
+      <main>
+        <!-- ------------------------------------------------------------ Заказы -->
+        <section class="panel is-active" id="panel-orders">
+          <div class="list-wrap glass">
+            <div class="orders-toolbar">
+              <h2 class="panel__title" style="margin: 0">Новые заказы</h2>
+              <div class="orders-toolbar__hint">
+                <p class="orders-toolbar__hint" id="orders-updated">Обновляется автоматически</p>
+              </div>
+              <button class="btn btn--glass btn--mini" type="button" id="orders-refresh">
+                Обновить
+              </button>
+            </div>
+            <p class="form-error" id="orders-error" hidden></p>
+            <ul class="list" id="orders-list"></ul>
+
+            <details class="order-history glass">
+              <summary>История заказов (<span id="orders-history-count">0</span>)</summary>
+              <ul class="order-history__list" id="orders-history"></ul>
+            </details>
+          </div>
+        </section>
+
+        <!-- -------------------------------------------------------------- Меню -->
+        <section class="panel" id="panel-menu">
+          <div class="grid grid--menu">
+            <div>
+              <form class="glass form" id="category-form">
+                <h2 class="panel__title" id="category-form-title">Новая категория</h2>
+                <input type="hidden" name="id" id="category-edit-id" value="" />
+                <label class="field">
+                  <span>Название</span>
+                  <input name="title" required placeholder="Пельмени" />
+                </label>
+                <label class="field">
+                  <span>Раздел</span>
+                  <select name="kind">
+                    <option value="hall">Меню зала</option>
+                    <option value="frozen">Заморозка домой</option>
+                  </select>
+                </label>
+                <label class="field">
+                  <span>Примечание под заголовком</span>
+                  <input name="note" placeholder="Порция 200 г" />
+                </label>
+                <p class="form-error" id="category-error" hidden></p>
+                <div class="form-actions">
+                  <button class="btn btn--dark" type="submit" id="category-submit">
+                    Добавить категорию
+                  </button>
+                  <button class="btn btn--glass" type="button" id="category-cancel" hidden>
+                    Отмена
+                  </button>
+                </div>
+              </form>
+
+              <div class="list-wrap glass" style="margin-top: 18px">
+                <h2 class="panel__title">Категории</h2>
+                <div id="category-list"></div>
+              </div>
+            </div>
+
+            <div>
+              <form class="glass form" id="item-form">
+                <h2 class="panel__title" id="item-form-title">Новая позиция меню</h2>
+                <input type="hidden" name="id" id="item-edit-id" value="" />
+
+                <div class="field-row">
+                  <label class="field">
+                    <span>Категория</span>
+                    <select name="categoryId" id="item-category" required></select>
+                  </label>
+                  <label class="field">
+                    <span>Название</span>
+                    <input name="title" required placeholder="Фирменные" />
+                  </label>
+                </div>
+
+                <label class="field">
+                  <span>Описание</span>
+                  <textarea name="description" rows="2" placeholder="Свинина-говядина"></textarea>
+                </label>
+
+                <div class="field-row--3 field-row">
+                  <label class="field">
+                    <span>Граммовка / объём</span>
+                    <input name="weight" placeholder="200 г" />
+                  </label>
+                  <label class="field">
+                    <span>Цена, BYN</span>
+                    <input name="price" inputmode="decimal" placeholder="10,90" />
+                  </label>
+                  <label class="field">
+                    <span>Бейдж</span>
+                    <input name="badge" placeholder="топ / new / веган" />
+                  </label>
+                </div>
+
+                <fieldset class="fieldset">
+                  <legend>Как заказывают</legend>
+                  <div class="field-row--3 field-row">
+                    <label class="field">
+                      <span>Единица</span>
+                      <select name="unit" id="item-unit">
+                        <option value="pcs">Порциями / штуками</option>
+                        <option value="g">Граммами (заморозка)</option>
+                      </select>
+                    </label>
+                    <label class="field">
+                      <span>Шаг заказа</span>
+                      <input name="step" inputmode="numeric" placeholder="500" />
+                    </label>
+                    <label class="field">
+                      <span>Цена указана за</span>
+                      <input name="priceUnit" inputmode="numeric" placeholder="500" />
+                    </label>
+                  </div>
+                  <p class="field-hint">
+                    Для заморозки: шаг <strong>500</strong> и «цена за» <strong>500</strong> —
+                    значит цена указана за 500 г и гость набирает вес по 500 г. Для блюд зала
+                    оставьте <strong>1</strong> и <strong>1</strong>.
+                  </p>
+                  <label class="field--check">
+                    <input type="checkbox" name="orderable" id="item-orderable" checked />
+                    <span>Можно заказать на сайте (снимите для бара)</span>
+                  </label>
+                </fieldset>
+
+                <fieldset class="fieldset">
+                  <legend>КБЖУ на 100 г — необязательно</legend>
+                  <div class="field-row--4 field-row">
+                    <label class="field">
+                      <span>Белки</span>
+                      <input name="protein" inputmode="decimal" />
+                    </label>
+                    <label class="field">
+                      <span>Жиры</span>
+                      <input name="fat" inputmode="decimal" />
+                    </label>
+                    <label class="field">
+                      <span>Углеводы</span>
+                      <input name="carbs" inputmode="decimal" />
+                    </label>
+                    <label class="field">
+                      <span>Ккал</span>
+                      <input name="kcal" inputmode="decimal" />
+                    </label>
+                  </div>
+                </fieldset>
+
+                <div class="field">
+                  <span>Фото блюда</span>
+                  <div class="file-row">
+                    <input type="hidden" name="imageUrl" id="menu-image-url" />
+                    <input type="file" id="menu-file" accept="image/*" hidden />
+                    <button class="btn btn--glass" type="button" id="menu-browse">Обзор…</button>
+                    <span class="file-name" id="menu-file-name">Файл не выбран</span>
+                  </div>
+                  <p class="field-hint">
+                    Рекомендуемый размер: <strong>800 × 800</strong>. Загрузите любое фото и
+                    обрежьте под карточку.
+                  </p>
+                  <div class="crop crop--square" id="menu-crop" hidden>
+                    <div class="crop__stage">
+                      <canvas id="menu-crop-canvas" width="400" height="400"></canvas>
+                    </div>
+                    <label class="crop__zoom">
+                      <span>Масштаб</span>
+                      <input type="range" id="menu-crop-zoom" min="100" max="300" value="100" />
+                    </label>
+                    <div class="form-actions">
+                      <button class="btn btn--dark" type="button" id="menu-crop-apply">
+                        Обрезать и загрузить
+                      </button>
+                      <button class="btn btn--glass" type="button" id="menu-crop-cancel">
+                        Сбросить фото
+                      </button>
+                    </div>
+                    <p class="form-error" id="menu-crop-error" hidden></p>
+                  </div>
+                  <img class="card__thumb" id="menu-image-preview" alt="" hidden />
+                </div>
+
+                <p class="form-error" id="item-error" hidden></p>
+                <div class="form-actions">
+                  <button class="btn btn--dark" type="submit" id="item-submit">
+                    Добавить позицию
+                  </button>
+                  <button class="btn btn--glass" type="button" id="item-cancel" hidden>
+                    Отмена
+                  </button>
+                </div>
+              </form>
+
+              <div class="list-wrap glass" style="margin-top: 18px">
+                <h2 class="panel__title">Позиции меню (<span id="item-count">0</span>)</h2>
+                <div id="item-list"></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ---------------------------------------------------- Акции / новости -->
+        <section class="panel" id="panel-promos">
+          <div class="grid">
+            <form class="glass form" id="promo-form">
+              <h2 class="panel__title" id="promo-form-title">Новая акция / новость</h2>
+              <input type="hidden" name="id" id="promo-edit-id" value="" />
+              <label class="field"><span>Заголовок</span><input name="title" required /></label>
+              <label class="field"
+                ><span>Текст</span><textarea name="text" rows="4"></textarea
+              ></label>
+              <label class="field"
+                ><span>Ссылка</span><input name="link" placeholder="/ или https://..." /></label
+              >
+              <div class="field">
+                <span>Картинка акции</span>
+                <div class="file-row">
+                  <input type="hidden" name="imageUrl" id="promo-image-url" />
+                  <input type="file" id="promo-file" accept="image/*" hidden />
+                  <button class="btn btn--glass" type="button" id="promo-browse">Обзор…</button>
+                  <span class="file-name" id="promo-file-name">Файл не выбран</span>
+                </div>
+                <p class="field-hint">
+                  Рекомендуемый размер: <strong>1550 × 350</strong>. Можно загрузить любое фото и
+                  обрезать под карточку.
+                </p>
+                <div class="crop" id="promo-crop" hidden>
+                  <div class="crop__stage">
+                    <canvas id="promo-crop-canvas" width="775" height="175"></canvas>
+                  </div>
+                  <label class="crop__zoom">
+                    <span>Масштаб</span>
+                    <input type="range" id="promo-crop-zoom" min="100" max="300" value="100" />
+                  </label>
+                  <div class="form-actions">
+                    <button class="btn btn--dark" type="button" id="promo-crop-apply">
+                      Обрезать и загрузить
+                    </button>
+                    <button class="btn btn--glass" type="button" id="promo-crop-cancel">
+                      Сбросить фото
+                    </button>
+                  </div>
+                  <p class="form-error" id="promo-crop-error" hidden></p>
+                </div>
+                <img class="card__thumb" id="promo-image-preview" alt="" hidden />
+              </div>
+              <p class="form-error" id="promo-error" hidden></p>
+              <div class="form-actions">
+                <button class="btn btn--dark" type="submit" id="promo-submit">Добавить акцию</button>
+                <button class="btn btn--glass" type="button" id="promo-cancel" hidden>Отмена</button>
+              </div>
+            </form>
+            <div class="list-wrap glass">
+              <h2 class="panel__title">Акции и новости</h2>
+              <ul class="list" id="promo-list"></ul>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script src="/admin/admin.js?v=2" defer></script>
+  </body>
+</html>

@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta
+      name="description"
+      content="Контакты ПельМесто: Гомель, ул. Советская, 44. Телефон +375 29 550-55-45, ежедневно 09:00–22:00, кухня и заморозка до 21:40. Карта, парковка, Wi-Fi."
+    />
+    <title>Контакты — ПельМесто, Гомель, Советская, 44</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@600;700;900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/styles.css?v=34" />
+    <link rel="stylesheet" href="/pages.css?v=4" />
+  </head>
+  <body class="page page--editorial">
+    <header class="header">
+      <a class="logo" href="/" aria-label="ПельМесто — на главную">
+        <img
+          class="logo__img"
+          src="/assets/logo-box.png"
+          width="1015"
+          height="1024"
+          alt=""
+          decoding="async"
+        />
+        <span class="logo__word">ПельМесто</span>
+      </a>
+
+      <button
+        type="button"
+        class="nav-toggle"
+        aria-label="Открыть меню"
+        aria-expanded="false"
+        aria-controls="site-nav"
+        data-nav-toggle
+      >
+        <span class="nav-toggle__bars" aria-hidden="true"></span>
+      </button>
+      <nav class="nav" id="site-nav" data-nav aria-label="Основная навигация">
+        <a href="/">Главная</a>
+        <a href="/menu">Меню</a>
+        <a href="/about">О нас</a>
+        <a href="/contacts">Контакты</a>
+      </nav>
+    </header>
+    <div class="nav-backdrop" data-nav-backdrop aria-hidden="true"></div>
+
+    <main class="page-main">
+      <section class="page-head">
+        <div class="page-head__inner">
+          <p class="page-head__eyebrow">Контакты</p>
+          <h1 class="page-head__title">Гомель, ул. Советская, 44</h1>
+          <p class="page-head__text">
+            Центр города, рядом цирк. Остановки «Фабрика 8 Марта» и «Цирк» — в минуте ходьбы.
+          </p>
+        </div>
+      </section>
+
+      <div class="page-section">
+        <div class="contacts-grid">
+          <div class="contacts-card glass-card">
+            <dl class="nap">
+              <div class="nap__row">
+                <dt>Телефон</dt>
+                <dd>
+                  <a href="tel:+375295505545" data-analytics="click_phone">+375 29 550-55-45</a>
+                </dd>
+              </div>
+              <div class="nap__row">
+                <dt>Адрес</dt>
+                <dd>Гомель, ул. Советская, 44</dd>
+              </div>
+              <div class="nap__row">
+                <dt>Instagram</dt>
+                <dd>
+                  <a
+                    href="https://instagram.com/pelmesto_gomel"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    data-analytics="click_instagram"
+                    >pelmesto_gomel</a
+                  >
+                </dd>
+              </div>
+              <div class="nap__row">
+                <dt>Wi-Fi</dt>
+                <dd>Сеть Pelmesto, пароль 1111111</dd>
+              </div>
+            </dl>
+
+            <h2 class="menu-group__title" style="margin-top: 28px; font-size: 24px">Часы работы</h2>
+            <ul class="contacts-hours" style="margin-top: 14px">
+              <li><span>Зал</span><strong>Ежедневно 09:00–22:00</strong></li>
+              <li><span>Кухня</span><strong>до 21:40</strong></li>
+              <li><span>Заморозка</span><strong>до 21:40</strong></li>
+            </ul>
+
+            <p class="order-hint" style="margin-top: 18px">
+              Подарочный сертификат покупают в зале — заявку на сайте оформлять не нужно. Своих
+              курьеров у нас нет: доставку гость вызывает и оплачивает сам через Яндекс Go, а мы
+              готовим заказ к нужному времени.
+            </p>
+
+            <div class="band__actions">
+              <a class="button" href="tel:+375295505545" data-analytics="click_phone">Позвонить</a>
+              <a class="button button--secondary" href="/menu">Собрать заказ</a>
+            </div>
+          </div>
+
+          <div class="contacts-map">
+            <div class="contacts-map__card">
+              <div class="contacts-map__view" data-ymap></div>
+              <div class="contacts-map__tint" aria-hidden="true"></div>
+            </div>
+            <a
+              class="band__map-link"
+              href="https://yandex.by/maps/?rtext=~52.43581,31.00687&rtt=auto"
+              target="_blank"
+              rel="noopener noreferrer"
+              data-analytics="click_path_hall"
+              >Построить маршрут в Яндекс Картах</a
+            >
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <div class="site-footer__inner">
+        <p class="site-footer__brand">ПельМесто</p>
+        <p class="site-footer__nap">
+          Гомель, ул. Советская, 44 ·
+          <a href="tel:+375295505545" data-analytics="click_phone">+375 29 550-55-45</a> · Ежедневно
+          09:00–22:00
+        </p>
+        <p class="site-footer__links">
+          <a href="/">Главная</a>
+          <a href="/menu">Меню</a>
+          <a href="/about">О нас</a>
+          <a href="/contacts">Контакты</a>
+          <a href="https://instagram.com/pelmesto_gomel" target="_blank" rel="noopener noreferrer"
+            >Instagram</a
+          >
+        </p>
+      </div>
+    </footer>
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Restaurant",
+        "name": "ПельМесто",
+        "url": "https://pelmesto.by/contacts",
+        "telephone": "+375295505545",
+        "servesCuisine": ["Russian", "dumpling"],
+        "address": {
+          "@type": "PostalAddress",
+          "streetAddress": "ул. Советская, 44",
+          "addressLocality": "Гомель",
+          "postalCode": "246022",
+          "addressCountry": "BY"
+        },
+        "geo": { "@type": "GeoCoordinates", "latitude": 52.43581, "longitude": 31.00687 },
+        "openingHours": "Mo-Su 09:00-22:00",
+        "sameAs": ["https://instagram.com/pelmesto_gomel"]
+      }
+    </script>
+
+    <script src="/site.js?v=3" defer></script>
+    <script src="/map.js?v=1" defer></script>
+  </body>
+</html>

@@ -1,0 +1,20 @@
+# Dependencies
+node_modules/
+
+# Local / editor
+.codegraph/
+.cursor/
+*.log
+.env
+.env.*
+
+# Backups & archives
+*.bak
+*.zip
+
+# Premiere / video work (not needed for the site)
+Adobe Premiere Pro Auto-Save/
+*.prproj
+
+# Raw photo dump used only for one-off image builds
+assetsTG/

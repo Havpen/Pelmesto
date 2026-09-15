@@ -1,0 +1,121 @@
+[
+  {
+    "id": "aaed47c687d3632f",
+    "number": "П-1002",
+    "name": "Алексей",
+    "phone": "+375336506585",
+    "fulfillment": "pickup",
+    "comment": "Шоб было сегодня",
+    "items": [
+      {
+        "itemId": "80af4c61598e",
+        "variantId": "",
+        "title": "С бараниной и мятой",
+        "variantLabel": "",
+        "category": "Пельмени",
+        "kind": "hall",
+        "unit": "pcs",
+        "qty": 1,
+        "price": 16,
+        "priceUnit": 1,
+        "sum": 16
+      },
+      {
+        "itemId": "b19f48133338",
+        "variantId": "",
+        "title": "С креветками и курицей",
+        "variantLabel": "",
+        "category": "Пельмени",
+        "kind": "hall",
+        "unit": "pcs",
+        "qty": 1,
+        "price": 19.7,
+        "priceUnit": 1,
+        "sum": 19.7
+      },
+      {
+        "itemId": "feeb7bdb9388",
+        "variantId": "",
+        "title": "С филе индейки",
+        "variantLabel": "",
+        "category": "Пельмени",
+        "kind": "hall",
+        "unit": "pcs",
+        "qty": 1,
+        "price": 12.7,
+        "priceUnit": 1,
+        "sum": 12.7
+      },
+      {
+        "itemId": "ef14c5444813",
+        "variantId": "",
+        "title": "Цветные с куриным филе",
+        "variantLabel": "",
+        "category": "Пельмени",
+        "kind": "hall",
+        "unit": "pcs",
+        "qty": 2,
+        "price": 11.6,
+        "priceUnit": 1,
+        "sum": 23.2
+      }
+    ],
+    "total": 71.6,
+    "status": "confirmed",
+    "createdAt": "2026-09-13T15:49:25.699Z",
+    "decidedAt": "2026-09-13T15:49:43.144Z"
+  },
+  {
+    "id": "5f6b6a1a86c703b1",
+    "number": "П-1001",
+    "name": "Женя",
+    "phone": "+375295253790",
+    "fulfillment": "delivery",
+    "comment": "К 19 вечера шоб было",
+    "items": [
+      {
+        "itemId": "ef14c5444813",
+        "variantId": "",
+        "title": "Цветные с куриным филе",
+        "variantLabel": "",
+        "category": "Пельмени",
+        "kind": "hall",
+        "unit": "pcs",
+        "qty": 1,
+        "price": 11.6,
+        "priceUnit": 1,
+        "sum": 11.6
+      },
+      {
+        "itemId": "feeb7bdb9388",
+        "variantId": "",
+        "title": "С филе индейки",
+        "variantLabel": "",
+        "category": "Пельмени",
+        "kind": "hall",
+        "unit": "pcs",
+        "qty": 1,
+        "price": 12.7,
+        "priceUnit": 1,
+        "sum": 12.7
+      },
+      {
+        "itemId": "80af4c61598e",
+        "variantId": "",
+        "title": "С бараниной и мятой",
+        "variantLabel": "",
+        "category": "Пельмени",
+        "kind": "hall",
+        "unit": "pcs",
+        "qty": 1,
+        "price": 16,
+        "priceUnit": 1,
+        "sum": 16
+      }
+    ],
+    "total": 40.3,
+    "status": "confirmed",
+    "createdAt": "2026-09-13T15:47:10.839Z",
+    "decidedAt": "2026-09-13T15:47:43.548Z"
+  }
+]
