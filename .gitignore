@@ -18,3 +18,6 @@ Adobe Premiere Pro Auto-Save/
 
 # Raw photo dump used only for one-off image builds
 assetsTG/
+
+# GitHub Pages build output
+dist/
