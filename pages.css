@@ -1,0 +1,1339 @@
+/* Inner pages (меню, о нас, контакты). Loaded after styles.css so the header,
+   nav, buttons, ₽-mask and footer keep the main-page look. */
+
+/* Explicit display values (flex/grid) beat the UA rule for [hidden], so the
+   attribute has to win outright — several toggles below rely on it. */
+[hidden] {
+  display: none !important;
+}
+
+/* Second pattern from the home page as the page backdrop. */
+body.page::before {
+  background-image:
+    var(--bg-pattern-balloons),
+    var(--bg-pattern-balloons);
+  background-size:
+    var(--bg-pattern-balloons-size) var(--bg-pattern-balloons-size-y),
+    var(--bg-pattern-balloons-size) var(--bg-pattern-balloons-size-y);
+  background-position:
+    0 0,
+    var(--bg-pattern-balloons-ox) var(--bg-pattern-balloons-oy);
+}
+
+/* Column layout keeps the footer glued to the bottom on short pages
+   (contacts fits on one screen and used to leave a gap under it). */
+body.page {
+  /* Same side inset and no width cap as the home-page bands, so content on the
+     new pages reaches as close to the screen edge as it does there. */
+  --page-pad: clamp(24px, 6vw, 96px);
+  --page-max: 100%;
+  /* Height a full-width 30° wedge needs. Uses 100vw, so it lands a hair below
+     the wedge's own aspect-ratio height — the safe side. */
+  --page-wedge-h: calc(100vw * tan(30deg));
+  display: flex;
+  min-height: 100vh;
+  min-height: 100svh;
+  flex-direction: column;
+}
+
+/* Reading-width pages: title and content share the narrower column. */
+body.page--editorial {
+  --page-max: 1280px;
+}
+
+/* The home page reserves the bottom strip for the floating pill; these pages
+   don't have one, so the dark band doesn't need to be that tall. */
+body.page--editorial .site-footer {
+  padding-bottom: clamp(40px, 5vw, 64px);
+}
+
+/* Reserving the wedge's full height keeps it inside main: otherwise on a short
+   page it paints over the footer and its overflow stretches the scroll area,
+   leaving a strip of background below the footer. */
+.page-main {
+  position: relative;
+  box-sizing: border-box;
+  min-height: calc(var(--header-height) + var(--page-wedge-h));
+  flex: 1 0 auto;
+  padding-top: var(--header-height);
+}
+
+/* Contacts fits on a screen, so reserving a screenful for the wedge's tip would
+   just be dead space — clip it at the footer instead. `clip` rather than
+   `hidden` because it doesn't create a scrollport, so sticky children survive. */
+body.page--editorial .page-main {
+  min-height: 0;
+  overflow: clip;
+}
+
+/* Belt and braces: the footer stays above the wedge whatever the geometry. */
+body.page .site-footer {
+  position: relative;
+  z-index: 1;
+}
+
+/* ------------------------------------------------------------- page heading */
+
+.page-head {
+  position: relative;
+  box-sizing: border-box;
+  min-height: clamp(180px, 18vw, 320px);
+  /* The wedge is taller than the head and deliberately hangs below it. */
+  overflow: visible;
+  padding: clamp(40px, 6vw, 88px) var(--page-pad) clamp(28px, 4vw, 48px);
+}
+
+/* Pink wedge spans the whole page — top edge from the left corner to the right
+   one, hypotenuse back down to the left edge at the same 30° as the home hero.
+   aspect-ratio ties the height to the real width, so the rake is exact. */
+.page-head::before {
+  position: absolute;
+  z-index: 0;
+  top: 0;
+  right: 0;
+  left: 0;
+  aspect-ratio: 1 / 0.57735; /* tan(30deg) */
+  background: var(--decor-pink);
+  clip-path: polygon(0 0, 100% 0, 0 100%);
+  content: "";
+  pointer-events: none;
+}
+
+.page-head__inner {
+  position: relative;
+  z-index: 1;
+  width: min(var(--page-max), 100%);
+  margin: 0 auto;
+}
+
+/* Darker than the home-page eyebrow: it now sits on the pink wedge. */
+.page-head__eyebrow {
+  margin: 0 0 12px;
+  color: #3d3d3d;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.page-head__title {
+  max-width: 24ch;
+  margin: 0;
+  color: #111111;
+  font-family: "Roboto Slab", serif;
+  font-size: clamp(38px, 7vw, 88px);
+  font-weight: 900;
+  letter-spacing: -0.05em;
+  line-height: 0.98;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.55);
+}
+
+.page-head__text {
+  max-width: 44em;
+  margin: 16px 0 0;
+  color: #2f2f2f;
+  font-size: clamp(17px, 1.8vw, 22px);
+  line-height: 1.5;
+}
+
+/* Padding is inside the width so cards line up with the page-head title. */
+.page-section {
+  position: relative;
+  box-sizing: border-box;
+  width: min(calc(var(--page-max) + 2 * var(--page-pad)), 100%);
+  margin: 0 auto;
+  padding: 0 var(--page-pad) clamp(32px, 5vw, 64px);
+}
+
+/* ------------------------------------------------------------ glass surface */
+
+.glass-card {
+  box-sizing: border-box;
+  background: rgba(255, 255, 255, 0.46);
+  border: 1px solid rgba(255, 255, 255, 0.64);
+  border-radius: 28px;
+  box-shadow: var(--shadow-soft), var(--shadow-glass-inset);
+  backdrop-filter: blur(18px) saturate(1.15);
+  -webkit-backdrop-filter: blur(18px) saturate(1.15);
+}
+
+/* ------------------------------------------------------------- menu switch */
+
+.menu-switch {
+  /* Shared control height: the kind buttons and the category chips must match. */
+  --switch-h: clamp(42px, 3vw, 54px);
+  position: sticky;
+  z-index: 6;
+  top: var(--header-height);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin: 0 auto;
+  padding-block: 12px;
+  /* Keeps the chips aligned with the content column on wide screens. */
+  padding-inline: max(var(--page-pad), calc((100% - var(--page-max)) / 2));
+  background: rgba(255, 255, 255, 0.82);
+  border-bottom: 1px solid rgba(23, 23, 23, 0.06);
+  backdrop-filter: blur(16px) saturate(1.1);
+  -webkit-backdrop-filter: blur(16px) saturate(1.1);
+}
+
+.menu-switch__group {
+  display: flex;
+  gap: 8px;
+  padding: 4px;
+  background: rgba(255, 255, 255, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  border-radius: 999px;
+  box-shadow: var(--shadow-glass-inset);
+}
+
+.menu-switch__btn {
+  display: inline-flex;
+  min-height: var(--switch-h);
+  align-items: center;
+  padding: 0 clamp(22px, 1.9vw, 34px);
+  color: #171717;
+  font-family: inherit;
+  font-size: clamp(16px, 1.05vw, 20px);
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  background: transparent;
+  border: 0;
+  border-radius: 999px;
+  cursor: pointer;
+  transition:
+    background 160ms ease,
+    color 160ms ease;
+}
+
+.menu-switch__btn.is-active {
+  color: #ffffff;
+  background: var(--decor-teal);
+}
+
+.menu-chips {
+  display: flex;
+  flex: 1 1 100%;
+  gap: clamp(8px, 0.7vw, 12px);
+  margin: 0;
+  padding: 2px 0;
+  list-style: none;
+  overflow-x: auto;
+  /* Native momentum on touch; JS adds it for mouse drags. */
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
+  cursor: grab;
+}
+
+.menu-chips::-webkit-scrollbar {
+  display: none;
+}
+
+.menu-chips.is-dragging {
+  cursor: grabbing;
+  user-select: none;
+}
+
+/* A drag must not land as a click on whichever chip is under the cursor. */
+.menu-chips.is-dragging a {
+  pointer-events: none;
+}
+
+.menu-chips a {
+  display: inline-flex;
+  min-height: var(--switch-h);
+  align-items: center;
+  padding: 0 clamp(16px, 1.35vw, 24px);
+  -webkit-user-drag: none;
+  color: #2a2a2a;
+  font-size: clamp(15px, 0.95vw, 18px);
+  font-weight: 600;
+  white-space: nowrap;
+  text-decoration: none;
+  background: rgba(255, 255, 255, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.75);
+  border-radius: 999px;
+  transition:
+    background 160ms ease,
+    color 160ms ease,
+    border-color 160ms ease;
+}
+
+.menu-chips a:hover,
+.menu-chips a.is-active {
+  color: #ffffff;
+  background: var(--decor-teal);
+  border-color: var(--decor-teal);
+}
+
+/* -------------------------------------------------------------- dish groups */
+
+.menu-group {
+  padding-top: clamp(28px, 4vw, 52px);
+  /* Sticky switch must not cover the heading when jumping by anchor. Its real
+     height is measured in menu.js, since it wraps differently per viewport. */
+  scroll-margin-top: calc(var(--header-height) + var(--menu-switch-h, 150px) + 18px);
+}
+
+.menu-group[hidden] {
+  display: none;
+}
+
+.menu-group__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px 16px;
+  margin-bottom: 18px;
+}
+
+.menu-group__title {
+  margin: 0;
+  color: #111111;
+  font-family: "Roboto Slab", serif;
+  font-size: clamp(26px, 3.4vw, 44px);
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  line-height: 1;
+}
+
+.menu-group__note {
+  margin: 0;
+  color: #5a5a5a;
+  font-size: 15px;
+  font-weight: 500;
+}
+
+/* Six cards max at any width: a track can never be narrower than a sixth of the
+   row, so auto-fill has no room for a seventh. The 1px trim keeps the sixth off
+   the exact tie, where sub-pixel rounding could drop the row to five. Past that
+   point the fluid floor takes over and the count steps down on its own:
+   6 → 5 → 4 → 3 → 2. Cards grow with the screen instead of leaving gutters. */
+.dish-grid {
+  --dish-gap: clamp(12px, 1.2vw, 24px);
+  --dish-min: clamp(160px, 22vw, 260px);
+  --dish-sixth: calc((100% - 5 * var(--dish-gap)) / 6 - 1px);
+  display: grid;
+  gap: var(--dish-gap);
+  grid-template-columns: repeat(
+    auto-fill,
+    minmax(min(100%, max(var(--dish-min), var(--dish-sixth))), 1fr)
+  );
+}
+
+.dish {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.52);
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  border-radius: 24px;
+  box-shadow: var(--shadow-soft), var(--shadow-glass-inset);
+  backdrop-filter: blur(16px) saturate(1.12);
+  -webkit-backdrop-filter: blur(16px) saturate(1.12);
+  transition:
+    transform 200ms ease,
+    box-shadow 200ms ease;
+}
+
+.dish:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-soft-hover), var(--shadow-glass-inset);
+}
+
+.dish__media {
+  position: relative;
+  aspect-ratio: 1;
+  overflow: hidden;
+  background: color-mix(in srgb, var(--decor-pink) 34%, #ffffff);
+}
+
+.dish__media img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* No photo yet: branded tile instead of an empty box. */
+.dish__media--empty {
+  display: grid;
+  place-items: center;
+  background:
+    radial-gradient(circle at 30% 25%, rgba(255, 255, 255, 0.75), transparent 60%),
+    color-mix(in srgb, var(--decor-teal) 30%, #ffffff);
+}
+
+.dish__monogram {
+  color: rgba(23, 23, 23, 0.34);
+  font-family: "Roboto Slab", serif;
+  font-size: clamp(44px, 6vw, 68px);
+  font-weight: 900;
+  letter-spacing: -0.06em;
+  line-height: 1;
+}
+
+.dish__badge {
+  position: absolute;
+  z-index: 1;
+  top: 12px;
+  left: 12px;
+  padding: 4px 12px;
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  background: var(--decor-teal);
+  border-radius: 999px;
+  box-shadow: var(--shadow-soft);
+}
+
+.dish__badge--new {
+  background: var(--brand-magenta);
+}
+
+.dish__badge--vegan {
+  background: #6a9c5a;
+}
+
+.dish__body {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: 6px;
+  padding: clamp(13px, 1vw, 18px) clamp(14px, 1.1vw, 20px) clamp(14px, 1.1vw, 20px);
+}
+
+.dish__title {
+  margin: 0;
+  color: #171717;
+  font-size: clamp(16px, 1.05vw, 22px);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+}
+
+.dish__desc {
+  margin: 0;
+  color: #545454;
+  font-size: clamp(13px, 0.82vw, 16px);
+  line-height: 1.4;
+}
+
+.dish__weight {
+  margin: 0;
+  color: #6b6b6b;
+  font-size: clamp(13px, 0.82vw, 16px);
+  font-weight: 600;
+}
+
+.dish__kbju {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 8px;
+  margin: 2px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.dish__kbju li {
+  color: #4a4a4a;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  padding: 2px 7px;
+  background: rgba(255, 255, 255, 0.66);
+  border-radius: 999px;
+}
+
+.dish__kbju-note {
+  margin: 0;
+  color: #8a8a8a;
+  font-size: 10px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.dish__variants {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+.dish__variant {
+  padding: 5px 12px;
+  color: #171717;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(23, 23, 23, 0.12);
+  border-radius: 999px;
+  cursor: pointer;
+  transition:
+    background 140ms ease,
+    color 140ms ease,
+    border-color 140ms ease;
+}
+
+.dish__variant.is-active {
+  color: #ffffff;
+  background: var(--decor-teal);
+  border-color: var(--decor-teal);
+}
+
+.dish__foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: auto;
+  padding-top: 12px;
+}
+
+.dish__price {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2em;
+  color: #171717;
+  font-size: clamp(18px, 1.3vw, 27px);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+}
+
+.dish__price--empty {
+  color: #8a8a8a;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.dish__add {
+  display: grid;
+  width: clamp(38px, 2.6vw, 54px);
+  height: clamp(38px, 2.6vw, 54px);
+  flex: 0 0 auto;
+  place-items: center;
+  color: #ffffff;
+  font-family: inherit;
+  font-size: clamp(22px, 1.6vw, 32px);
+  font-weight: 500;
+  line-height: 1;
+  background: #171717;
+  border: 1px solid #171717;
+  border-radius: 50%;
+  cursor: pointer;
+  transition:
+    background 160ms ease,
+    color 160ms ease,
+    transform 160ms ease;
+}
+
+.dish__add:hover {
+  color: #171717;
+  background: #ffffff;
+  transform: translateY(-1px);
+}
+
+.dish__add:disabled {
+  opacity: 0.32;
+  cursor: default;
+  transform: none;
+}
+
+.dish__in-cart {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 8px 6px 12px;
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 700;
+  background: var(--decor-teal);
+  border-radius: 999px;
+}
+
+.dish__in-cart button {
+  display: grid;
+  width: 26px;
+  height: 26px;
+  place-items: center;
+  color: #ffffff;
+  font-family: inherit;
+  font-size: 17px;
+  line-height: 1;
+  background: rgba(255, 255, 255, 0.22);
+  border: 0;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.dish__in-cart button:hover {
+  background: rgba(255, 255, 255, 0.38);
+}
+
+.dish--hall-only .dish__foot {
+  color: #6b6b6b;
+  font-size: 13px;
+}
+
+.menu-note {
+  margin: clamp(24px, 4vw, 40px) 0 0;
+  padding: 18px 22px;
+  color: #2f2f2f;
+  font-size: 15px;
+  line-height: 1.55;
+}
+
+.menu-loading {
+  padding: 60px 0;
+  color: #5a5a5a;
+  font-size: 17px;
+  text-align: center;
+}
+
+/* -------------------------------------------------------------------- cart */
+
+.cart-pill {
+  position: fixed;
+  z-index: 20;
+  right: max(16px, 3vw, env(safe-area-inset-right));
+  bottom: max(16px, 3vw, env(safe-area-inset-bottom));
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 52px;
+  padding: 12px 22px;
+  color: #ffffff;
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  background: var(--brand-magenta);
+  border: 0;
+  border-radius: 999px;
+  box-shadow: var(--shadow-soft);
+  cursor: pointer;
+  transition:
+    opacity 180ms ease,
+    transform 180ms ease;
+}
+
+.cart-pill:hover {
+  transform: translateY(-1px);
+}
+
+.cart-pill[hidden] {
+  display: none;
+}
+
+.cart-pill__count {
+  display: grid;
+  min-width: 24px;
+  height: 24px;
+  place-items: center;
+  padding: 0 6px;
+  color: var(--brand-magenta);
+  font-size: 13px;
+  font-weight: 800;
+  background: #ffffff;
+  border-radius: 999px;
+}
+
+.cart-backdrop {
+  position: fixed;
+  z-index: 40;
+  inset: 0;
+  background: rgba(23, 23, 23, 0.42);
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 220ms ease,
+    visibility 220ms ease;
+}
+
+body.cart-open .cart-backdrop {
+  opacity: 1;
+  visibility: visible;
+}
+
+body.cart-open {
+  overflow: hidden;
+}
+
+.cart {
+  position: fixed;
+  z-index: 41;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  width: min(440px, 100%);
+  flex-direction: column;
+  background: rgba(255, 255, 255, 0.96);
+  border-left: 1px solid rgba(23, 23, 23, 0.08);
+  box-shadow: -18px 0 48px rgba(23, 23, 23, 0.18);
+  backdrop-filter: blur(20px) saturate(1.1);
+  -webkit-backdrop-filter: blur(20px) saturate(1.1);
+  transform: translateX(102%);
+  transition: transform 260ms cubic-bezier(0.33, 1, 0.32, 1);
+}
+
+body.cart-open .cart {
+  transform: none;
+}
+
+.cart__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 18px 20px 14px;
+  padding-top: max(18px, env(safe-area-inset-top));
+  border-bottom: 1px solid rgba(23, 23, 23, 0.08);
+}
+
+.cart__title {
+  margin: 0;
+  color: #111111;
+  font-family: "Roboto Slab", serif;
+  font-size: 22px;
+  font-weight: 900;
+  letter-spacing: -0.03em;
+}
+
+.cart__close {
+  display: grid;
+  width: 38px;
+  height: 38px;
+  flex: 0 0 auto;
+  place-items: center;
+  color: #171717;
+  font-family: inherit;
+  font-size: 24px;
+  line-height: 1;
+  background: rgba(23, 23, 23, 0.06);
+  border: 0;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.cart__close:hover {
+  background: rgba(23, 23, 23, 0.12);
+}
+
+.cart__body {
+  flex: 1 1 auto;
+  padding: 16px 20px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.cart__empty {
+  padding: 40px 0;
+  color: #6b6b6b;
+  font-size: 16px;
+  text-align: center;
+}
+
+.cart__list {
+  display: grid;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.cart-line {
+  display: grid;
+  gap: 4px 12px;
+  grid-template-columns: 1fr auto;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(23, 23, 23, 0.07);
+}
+
+.cart-line__title {
+  margin: 0;
+  color: #171717;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.cart-line__meta {
+  margin: 0;
+  color: #6b6b6b;
+  font-size: 12px;
+}
+
+.cart-line__sum {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2em;
+  color: #171717;
+  font-size: 15px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.cart-line__qty {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  grid-column: 1 / -1;
+  margin-top: 4px;
+}
+
+.cart-line__qty button {
+  display: grid;
+  width: 30px;
+  height: 30px;
+  place-items: center;
+  color: #171717;
+  font-family: inherit;
+  font-size: 18px;
+  line-height: 1;
+  background: rgba(23, 23, 23, 0.06);
+  border: 0;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.cart-line__qty button:hover {
+  background: rgba(23, 23, 23, 0.13);
+}
+
+.cart-line__qty output {
+  min-width: 5.5em;
+  color: #171717;
+  font-size: 14px;
+  font-weight: 700;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+.cart__foot {
+  padding: 14px 20px 18px;
+  padding-bottom: max(18px, env(safe-area-inset-bottom));
+  border-top: 1px solid rgba(23, 23, 23, 0.08);
+  background: rgba(255, 255, 255, 0.7);
+}
+
+.cart__total {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 14px;
+  color: #111111;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.cart__total strong {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2em;
+  font-size: 24px;
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+}
+
+/* -------------------------------------------------------------- order form */
+
+.order-form {
+  display: grid;
+  gap: 12px;
+}
+
+.order-form__row {
+  display: grid;
+  gap: 6px;
+}
+
+.order-form label {
+  color: #4a4a4a;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.order-form input,
+.order-form textarea {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 12px 14px;
+  color: #171717;
+  font-family: inherit;
+  font-size: 15px;
+  background: #ffffff;
+  border: 1px solid rgba(23, 23, 23, 0.16);
+  border-radius: 14px;
+}
+
+.order-form textarea {
+  min-height: 68px;
+  resize: vertical;
+}
+
+.order-form input:focus,
+.order-form textarea:focus {
+  outline: 2px solid color-mix(in srgb, var(--decor-teal) 60%, transparent);
+  outline-offset: 1px;
+}
+
+.order-fulfillment {
+  display: grid;
+  gap: 8px;
+  grid-template-columns: 1fr 1fr;
+}
+
+.order-fulfillment label {
+  display: block;
+  padding: 10px 12px;
+  color: #171717;
+  font-size: 14px;
+  font-weight: 700;
+  text-align: center;
+  background: rgba(23, 23, 23, 0.05);
+  border: 1px solid transparent;
+  border-radius: 14px;
+  cursor: pointer;
+  transition:
+    background 140ms ease,
+    border-color 140ms ease;
+}
+
+.order-fulfillment input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+
+.order-fulfillment input:checked + span {
+  color: var(--decor-teal);
+}
+
+.order-fulfillment label:has(input:checked) {
+  background: rgba(92, 145, 149, 0.14);
+  border-color: var(--decor-teal);
+}
+
+.order-hint {
+  margin: 0;
+  color: #6b6b6b;
+  font-size: 12.5px;
+  line-height: 1.45;
+}
+
+.order-submit {
+  display: block;
+  width: 100%;
+  padding: 15px 20px;
+  color: #ffffff;
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 700;
+  background: #171717;
+  border: 1px solid #171717;
+  border-radius: 999px;
+  cursor: pointer;
+  transition:
+    color 160ms ease,
+    background 160ms ease;
+}
+
+.order-submit:hover {
+  color: #171717;
+  background: #ffffff;
+}
+
+.order-submit:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.order-error {
+  margin: 0;
+  padding: 10px 14px;
+  color: #8c1d3f;
+  font-size: 13.5px;
+  background: rgba(200, 40, 104, 0.1);
+  border-radius: 12px;
+}
+
+.order-done {
+  padding: 32px 4px;
+  text-align: center;
+}
+
+.order-done__mark {
+  display: grid;
+  width: 64px;
+  height: 64px;
+  margin: 0 auto 16px;
+  place-items: center;
+  color: #ffffff;
+  font-size: 32px;
+  background: var(--decor-teal);
+  border-radius: 50%;
+}
+
+.order-done__title {
+  margin: 0 0 8px;
+  color: #111111;
+  font-family: "Roboto Slab", serif;
+  font-size: 24px;
+  font-weight: 900;
+  letter-spacing: -0.03em;
+}
+
+.order-done__text {
+  margin: 0 auto;
+  max-width: 30em;
+  color: #4a4a4a;
+  font-size: 15px;
+  line-height: 1.55;
+}
+
+/* ------------------------------------------------------------- about page */
+
+.story {
+  display: grid;
+  gap: clamp(20px, 3vw, 44px);
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+  align-items: start;
+}
+
+.story__copy {
+  padding: clamp(22px, 3vw, 40px);
+}
+
+.story__lead {
+  margin: 0 0 18px;
+  color: #171717;
+  font-family: "Roboto Slab", serif;
+  font-size: clamp(20px, 2.2vw, 27px);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.3;
+}
+
+.story__copy p {
+  margin: 0 0 15px;
+  color: #2c2c2c;
+  font-size: clamp(16px, 1.5vw, 19px);
+  line-height: 1.62;
+}
+
+.story__copy p:last-child {
+  margin-bottom: 0;
+}
+
+.story__quote {
+  margin: 24px 0;
+  padding: 18px 22px;
+  color: #171717;
+  font-family: "Roboto Slab", serif;
+  font-size: clamp(19px, 2vw, 25px);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.28;
+  background: rgba(255, 255, 255, 0.5);
+  border-left: 4px solid var(--decor-pink);
+  border-radius: 0 18px 18px 0;
+}
+
+.story__aside {
+  display: grid;
+  gap: clamp(14px, 2vw, 20px);
+  position: sticky;
+  top: calc(var(--header-height) + 20px);
+}
+
+.story__photo {
+  overflow: hidden;
+  border-radius: 26px;
+  box-shadow:
+    0 16px 36px rgba(23, 23, 23, 0.2),
+    0 6px 14px rgba(23, 23, 23, 0.12);
+}
+
+.story__photo img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.story__fact {
+  padding: 18px 22px;
+}
+
+.story__fact strong {
+  display: block;
+  margin-bottom: 4px;
+  color: #111111;
+  font-family: "Roboto Slab", serif;
+  font-size: 22px;
+  font-weight: 900;
+  letter-spacing: -0.03em;
+}
+
+.story__fact span {
+  color: #4a4a4a;
+  font-size: 14.5px;
+  line-height: 1.5;
+}
+
+.story-cta {
+  position: relative;
+  display: grid;
+  overflow: hidden;
+  align-items: center;
+  gap: clamp(20px, 4vw, 48px);
+  grid-template-columns: minmax(0, 1fr) minmax(0, 0.4fr);
+  margin-top: clamp(32px, 5vw, 64px);
+  padding: clamp(32px, 5vw, 64px) clamp(22px, 4vw, 56px);
+  background: var(--decor-teal);
+  border-radius: 32px;
+  box-shadow: var(--shadow-soft);
+}
+
+/* Pink backdrop against the teal panel is the brand's own pairing — the hall
+   has pink walls and teal sofas — so the photo shows as-is. */
+.story-cta__photo {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 340px;
+  object-fit: cover;
+  border-radius: 24px;
+  box-shadow: 0 14px 30px rgba(23, 23, 23, 0.22);
+}
+
+.story-cta__title {
+  margin: 0 0 10px;
+  color: #ffffff;
+  font-family: "Roboto Slab", serif;
+  font-size: clamp(28px, 4.4vw, 54px);
+  font-weight: 900;
+  letter-spacing: -0.045em;
+  line-height: 1;
+}
+
+.story-cta__text {
+  margin: 0 0 24px;
+  max-width: 34em;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: clamp(16px, 1.6vw, 20px);
+  line-height: 1.5;
+}
+
+.story-cta .button {
+  background: #ffffff;
+  border-color: #ffffff;
+  color: #171717;
+}
+
+.story-cta .button:hover {
+  color: #ffffff;
+  background: transparent;
+  border-color: #ffffff;
+}
+
+/* ----------------------------------------------------------- contacts page */
+
+.contacts-grid {
+  display: grid;
+  gap: clamp(20px, 3vw, 44px);
+  grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+  align-items: start;
+}
+
+.contacts-card {
+  padding: clamp(22px, 3vw, 36px);
+}
+
+.contacts-card .nap {
+  margin-top: 0;
+}
+
+.contacts-map {
+  display: grid;
+  gap: 12px;
+}
+
+.contacts-map__card {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  height: min(520px, 62vh);
+  background: #f3e6e4;
+  border-radius: 26px;
+  box-shadow:
+    0 16px 36px rgba(23, 23, 23, 0.28),
+    0 6px 14px rgba(23, 23, 23, 0.16);
+}
+
+.contacts-map__view {
+  position: absolute;
+  inset: 0;
+}
+
+.contacts-map__tint {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  background: var(--decor-pink);
+  mix-blend-mode: color;
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.contacts-hours {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.contacts-hours li {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  padding-bottom: 8px;
+  color: #171717;
+  font-size: 16px;
+  border-bottom: 1px dotted rgba(23, 23, 23, 0.2);
+}
+
+.contacts-hours span:first-child {
+  color: #5a5a5a;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.contacts-hours strong {
+  font-variant-numeric: tabular-nums;
+}
+
+/* -------------------------------------------------------------- responsive */
+
+@media (max-width: 1000px) {
+  .story,
+  .contacts-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .story__aside {
+    position: static;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .story__fact {
+    grid-column: 1 / -1;
+  }
+
+  .story-cta {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+
+  .story-cta__text {
+    margin-inline: auto;
+  }
+
+  .story-cta__photo {
+    order: -1;
+    max-width: 320px;
+    margin-inline: auto;
+  }
+}
+
+@media (max-width: 900px) {
+  .menu-switch {
+    top: var(--header-height);
+    padding-block: 10px;
+  }
+
+  .dish__body {
+    padding: 12px 13px 14px;
+  }
+
+  .dish__title {
+    font-size: 15px;
+  }
+
+  .dish__price {
+    font-size: 17px;
+  }
+
+  .dish__add {
+    width: 36px;
+    height: 36px;
+    font-size: 22px;
+  }
+
+  .story__aside {
+    grid-template-columns: 1fr;
+  }
+
+  .contacts-map__card {
+    height: min(360px, 56vh);
+  }
+}
+
+@media (max-width: 600px) {
+  .cart {
+    width: 100%;
+    border-left: 0;
+  }
+
+  /* Pinned to two so the count never grows as the screen shrinks. */
+  .dish-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .dish__kbju li {
+    font-size: 10px;
+  }
+
+  .menu-switch__btn {
+    padding: 9px 16px;
+    font-size: 14px;
+  }
+
+  .order-fulfillment {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 340px) {
+  .dish-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .dish__media {
+    aspect-ratio: 16 / 10;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cart,
+  .cart-backdrop,
+  .dish,
+  .cart-pill {
+    transition: none;
+  }
+}

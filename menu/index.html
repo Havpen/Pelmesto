@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta
+      name="description"
+      content="Меню пельменной ПельМесто в Гомеле: пельмени, хинкали, вареники, чебуреки, блинчики и сырники ручной лепки. Заморозка домой, самовынос и доставка. Советская, 44."
+    />
+    <title>Меню — ПельМесто, пельменная в Гомеле | Заказ и заморозка</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@600;700;900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/Pelmesto/styles.css?v=34" />
+    <link rel="stylesheet" href="/Pelmesto/pages.css?v=5" />
+  </head>
+  <body class="page">
+    <header class="header">
+      <a class="logo" href="/Pelmesto/" aria-label="ПельМесто — на главную">
+        <img
+          class="logo__img"
+          src="/Pelmesto/assets/logo-box.png"
+          width="1015"
+          height="1024"
+          alt=""
+          decoding="async"
+        />
+        <span class="logo__word">ПельМесто</span>
+      </a>
+
+      <button
+        type="button"
+        class="nav-toggle"
+        aria-label="Открыть меню"
+        aria-expanded="false"
+        aria-controls="site-nav"
+        data-nav-toggle
+      >
+        <span class="nav-toggle__bars" aria-hidden="true"></span>
+      </button>
+      <nav class="nav" id="site-nav" data-nav aria-label="Основная навигация">
+        <a href="/Pelmesto/">Главная</a>
+        <a href="/Pelmesto/menu">Меню</a>
+        <a href="/Pelmesto/about">О нас</a>
+        <a href="/Pelmesto/contacts">Контакты</a>
+      </nav>
+    </header>
+    <div class="nav-backdrop" data-nav-backdrop aria-hidden="true"></div>
+
+    <main class="page-main">
+      <section class="page-head">
+        <div class="page-head__inner">
+          <p class="page-head__eyebrow">Советская, 44 · Гомель</p>
+          <h1 class="page-head__title">Меню и заморозка</h1>
+          <p class="page-head__text">
+            Всё, что мы лепим руками: пельмени, хинкали, вареники, чебуреки, блинчики и сырники.
+            Соберите заказ — заберёте сами или отправите курьером.
+          </p>
+        </div>
+      </section>
+
+      <div class="menu-switch" data-menu-switch>
+        <div class="menu-switch__group">
+          <button class="menu-switch__btn is-active" type="button" data-kind="hall">Меню зала</button>
+          <button class="menu-switch__btn" type="button" data-kind="frozen">Заморозка домой</button>
+        </div>
+        <ul class="menu-chips" data-menu-chips aria-label="Категории меню"></ul>
+      </div>
+
+      <div class="page-section">
+        <div data-menu-groups>
+          <p class="menu-loading">Загружаем меню…</p>
+        </div>
+
+        <p class="menu-note glass-card">
+          Заморозку берут на вес — от 500 г, блюда зала считаем порциями. Своих курьеров у нас нет:
+          доставку вы оформляете и оплачиваете самостоятельно через Яндекс Go, а мы готовим заказ
+          к нужному времени. Кухня и заморозка работают до 21:40.
+        </p>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <div class="site-footer__inner">
+        <p class="site-footer__brand">ПельМесто</p>
+        <p class="site-footer__nap">
+          Гомель, ул. Советская, 44 ·
+          <a href="tel:+375295505545" data-analytics="click_phone">+375 29 550-55-45</a> · Ежедневно
+          09:00–22:00
+        </p>
+        <p class="site-footer__links">
+          <a href="/Pelmesto/">Главная</a>
+          <a href="/Pelmesto/menu">Меню</a>
+          <a href="/Pelmesto/about">О нас</a>
+          <a href="/Pelmesto/contacts">Контакты</a>
+          <a href="https://instagram.com/pelmesto_gomel" target="_blank" rel="noopener noreferrer"
+            >Instagram</a
+          >
+        </p>
+      </div>
+    </footer>
+
+    <button class="cart-pill" type="button" data-cart-open data-cart-pill hidden>
+      Корзина
+      <span class="cart-pill__count" data-cart-count>0</span>
+    </button>
+
+    <div class="cart-backdrop" data-cart-close aria-hidden="true"></div>
+
+    <aside class="cart" aria-label="Корзина заказа">
+      <div class="cart__top">
+        <h2 class="cart__title">Ваш заказ</h2>
+        <button class="cart__close" type="button" data-cart-close aria-label="Закрыть корзину">
+          ×
+        </button>
+      </div>
+
+      <div class="cart__body" data-cart-body></div>
+
+      <div class="cart__foot" data-cart-foot hidden>
+        <p class="cart__total">
+          Итого <strong data-cart-total>0,00</strong>
+        </p>
+
+        <form class="order-form" data-order-form>
+          <div class="order-fulfillment">
+            <label>
+              <input type="radio" name="fulfillment" value="pickup" checked />
+              <span>Самовынос</span>
+            </label>
+            <label>
+              <input type="radio" name="fulfillment" value="delivery" />
+              <span>Доставка</span>
+            </label>
+          </div>
+
+          <p class="order-hint" data-delivery-hint hidden>
+            Курьера Яндекс Go вы вызываете и оплачиваете сами — мы соберём заказ и передадим его.
+          </p>
+
+          <div class="order-form__row">
+            <label for="order-name">Имя</label>
+            <input id="order-name" name="name" type="text" autocomplete="name" required />
+          </div>
+
+          <div class="order-form__row">
+            <label for="order-phone">Телефон</label>
+            <input
+              id="order-phone"
+              name="phone"
+              type="tel"
+              inputmode="tel"
+              autocomplete="tel"
+              placeholder="+375 29 000-00-00"
+              required
+            />
+          </div>
+
+          <div class="order-form__row">
+            <label for="order-comment">Комментарий</label>
+            <textarea id="order-comment" name="comment" rows="2" placeholder="Ко скольки готовить, пожелания"></textarea>
+          </div>
+
+          <p class="order-error" data-order-error hidden></p>
+
+          <button class="order-submit" type="submit" data-order-submit data-analytics="order_submit">
+            Отправить заказ
+          </button>
+
+          <p class="order-hint">
+            Оплата при получении. Официант позвонит, чтобы подтвердить заказ и время.
+          </p>
+        </form>
+      </div>
+
+      <div class="order-done" data-order-done hidden>
+        <div class="order-done__mark" aria-hidden="true">✓</div>
+        <h3 class="order-done__title">Заказ <span data-order-number>—</span> принят</h3>
+        <p class="order-done__text">
+          Мы уже видим его в работе. Официант перезвонит, подтвердит состав и время. Спасибо, что
+          выбираете ПельМесто!
+        </p>
+      </div>
+    </aside>
+
+    <script src="/Pelmesto/site.js?v=3" defer></script>
+    <script src="/Pelmesto/menu.js?v=4" defer></script>
+  </body>
+</html>
