@@ -17,13 +17,13 @@
   --decor-size: min(68vw, 860px);
   --decor-height: calc(var(--decor-size) * tan(30deg));
   --bg-pattern: url("assets/pattern-dumplings.png");
-  --bg-pattern-size: 1180px;
+  --bg-pattern-size: 1680px;
   --bg-pattern-size-y: calc(var(--bg-pattern-size) * 906 / 950);
   /* One green pelmen ≈ 1/6 of tile width (green/pink alternating). */
   --bg-pattern-overlap: calc(var(--bg-pattern-size) / 6);
   --bg-pattern-balloons: url("assets/pattern-khinkali-balloons.png");
-  --bg-pattern-balloons-size: 1260px;
-  --bg-pattern-balloons-size-y: calc(1260px * 689 / 1024);
+  --bg-pattern-balloons-size: 1680px;
+  --bg-pattern-balloons-size-y: calc(1680px * 689 / 1024);
   /* 50% right + 50% up for each layered copy of the tile. */
   --bg-pattern-balloons-ox: calc(var(--bg-pattern-balloons-size) / 2);
   --bg-pattern-balloons-oy: calc(var(--bg-pattern-balloons-size-y) / -2);
@@ -68,7 +68,19 @@ body::before {
     calc(-1 * var(--bg-pattern-overlap)) 0,
     0 calc(-1 * var(--bg-pattern-overlap)),
     calc(-1 * var(--bg-pattern-overlap)) calc(-1 * var(--bg-pattern-overlap));
-  filter: blur(2.4px) saturate(0.88);
+  /* Pastel wash to match the brand moodboard: keep pink/green/yellow readable,
+     just softer and less saturated than the raw tile. */
+  filter: blur(2.6px) saturate(0.64) brightness(1.14) contrast(0.9);
+  content: "";
+}
+
+/* Soft white veil over the pattern so dumplings read as a tint, not texture. */
+body::after {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: rgba(255, 255, 255, 0.35);
   content: "";
 }
 
@@ -90,7 +102,7 @@ body::before {
   background-position:
     0 0,
     var(--bg-pattern-balloons-ox) var(--bg-pattern-balloons-oy);
-  filter: blur(2.4px) saturate(0.88);
+  filter: blur(2.6px) saturate(0.64) brightness(1.14) contrast(0.9);
   clip-path: inset(100% 0 0 0);
 }
 
@@ -380,11 +392,11 @@ body.nav-open .nav-toggle__bars::after {
 }
 
 .hero__title-pel {
-  color: var(--brand-magenta);
+  color: var(--decor-teal);
 }
 
 .hero__title-mesto {
-  color: var(--brand-magenta);
+  color: var(--decor-teal);
 }
 
 .hero__backdrop {
@@ -1753,9 +1765,9 @@ h2 {
 @media (max-width: 900px) {
   :root {
     --decor-size: min(78vw, 640px);
-    --bg-pattern-size: 900px;
-    --bg-pattern-balloons-size: 900px;
-    --bg-pattern-balloons-size-y: calc(900px * 689 / 1024);
+    --bg-pattern-size: 1280px;
+    --bg-pattern-balloons-size: 1280px;
+    --bg-pattern-balloons-size-y: calc(1280px * 689 / 1024);
   }
 
   .nav-toggle {
@@ -2211,9 +2223,9 @@ h2 {
   :root {
     --header-height: calc(8px + 48px + 8px + 1px);
     --decor-size: min(88vw, 420px);
-    --bg-pattern-size: 720px;
-    --bg-pattern-balloons-size: 720px;
-    --bg-pattern-balloons-size-y: calc(720px * 689 / 1024);
+    --bg-pattern-size: 1020px;
+    --bg-pattern-balloons-size: 1020px;
+    --bg-pattern-balloons-size-y: calc(1020px * 689 / 1024);
   }
 
   .header {
