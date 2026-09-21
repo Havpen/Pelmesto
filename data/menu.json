@@ -184,7 +184,7 @@
       "priceUnit": 1,
       "badge": "топ",
       "orderable": true,
-      "imageUrl": "/assets/menu/pelmeni-firmennye.webp",
+      "imageUrl": "/Pelmesto/assets/menu/pelmeni-firmennye.webp",
       "variants": [],
       "nutrition": {
         "protein": 8.93,
@@ -207,7 +207,7 @@
       "priceUnit": 1,
       "badge": "",
       "orderable": true,
-      "imageUrl": "/assets/menu/pelmeni-kurinoe-file.webp",
+      "imageUrl": "/Pelmesto/assets/menu/pelmeni-kurinoe-file.webp",
       "variants": [],
       "nutrition": {
         "protein": 12.38,
@@ -230,7 +230,7 @@
       "priceUnit": 1,
       "badge": "топ",
       "orderable": true,
-      "imageUrl": "/assets/menu/pelmeni-cvetnye.webp",
+      "imageUrl": "/Pelmesto/assets/menu/pelmeni-cvetnye.webp",
       "variants": [],
       "nutrition": {
         "protein": 12.32,
@@ -253,7 +253,7 @@
       "priceUnit": 1,
       "badge": "",
       "orderable": true,
-      "imageUrl": "/assets/menu/pelmeni-indeyka.webp",
+      "imageUrl": "/Pelmesto/assets/menu/pelmeni-indeyka.webp",
       "variants": [],
       "nutrition": {
         "protein": 11.26,
@@ -276,7 +276,7 @@
       "priceUnit": 1,
       "badge": "",
       "orderable": true,
-      "imageUrl": "/assets/menu/pelmeni-baranina-myata.webp",
+      "imageUrl": "/Pelmesto/assets/menu/pelmeni-baranina-myata.webp",
       "variants": [],
       "nutrition": {
         "protein": 9.3,
@@ -299,7 +299,7 @@
       "priceUnit": 1,
       "badge": "",
       "orderable": true,
-      "imageUrl": "/assets/menu/pelmeni-krevetka-kurica.webp",
+      "imageUrl": "/Pelmesto/assets/menu/pelmeni-krevetka-kurica.webp",
       "variants": [],
       "nutrition": {
         "protein": 14.15,
@@ -322,7 +322,7 @@
       "priceUnit": 1,
       "badge": "",
       "orderable": true,
-      "imageUrl": "/assets/menu/pelmeni-semga.webp",
+      "imageUrl": "/Pelmesto/assets/menu/pelmeni-semga.webp",
       "variants": [],
       "nutrition": {
         "protein": 12.16,
@@ -345,7 +345,7 @@
       "priceUnit": 1,
       "badge": "",
       "orderable": true,
-      "imageUrl": "/assets/menu/hinkali-kurica-suluguni.webp",
+      "imageUrl": "/Pelmesto/assets/menu/hinkali-kurica-suluguni.webp",
       "variants": [
         {
           "id": "p3",
@@ -387,7 +387,7 @@
       "priceUnit": 1,
       "badge": "",
       "orderable": true,
-      "imageUrl": "/assets/menu/hinkali-svinina-govyadina.webp",
+      "imageUrl": "/Pelmesto/assets/menu/hinkali-svinina-govyadina.webp",
       "variants": [
         {
           "id": "p3",
@@ -429,7 +429,7 @@
       "priceUnit": 1,
       "badge": "",
       "orderable": true,
-      "imageUrl": "/assets/menu/hinkali-baranina.webp",
+      "imageUrl": "/Pelmesto/assets/menu/hinkali-baranina.webp",
       "variants": [
         {
           "id": "p3",
@@ -471,7 +471,7 @@
       "priceUnit": 1,
       "badge": "",
       "orderable": true,
-      "imageUrl": "/assets/menu/hinkali-assorti.webp",
+      "imageUrl": "/Pelmesto/assets/menu/hinkali-assorti.webp",
       "variants": [],
       "nutrition": null,
       "createdAt": "2026-09-13T00:00:00.000Z"
@@ -489,7 +489,7 @@
       "priceUnit": 1,
       "badge": "топ",
       "orderable": true,
-      "imageUrl": "/assets/menu/pelmeni-svinina-kurica.webp",
+      "imageUrl": "/Pelmesto/assets/menu/pelmeni-svinina-kurica.webp",
       "variants": [],
       "nutrition": null,
       "createdAt": "2026-09-13T00:00:00.000Z"
@@ -507,7 +507,7 @@
       "priceUnit": 1,
       "badge": "",
       "orderable": true,
-      "imageUrl": "/assets/menu/vareniki-kartoshka-grudinka.webp",
+      "imageUrl": "/Pelmesto/assets/menu/vareniki-kartoshka-grudinka.webp",
       "variants": [],
       "nutrition": null,
       "createdAt": "2026-09-13T00:00:00.000Z"
@@ -525,7 +525,7 @@
       "priceUnit": 1,
       "badge": "",
       "orderable": true,
-      "imageUrl": "/assets/menu/chebureki-myaso.webp",
+      "imageUrl": "/Pelmesto/assets/menu/chebureki-myaso.webp",
       "variants": [],
       "nutrition": null,
       "createdAt": "2026-09-13T00:00:00.000Z"
@@ -543,7 +543,7 @@
       "priceUnit": 1,
       "badge": "",
       "orderable": true,
-      "imageUrl": "/assets/menu/chebureki-syr.webp",
+      "imageUrl": "/Pelmesto/assets/menu/chebureki-syr.webp",
       "variants": [],
       "nutrition": null,
       "createdAt": "2026-09-13T00:00:00.000Z"
@@ -705,7 +705,7 @@
       "priceUnit": 1,
       "badge": "",
       "orderable": true,
-      "imageUrl": "/assets/menu/vareniki-kartoshka-griby.webp",
+      "imageUrl": "/Pelmesto/assets/menu/vareniki-kartoshka-griby.webp",
       "variants": [],
       "nutrition": null,
       "createdAt": "2026-09-13T00:00:00.000Z"
@@ -723,7 +723,7 @@
       "priceUnit": 1,
       "badge": "",
       "orderable": true,
-      "imageUrl": "/assets/menu/vareniki-tri-syra.webp",
+      "imageUrl": "/Pelmesto/assets/menu/vareniki-tri-syra.webp",
       "variants": [],
       "nutrition": null,
       "createdAt": "2026-09-13T00:00:00.000Z"
@@ -741,7 +741,7 @@
       "priceUnit": 1,
       "badge": "веган",
       "orderable": true,
-      "imageUrl": "/assets/menu/vareniki-nut-zelen.webp",
+      "imageUrl": "/Pelmesto/assets/menu/vareniki-nut-zelen.webp",
       "variants": [],
       "nutrition": null,
       "createdAt": "2026-09-13T00:00:00.000Z"
@@ -759,7 +759,7 @@
       "priceUnit": 1,
       "badge": "",
       "orderable": true,
-      "imageUrl": "/assets/menu/vareniki-chernika.webp",
+      "imageUrl": "/Pelmesto/assets/menu/vareniki-chernika.webp",
       "variants": [],
       "nutrition": null,
       "createdAt": "2026-09-13T00:00:00.000Z"
@@ -777,7 +777,7 @@
       "priceUnit": 1,
       "badge": "",
       "orderable": true,
-      "imageUrl": "/assets/menu/vareniki-vishnya.webp",
+      "imageUrl": "/Pelmesto/assets/menu/vareniki-vishnya.webp",
       "variants": [],
       "nutrition": null,
       "createdAt": "2026-09-13T00:00:00.000Z"
@@ -795,7 +795,7 @@
       "priceUnit": 1,
       "badge": "",
       "orderable": true,
-      "imageUrl": "/assets/menu/blinchiki-bolonyeze.webp",
+      "imageUrl": "/Pelmesto/assets/menu/blinchiki-bolonyeze.webp",
       "variants": [],
       "nutrition": null,
       "createdAt": "2026-09-13T00:00:00.000Z"
@@ -813,7 +813,7 @@
       "priceUnit": 1,
       "badge": "",
       "orderable": true,
-      "imageUrl": "/assets/menu/blinchiki-kurica-griby-syr.webp",
+      "imageUrl": "/Pelmesto/assets/menu/blinchiki-kurica-griby-syr.webp",
       "variants": [],
       "nutrition": null,
       "createdAt": "2026-09-13T00:00:00.000Z"
@@ -831,7 +831,7 @@
       "priceUnit": 1,
       "badge": "",
       "orderable": true,
-      "imageUrl": "/assets/menu/blinchiki-govyadina-ogurec.webp",
+      "imageUrl": "/Pelmesto/assets/menu/blinchiki-govyadina-ogurec.webp",
       "variants": [],
       "nutrition": null,
       "createdAt": "2026-09-13T00:00:00.000Z"
@@ -849,7 +849,7 @@
       "priceUnit": 1,
       "badge": "",
       "orderable": true,
-      "imageUrl": "/assets/menu/blinchiki-yabloko-korica.webp",
+      "imageUrl": "/Pelmesto/assets/menu/blinchiki-yabloko-korica.webp",
       "variants": [],
       "nutrition": null,
       "createdAt": "2026-09-13T00:00:00.000Z"
@@ -967,7 +967,7 @@
       "priceUnit": 1,
       "badge": "",
       "orderable": true,
-      "imageUrl": "/assets/menu/pelmeni-cvetnye.webp",
+      "imageUrl": "/Pelmesto/assets/menu/pelmeni-cvetnye.webp",
       "variants": [],
       "nutrition": null,
       "createdAt": "2026-09-13T00:00:00.000Z"
@@ -985,7 +985,7 @@
       "priceUnit": 1,
       "badge": "",
       "orderable": true,
-      "imageUrl": "/assets/menu/hinkali-kurica-suluguni.webp",
+      "imageUrl": "/Pelmesto/assets/menu/hinkali-kurica-suluguni.webp",
       "variants": [],
       "nutrition": null,
       "createdAt": "2026-09-13T00:00:00.000Z"
@@ -1793,7 +1793,7 @@
       "priceUnit": 500,
       "badge": "",
       "orderable": true,
-      "imageUrl": "/assets/menu/pelmeni-firmennye.webp",
+      "imageUrl": "/Pelmesto/assets/menu/pelmeni-firmennye.webp",
       "variants": [],
       "nutrition": {
         "protein": 8.93,
@@ -1816,7 +1816,7 @@
       "priceUnit": 500,
       "badge": "",
       "orderable": true,
-      "imageUrl": "/assets/menu/pelmeni-kurinoe-file.webp",
+      "imageUrl": "/Pelmesto/assets/menu/pelmeni-kurinoe-file.webp",
       "variants": [],
       "nutrition": {
         "protein": 12.38,
@@ -1839,7 +1839,7 @@
       "priceUnit": 500,
       "badge": "",
       "orderable": true,
-      "imageUrl": "/assets/menu/pelmeni-cvetnye.webp",
+      "imageUrl": "/Pelmesto/assets/menu/pelmeni-cvetnye.webp",
       "variants": [],
       "nutrition": {
         "protein": 12.32,
@@ -1862,7 +1862,7 @@
       "priceUnit": 500,
       "badge": "",
       "orderable": true,
-      "imageUrl": "/assets/menu/pelmeni-svinina-kurica.webp",
+      "imageUrl": "/Pelmesto/assets/menu/pelmeni-svinina-kurica.webp",
       "variants": [],
       "nutrition": {
         "protein": 10.86,
@@ -1885,7 +1885,7 @@
       "priceUnit": 500,
       "badge": "",
       "orderable": true,
-      "imageUrl": "/assets/menu/pelmeni-indeyka.webp",
+      "imageUrl": "/Pelmesto/assets/menu/pelmeni-indeyka.webp",
       "variants": [],
       "nutrition": {
         "protein": 11.26,
@@ -1908,7 +1908,7 @@
       "priceUnit": 500,
       "badge": "",
       "orderable": true,
-      "imageUrl": "/assets/menu/pelmeni-baranina-myata.webp",
+      "imageUrl": "/Pelmesto/assets/menu/pelmeni-baranina-myata.webp",
       "variants": [],
       "nutrition": {
         "protein": 9.3,
@@ -1931,7 +1931,7 @@
       "priceUnit": 500,
       "badge": "",
       "orderable": true,
-      "imageUrl": "/assets/menu/pelmeni-semga.webp",
+      "imageUrl": "/Pelmesto/assets/menu/pelmeni-semga.webp",
       "variants": [],
       "nutrition": {
         "protein": 12.16,
@@ -1954,7 +1954,7 @@
       "priceUnit": 500,
       "badge": "",
       "orderable": true,
-      "imageUrl": "/assets/menu/pelmeni-krevetka-kurica.webp",
+      "imageUrl": "/Pelmesto/assets/menu/pelmeni-krevetka-kurica.webp",
       "variants": [],
       "nutrition": {
         "protein": 14.15,
@@ -1977,7 +1977,7 @@
       "priceUnit": 500,
       "badge": "",
       "orderable": true,
-      "imageUrl": "/assets/menu/hinkali-svinina-govyadina.webp",
+      "imageUrl": "/Pelmesto/assets/menu/hinkali-svinina-govyadina.webp",
       "variants": [],
       "nutrition": {
         "protein": 7.8,
@@ -2000,7 +2000,7 @@
       "priceUnit": 500,
       "badge": "",
       "orderable": true,
-      "imageUrl": "/assets/menu/hinkali-kurica-suluguni.webp",
+      "imageUrl": "/Pelmesto/assets/menu/hinkali-kurica-suluguni.webp",
       "variants": [],
       "nutrition": {
         "protein": 10.74,
@@ -2023,7 +2023,7 @@
       "priceUnit": 500,
       "badge": "",
       "orderable": true,
-      "imageUrl": "/assets/menu/hinkali-baranina.webp",
+      "imageUrl": "/Pelmesto/assets/menu/hinkali-baranina.webp",
       "variants": [],
       "nutrition": {
         "protein": 8.82,
@@ -2046,7 +2046,7 @@
       "priceUnit": 500,
       "badge": "",
       "orderable": true,
-      "imageUrl": "/assets/menu/vareniki-kartoshka-griby.webp",
+      "imageUrl": "/Pelmesto/assets/menu/vareniki-kartoshka-griby.webp",
       "variants": [],
       "nutrition": null,
       "createdAt": "2026-09-13T00:00:00.000Z"
@@ -2064,7 +2064,7 @@
       "priceUnit": 500,
       "badge": "",
       "orderable": true,
-      "imageUrl": "/assets/menu/vareniki-kartoshka-grudinka.webp",
+      "imageUrl": "/Pelmesto/assets/menu/vareniki-kartoshka-grudinka.webp",
       "variants": [],
       "nutrition": null,
       "createdAt": "2026-09-13T00:00:00.000Z"
@@ -2082,7 +2082,7 @@
       "priceUnit": 500,
       "badge": "",
       "orderable": true,
-      "imageUrl": "/assets/menu/vareniki-tri-syra.webp",
+      "imageUrl": "/Pelmesto/assets/menu/vareniki-tri-syra.webp",
       "variants": [],
       "nutrition": null,
       "createdAt": "2026-09-13T00:00:00.000Z"
@@ -2100,7 +2100,7 @@
       "priceUnit": 500,
       "badge": "",
       "orderable": true,
-      "imageUrl": "/assets/menu/vareniki-nut-zelen.webp",
+      "imageUrl": "/Pelmesto/assets/menu/vareniki-nut-zelen.webp",
       "variants": [],
       "nutrition": null,
       "createdAt": "2026-09-13T00:00:00.000Z"
@@ -2118,7 +2118,7 @@
       "priceUnit": 500,
       "badge": "",
       "orderable": true,
-      "imageUrl": "/assets/menu/vareniki-chernika.webp",
+      "imageUrl": "/Pelmesto/assets/menu/vareniki-chernika.webp",
       "variants": [],
       "nutrition": null,
       "createdAt": "2026-09-13T00:00:00.000Z"
@@ -2136,7 +2136,7 @@
       "priceUnit": 500,
       "badge": "",
       "orderable": true,
-      "imageUrl": "/assets/menu/vareniki-vishnya.webp",
+      "imageUrl": "/Pelmesto/assets/menu/vareniki-vishnya.webp",
       "variants": [],
       "nutrition": null,
       "createdAt": "2026-09-13T00:00:00.000Z"
@@ -2154,7 +2154,7 @@
       "priceUnit": 1,
       "badge": "",
       "orderable": true,
-      "imageUrl": "/assets/menu/blinchiki-bolonyeze.webp",
+      "imageUrl": "/Pelmesto/assets/menu/blinchiki-bolonyeze.webp",
       "variants": [],
       "nutrition": null,
       "createdAt": "2026-09-13T00:00:00.000Z"
@@ -2172,7 +2172,7 @@
       "priceUnit": 1,
       "badge": "",
       "orderable": true,
-      "imageUrl": "/assets/menu/blinchiki-kurica-griby-syr.webp",
+      "imageUrl": "/Pelmesto/assets/menu/blinchiki-kurica-griby-syr.webp",
       "variants": [],
       "nutrition": null,
       "createdAt": "2026-09-13T00:00:00.000Z"
@@ -2190,7 +2190,7 @@
       "priceUnit": 1,
       "badge": "",
       "orderable": true,
-      "imageUrl": "/assets/menu/blinchiki-govyadina-ogurec.webp",
+      "imageUrl": "/Pelmesto/assets/menu/blinchiki-govyadina-ogurec.webp",
       "variants": [],
       "nutrition": null,
       "createdAt": "2026-09-13T00:00:00.000Z"
@@ -2208,7 +2208,7 @@
       "priceUnit": 1,
       "badge": "",
       "orderable": true,
-      "imageUrl": "/assets/menu/blinchiki-yabloko-korica.webp",
+      "imageUrl": "/Pelmesto/assets/menu/blinchiki-yabloko-korica.webp",
       "variants": [],
       "nutrition": null,
       "createdAt": "2026-09-13T00:00:00.000Z"
@@ -2280,7 +2280,7 @@
       "priceUnit": 500,
       "badge": "",
       "orderable": true,
-      "imageUrl": "/assets/menu/chebureki-myaso.webp",
+      "imageUrl": "/Pelmesto/assets/menu/chebureki-myaso.webp",
       "variants": [],
       "nutrition": null,
       "createdAt": "2026-09-13T00:00:00.000Z"
@@ -2298,7 +2298,7 @@
       "priceUnit": 500,
       "badge": "",
       "orderable": true,
-      "imageUrl": "/assets/menu/chebureki-syr.webp",
+      "imageUrl": "/Pelmesto/assets/menu/chebureki-syr.webp",
       "variants": [],
       "nutrition": null,
       "createdAt": "2026-09-13T00:00:00.000Z"

@@ -3,8 +3,8 @@
     "id": "93b636e011be0c54",
     "title": "Завтрак — личное дело каждого",
     "text": "Мы открываемся в 9:00 и приглашаем вас начать день вкусно.\n\nС самого утра в нашем зале — нежные сырники на рисовой муке (без глютена), румяные блинчики и ароматный кофе. Выбирайте то, что любите именно вы, и собирайте завтрак под своё настроение.",
-    "link": "/menu",
-    "imageUrl": "/assets/promos/promo-1788545938748-57c62a.jpg",
+    "link": "/Pelmesto/menu",
+    "imageUrl": "/Pelmesto/assets/promos/promo-1788545938748-57c62a.jpg",
     "locked": true,
     "seo": true,
     "createdAt": "2026-09-04T18:19:00.185Z"
@@ -14,7 +14,7 @@
     "title": "Самые вкусные пельмени только у нас",
     "text": "Акция с сторис с инстаграм",
     "link": "https://www.instagram.com/pelmesto_gomel/",
-    "imageUrl": "/assets/promos/promo-1788541473569-0ab7fc.jpg",
+    "imageUrl": "/Pelmesto/assets/promos/promo-1788541473569-0ab7fc.jpg",
     "createdAt": "2026-09-04T16:23:03.382Z",
     "updatedAt": "2026-09-04T17:04:34.419Z"
   },
@@ -23,7 +23,7 @@
     "title": "Всё начинается с любви...",
     "text": "Акция с сердечными пельменями",
     "link": "",
-    "imageUrl": "/assets/promos/love.png",
+    "imageUrl": "/Pelmesto/assets/promos/love.png",
     "createdAt": "2026-09-04T12:00:00.000Z"
   },
   {
@@ -31,7 +31,7 @@
     "title": "Смузи — новинка сезона",
     "text": "Новые смузи в меню",
     "link": "",
-    "imageUrl": "/assets/promos/smoothie.png",
+    "imageUrl": "/Pelmesto/assets/promos/smoothie.png",
     "createdAt": "2026-09-04T12:00:01.000Z"
   }
 ]
