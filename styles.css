@@ -17,13 +17,9 @@
   --decor-size: min(68vw, 860px);
   --decor-height: calc(var(--decor-size) * tan(30deg));
   --bg-pattern: url("assets/pattern-dumplings.png");
-  --bg-pattern-size: 1680px;
-  --bg-pattern-size-y: calc(var(--bg-pattern-size) * 906 / 950);
-  /* One green pelmen ≈ 1/6 of tile width (green/pink alternating). */
-  --bg-pattern-overlap: calc(var(--bg-pattern-size) / 6);
   --bg-pattern-balloons: url("assets/pattern-khinkali-balloons.png");
-  --bg-pattern-balloons-size: 1680px;
-  --bg-pattern-balloons-size-y: calc(1680px * 689 / 1024);
+  --bg-pattern-balloons-size: 2200px;
+  --bg-pattern-balloons-size-y: calc(2200px * 689 / 1024);
   /* 50% right + 50% up for each layered copy of the tile. */
   --bg-pattern-balloons-ox: calc(var(--bg-pattern-balloons-size) / 2);
   --bg-pattern-balloons-oy: calc(var(--bg-pattern-balloons-size-y) / -2);
@@ -44,33 +40,19 @@ body {
   overflow-x: clip;
 }
 
-/* Fixed layer so the pattern stays put while the hero video scrubs on scroll.
-   Four slightly offset copies overlap so tile seams don't show as hairlines. */
+/* Fixed full-screen photo behind the page (stays put while the hero scrubs). */
 body::before {
   position: fixed;
-  inset: -12px;
+  inset: 0;
   z-index: -1;
   pointer-events: none;
   background-color: #ffffff;
-  background-image:
-    var(--bg-pattern),
-    var(--bg-pattern),
-    var(--bg-pattern),
-    var(--bg-pattern);
-  background-repeat: repeat;
-  background-size:
-    var(--bg-pattern-size) var(--bg-pattern-size-y),
-    var(--bg-pattern-size) var(--bg-pattern-size-y),
-    var(--bg-pattern-size) var(--bg-pattern-size-y),
-    var(--bg-pattern-size) var(--bg-pattern-size-y);
-  background-position:
-    0 0,
-    calc(-1 * var(--bg-pattern-overlap)) 0,
-    0 calc(-1 * var(--bg-pattern-overlap)),
-    calc(-1 * var(--bg-pattern-overlap)) calc(-1 * var(--bg-pattern-overlap));
-  /* Pastel wash to match the brand moodboard: keep pink/green/yellow readable,
-     just softer and less saturated than the raw tile. */
-  filter: blur(2.6px) saturate(0.64) brightness(1.14) contrast(0.9);
+  background-image: var(--bg-pattern);
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  /* Soften so it stays a backdrop, not a competing photo. */
+  filter: blur(1.2px) saturate(0.72) brightness(1.08) contrast(0.94);
   content: "";
 }
 
@@ -380,7 +362,8 @@ body.nav-open .nav-toggle__bars::after {
     calc((140px + 10pt) * 1.5)
   );
   font-weight: 900;
-  letter-spacing: -0.045em;
+  /* Was -0.045em; 1.5× more open → -0.03em */
+  letter-spacing: -0.03em;
   line-height: 0.95;
   text-align: center;
   pointer-events: none;
@@ -1765,9 +1748,8 @@ h2 {
 @media (max-width: 900px) {
   :root {
     --decor-size: min(78vw, 640px);
-    --bg-pattern-size: 1280px;
-    --bg-pattern-balloons-size: 1280px;
-    --bg-pattern-balloons-size-y: calc(1280px * 689 / 1024);
+    --bg-pattern-balloons-size: 1680px;
+    --bg-pattern-balloons-size-y: calc(1680px * 689 / 1024);
   }
 
   .nav-toggle {
@@ -2223,9 +2205,8 @@ h2 {
   :root {
     --header-height: calc(8px + 48px + 8px + 1px);
     --decor-size: min(88vw, 420px);
-    --bg-pattern-size: 1020px;
-    --bg-pattern-balloons-size: 1020px;
-    --bg-pattern-balloons-size-y: calc(1020px * 689 / 1024);
+    --bg-pattern-balloons-size: 1320px;
+    --bg-pattern-balloons-size-y: calc(1320px * 689 / 1024);
   }
 
   .header {
