@@ -2124,11 +2124,12 @@ h2 {
   }
 
   /*
-   * Mobile pink = same two pieces as desktop (one 30° object):
-   * 1) tip triangle on the sticky stage
-   * 2) pink-menu plane with origin at menu top (diagonal stays visible in «Меню зала»)
-   * A tip-apex rail was wrong: once you scroll into the menu the diagonal is
-   * above the viewport → solid pink “window”. No rail on mobile.
+   * Mobile pink = one 30° half-plane (same silhouette as desktop tip+menu):
+   * - tip: classic triangle on the sticky stage (apex → seam)
+   * - pink-menu: SAME half-plane, origin at tip apex (menuTop − decor-height),
+   *   so «Меню зала» keeps a visible 30° slash from the left — not a flat pink
+   *   window (88vw left-strip was covering almost the whole phone width).
+   * No tip-apex rail through the spacer (that flooded the menu once scrolled).
    */
   .pink-host {
     display: contents;
@@ -2156,43 +2157,41 @@ h2 {
     display: none;
   }
 
+  .menu {
+    position: relative;
+    z-index: 1;
+    overflow: visible;
+    background: transparent;
+  }
+
   .decor--pink-menu {
     display: block;
-    top: 0;
+    top: calc(-1 * var(--decor-height));
     left: 0;
     z-index: 0;
     width: 100%;
-    height: 100%;
+    height: calc(100% + var(--decor-height));
     overflow: hidden;
     background: transparent;
   }
 
+  /* No left strip — on ~390px that strip was ~88vw and killed the diagonal. */
   .decor--pink-menu::before {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: var(--decor-size);
-    height: 100%;
-    background: var(--decor-pink);
-    content: "";
+    content: none;
+    display: none;
   }
 
+  /* Origin = tip apex (menuTop − decor-height). One 30° line from the left. */
   .decor--pink-menu::after {
     position: absolute;
     top: 0;
-    left: var(--decor-size);
+    left: 0;
     width: 300vmax;
     height: 300vmax;
     background: var(--decor-pink);
     transform: rotate(30deg);
     transform-origin: 0 0;
     content: "";
-  }
-
-  .menu {
-    position: relative;
-    z-index: 1;
-    background: transparent;
   }
 
   .decor--teal,
