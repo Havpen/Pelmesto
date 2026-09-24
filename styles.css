@@ -2195,8 +2195,7 @@ h2 {
     background: transparent;
   }
 
-  .decor--teal,
-  .decor--pink-home {
+  .decor--teal {
     transform: translateZ(0);
     backface-visibility: hidden;
   }
