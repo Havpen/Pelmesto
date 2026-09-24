@@ -2159,11 +2159,12 @@ h2 {
 
   .decor--pink-menu {
     display: block;
-    top: 0;
+    /* Reach tip apex so tip hypotenuse + menu slash are one 30° line. */
+    top: calc(-1 * var(--decor-height));
     left: 0;
     z-index: 0;
     width: 100%;
-    height: 100%;
+    height: calc(100% + var(--decor-height));
     overflow: hidden;
     background: transparent;
   }
@@ -2173,7 +2174,7 @@ h2 {
     display: none;
   }
 
-  /* 30° slash from the left edge — visible on a phone-width screen. */
+  /* Same apex as the tip triangle (menuTop − decor-height). */
   .decor--pink-menu::after {
     position: absolute;
     top: 0;
@@ -2190,6 +2191,7 @@ h2 {
   .menu {
     position: relative;
     z-index: 1;
+    overflow: visible;
     background: transparent;
   }
 
