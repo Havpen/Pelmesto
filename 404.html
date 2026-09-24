@@ -22,7 +22,7 @@
       rel="stylesheet"
     />
     <link rel="preload" href="assets/hero-a-frames/frame-0001.webp" as="image" type="image/webp" />
-    <link rel="stylesheet" href="styles.css?v=74" />
+    <link rel="stylesheet" href="styles.css?v=75" />
   </head>
   <body>
     <div class="bg-pattern-balloons" data-bg-balloons aria-hidden="true"></div>
@@ -635,7 +635,7 @@
       const frameCount = 73;
       const frameFps = 24 * 1.5 * 1.5;
       const frames = new Array(frameCount);
-      const LOAD_CONCURRENCY = 6;
+      const LOAD_CONCURRENCY = window.matchMedia("(max-width: 900px)").matches ? 2 : 6;
 
       let targetA = 0;
       let currentFrame = 0;
@@ -676,7 +676,9 @@
       const videoShell = document.querySelector(".hero__video-shell");
       const mobileHeroMq = window.matchMedia("(max-width: 900px)");
       /** Keep in sync with styles.css `.hero__video { transform: scale(…) }` on mobile. */
-      const MOBILE_HERO_VIDEO_SCALE = 3;
+      const MOBILE_HERO_VIDEO_SCALE = 1.9;
+      /** Source hero-a frame size used by knob-patch coordinates. */
+      const HERO_A_NATIVE_W = 1600;
       /** Hero-b opens a bit larger than the dumpling in the last hero-a frame — nudge down uniformly. */
       const FLY_START_SIZE_MATCH = 0.93;
 
@@ -847,13 +849,17 @@
         flyCanvas.style.backgroundColor = "transparent";
       };
 
-      const maxBitmapEdge = () =>
-        Math.min(
+      const maxBitmapEdge = () => {
+        const dpr = Math.min(window.devicePixelRatio || 1, 2);
+        // iOS Safari OOMs if we keep ~170 full-HD canvases in RAM. Cap hard on phones.
+        if (mobileHeroMq.matches) {
+          return Math.min(512, Math.ceil(Math.max(window.innerWidth, window.innerHeight) * dpr));
+        }
+        return Math.min(
           1920,
-          Math.ceil(
-            Math.max(window.innerWidth, 1094) * Math.min(window.devicePixelRatio || 1, 2) * 1.15,
-          ),
+          Math.ceil(Math.max(window.innerWidth, 1094) * dpr * 1.15),
         );
+      };
 
       const loadFrameBitmap = async (url, { cropCenter = false } = {}) => {
         const response = await fetch(url);
@@ -958,9 +964,16 @@
         heroAContext.clearRect(0, 0, width, height);
         const patch = heroKnobPatch[index];
         if (patch) {
-          const half = heroKnobPatchSize / 2;
+          const patchScale = width / HERO_A_NATIVE_W;
+          const half = (heroKnobPatchSize * patchScale) / 2;
+          const size = heroKnobPatchSize * patchScale;
           heroAContext.fillStyle = "#ffffff";
-          heroAContext.fillRect(patch[0] - half, patch[1] - half, heroKnobPatchSize, heroKnobPatchSize);
+          heroAContext.fillRect(
+            patch[0] * patchScale - half,
+            patch[1] * patchScale - half,
+            size,
+            size,
+          );
         }
         heroAContext.globalCompositeOperation = "source-over";
         heroAContext.drawImage(frame, 0, 0);
@@ -1472,9 +1485,17 @@
         }
       };
 
-      // First paint: transparent hero frames + first pelmen frame ASAP.
-      preloadHeroA();
-      preloadFrames();
+      // First paint: hero-a only. Defer fly/khinkali sequences so iOS doesn't OOM.
+      let heroBWarmStarted = false;
+      const warmHeroB = () => {
+        if (heroBWarmStarted) return;
+        heroBWarmStarted = true;
+        preloadFrames();
+      };
+
+      preloadHeroA().then(() => {
+        if (!mobileHeroMq.matches) scheduleIdle(warmHeroB);
+      });
 
       // Khinkali only when menu is near or user is about to open that slide.
       const warmKhinkali = () => {
@@ -1487,6 +1508,7 @@
       };
 
       const onScrollWarm = () => {
+        if (window.scrollY > 24) warmHeroB();
         if (warmKhinkali()) {
           window.removeEventListener("scroll", onScrollWarm);
         }
@@ -1496,6 +1518,26 @@
       scheduleIdle(() => {
         warmKhinkali();
       });
+
+      /* Freeze hero stage + decor sizes so iOS chrome show/hide doesn't slide the triangles. */
+      const lockHeroViewport = () => {
+        const h = Math.round(window.innerHeight);
+        if (h < 200) return;
+        document.documentElement.style.setProperty("--hero-stage-h", `${h}px`);
+        if (mobileHeroMq.matches) {
+          const decorPx = Math.min(h < 700 ? 420 : 640, Math.round(window.innerWidth * (h < 700 ? 0.88 : 0.78)));
+          document.documentElement.style.setProperty("--decor-size", `${decorPx}px`);
+        } else {
+          document.documentElement.style.removeProperty("--decor-size");
+        }
+      };
+      lockHeroViewport();
+      window.addEventListener("orientationchange", () => {
+        window.setTimeout(lockHeroViewport, 250);
+      });
+      if (typeof mobileHeroMq.addEventListener === "function") {
+        mobileHeroMq.addEventListener("change", lockHeroViewport);
+      }
 
       const floatPill = document.querySelector("[data-float-pill]");
       const syncFloatPill = () => {
