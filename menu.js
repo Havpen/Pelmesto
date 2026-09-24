@@ -199,6 +199,7 @@
       : "";
     var price = unitPrice(item, variantId);
     var entry = cart[lineKey(item.id, variantId)];
+    var inCart = !!(entry && entry.qty > 0);
 
     var priceHtml =
       price === null || price === undefined
@@ -214,21 +215,24 @@
     var action;
     if (price === null || price === undefined) {
       action = '<button class="dish__add" type="button" disabled aria-label="Недоступно">+</button>';
-    } else if (entry && entry.qty > 0) {
+    } else if (inCart) {
+      var qtyLabel = item.unit === "g" ? grams(entry.qty) : entry.qty + " шт";
       action =
-        '<span class="dish__in-cart">' +
-        (item.unit === "g" ? grams(entry.qty) : entry.qty + " шт") +
+        '<div class="dish__in-cart" role="group" aria-label="Количество">' +
         '<button type="button" data-step="-1" data-item="' +
         escapeHtml(item.id) +
         '" data-variant="' +
         escapeHtml(variantId) +
         '" aria-label="Убрать">−</button>' +
+        '<span class="dish__in-cart-qty">' +
+        qtyLabel +
+        "</span>" +
         '<button type="button" data-step="1" data-item="' +
         escapeHtml(item.id) +
         '" data-variant="' +
         escapeHtml(variantId) +
         '" aria-label="Добавить">+</button>' +
-        "</span>";
+        "</div>";
     } else {
       action =
         '<button class="dish__add" type="button" data-add="' +
@@ -240,7 +244,14 @@
         '">+</button>';
     }
 
-    return '<div class="dish__foot">' + priceHtml + action + "</div>";
+    return (
+      '<div class="dish__foot' +
+      (inCart ? " is-active" : "") +
+      '">' +
+      priceHtml +
+      action +
+      "</div>"
+    );
   }
 
   function dishHtml(item) {
