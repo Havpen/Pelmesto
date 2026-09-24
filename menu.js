@@ -599,8 +599,31 @@
   }
 
   function setCartOpen(open) {
-    document.body.classList.toggle("cart-open", open);
-    if (open) resetOrderView();
+    var root = document.documentElement;
+    if (open) {
+      if (!document.body.classList.contains("cart-open")) {
+        document.body.dataset.cartScrollY = String(window.scrollY || window.pageYOffset || 0);
+      }
+      document.body.classList.add("cart-open");
+      document.body.style.position = "fixed";
+      document.body.style.top = "-" + (document.body.dataset.cartScrollY || "0") + "px";
+      document.body.style.left = "0";
+      document.body.style.right = "0";
+      document.body.style.width = "100%";
+      root.style.overflow = "hidden";
+      resetOrderView();
+    } else {
+      var y = Number(document.body.dataset.cartScrollY || 0);
+      document.body.classList.remove("cart-open");
+      document.body.style.position = "";
+      document.body.style.top = "";
+      document.body.style.left = "";
+      document.body.style.right = "";
+      document.body.style.width = "";
+      root.style.overflow = "";
+      window.scrollTo(0, y);
+      delete document.body.dataset.cartScrollY;
+    }
   }
 
   function resetOrderView() {
