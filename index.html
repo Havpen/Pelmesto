@@ -22,7 +22,7 @@
       rel="stylesheet"
     />
     <link rel="preload" href="assets/hero-a-frames/frame-0001.webp" as="image" type="image/webp" />
-    <link rel="stylesheet" href="styles.css?v=80" />
+    <link rel="stylesheet" href="styles.css?v=81" />
   </head>
   <body>
     <div class="bg-pattern-balloons" data-bg-balloons aria-hidden="true"></div>
@@ -59,6 +59,7 @@
     <div class="nav-backdrop" data-nav-backdrop aria-hidden="true"></div>
 
     <main>
+      <div class="pink-host">
       <section class="hero" id="home">
         <div class="hero__seo">
           <p class="hero__seo-eyebrow">ПельМесто · Гомель</p>
@@ -89,8 +90,6 @@
             ></canvas>
           </div>
         </div>
-        <!-- Mobile-only: continuous pink plane under the sticky stage through #home → #menu seam. -->
-        <div class="decor decor--pink-span" aria-hidden="true"></div>
       </section>
 
       <section class="menu" id="menu">
@@ -291,6 +290,8 @@
 
         <a class="menu__all" href="/Pelmesto/menu" data-analytics="click_menu">Всё меню</a>
       </section>
+      <div class="decor decor--pink-rail" aria-hidden="true"></div>
+      </div>
 
       <section class="band band--shop" id="shop" aria-labelledby="shop-title">
         <div class="band__inner band__inner--shop">
