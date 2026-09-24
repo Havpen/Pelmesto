@@ -7,17 +7,20 @@
   display: none !important;
 }
 
-/* Second pattern from the home page as the page backdrop. */
+/* Balloon tile from the home «Купить домой» band — must reset repeat/filter:
+   body::before is cover/no-repeat for the dumpling photo. */
 body.page::before {
   background-image:
     var(--bg-pattern-balloons),
     var(--bg-pattern-balloons);
+  background-repeat: repeat;
   background-size:
     var(--bg-pattern-balloons-size) var(--bg-pattern-balloons-size-y),
     var(--bg-pattern-balloons-size) var(--bg-pattern-balloons-size-y);
   background-position:
     0 0,
     var(--bg-pattern-balloons-ox) var(--bg-pattern-balloons-oy);
+  filter: blur(2.6px) saturate(0.64) brightness(1.14) contrast(0.9);
 }
 
 /* Column layout keeps the footer glued to the bottom on short pages

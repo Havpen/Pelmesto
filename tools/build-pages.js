@@ -172,6 +172,13 @@ async function main() {
   await writePage("menu", "menu.html");
   await writePage("about", "about.html");
   await writePage("contacts", "contacts.html");
+  await writePage("privacy", "privacy.html");
+  /* Clean-URL aliases that the Node server maps — Pages has no rewrite table. */
+  await writePage("gift", "contacts.html");
+  await writePage("booking", "contacts.html");
+  await writePage("shop", "menu.html");
+  await writePage("takeaway", "menu.html");
+  await writePage("kids", "menu.html");
 
   const home = await fsp.readFile(path.join(dist, "index.html"), "utf8");
   await fsp.writeFile(path.join(dist, "404.html"), home, "utf8");

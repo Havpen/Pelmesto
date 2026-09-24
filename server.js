@@ -782,6 +782,7 @@ const pageRoutes = {
   "/menu": "menu.html",
   "/about": "about.html",
   "/contacts": "contacts.html",
+  "/privacy": "privacy.html",
   "/shop": "menu.html",
   "/takeaway": "menu.html",
   "/kids": "menu.html",

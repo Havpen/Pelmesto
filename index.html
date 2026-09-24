@@ -11,11 +11,18 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@600;700;900&display=swap"
+      rel="preload"
+      href="https://fonts.gstatic.com/s/robotoslab/v36/BngbUXZYTXPIvIBgJJSb6s3BzlRRfKOFbvjoJYOma2RjRdE.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@600;700;900&display=block"
       rel="stylesheet"
     />
     <link rel="preload" href="assets/hero-a-frames/frame-0001.webp" as="image" type="image/webp" />
-    <link rel="stylesheet" href="styles.css?v=45" />
+    <link rel="stylesheet" href="styles.css?v=74" />
   </head>
   <body>
     <div class="bg-pattern-balloons" data-bg-balloons aria-hidden="true"></div>
@@ -65,10 +72,15 @@
           <div class="decor decor--teal" aria-hidden="true"></div>
           <div class="decor decor--pink decor--pink-home" aria-hidden="true"></div>
           <p class="hero__title" aria-hidden="true">
-            <span class="hero__title-text"
-              ><span class="hero__title-pel">Пель</span
-              ><span class="hero__title-mesto">Место</span></span
-            >
+            <span class="hero__title-stack">
+              <span class="hero__title-text"
+                ><span class="hero__title-pel">Пель</span
+                ><span class="hero__title-mesto">Место</span></span
+              >
+              <span class="hero__title-tagline"
+                >место, где пельмени не просто пельмени</span
+              >
+            </span>
           </p>
           <div class="hero__video-shell">
             <canvas
@@ -103,6 +115,7 @@
                           </span>
                           <span class="menu-list__dots" aria-hidden="true"></span>
                           <span class="menu-list__weight">200&nbsp;г</span>
+                          <span class="menu-list__dots menu-list__dots--meta" aria-hidden="true"></span>
                           <span class="menu-list__price">10,90<span class="byn" role="img" aria-label="белорусский рубль"></span></span>
                         </a>
                       </li>
@@ -111,6 +124,7 @@
                           <span class="menu-list__name">С куриным филе</span>
                           <span class="menu-list__dots" aria-hidden="true"></span>
                           <span class="menu-list__weight">200&nbsp;г</span>
+                          <span class="menu-list__dots menu-list__dots--meta" aria-hidden="true"></span>
                           <span class="menu-list__price">10,90<span class="byn" role="img" aria-label="белорусский рубль"></span></span>
                         </a>
                       </li>
@@ -123,10 +137,11 @@
                           </span>
                           <span class="menu-list__dots" aria-hidden="true"></span>
                           <span class="menu-list__weight">200&nbsp;г</span>
+                          <span class="menu-list__dots menu-list__dots--meta" aria-hidden="true"></span>
                           <span class="menu-list__price">11,60<span class="byn" role="img" aria-label="белорусский рубль"></span></span>
                         </a>
                       </li>
-                      <li>
+                      <li class="menu-list__extra">
                         <a class="menu-list__row" href="/menu#cat-pelmeni">
                           <span class="menu-list__name">
                             С филе индейки
@@ -134,10 +149,11 @@
                           </span>
                           <span class="menu-list__dots" aria-hidden="true"></span>
                           <span class="menu-list__weight">200&nbsp;г</span>
+                          <span class="menu-list__dots menu-list__dots--meta" aria-hidden="true"></span>
                           <span class="menu-list__price">12,70<span class="byn" role="img" aria-label="белорусский рубль"></span></span>
                         </a>
                       </li>
-                      <li>
+                      <li class="menu-list__extra">
                         <a class="menu-list__row" href="/menu#cat-pelmeni">
                           <span class="menu-list__name">
                             С бараниной и мятой
@@ -145,10 +161,11 @@
                           </span>
                           <span class="menu-list__dots" aria-hidden="true"></span>
                           <span class="menu-list__weight">200&nbsp;г</span>
+                          <span class="menu-list__dots menu-list__dots--meta" aria-hidden="true"></span>
                           <span class="menu-list__price">16,00<span class="byn" role="img" aria-label="белорусский рубль"></span></span>
                         </a>
                       </li>
-                      <li>
+                      <li class="menu-list__extra">
                         <a class="menu-list__row" href="/menu#cat-pelmeni">
                           <span class="menu-list__name">
                             С креветками и курицей
@@ -156,10 +173,11 @@
                           </span>
                           <span class="menu-list__dots" aria-hidden="true"></span>
                           <span class="menu-list__weight">200&nbsp;г</span>
+                          <span class="menu-list__dots menu-list__dots--meta" aria-hidden="true"></span>
                           <span class="menu-list__price">19,70<span class="byn" role="img" aria-label="белорусский рубль"></span></span>
                         </a>
                       </li>
-                      <li>
+                      <li class="menu-list__extra">
                         <a class="menu-list__row" href="/menu#cat-pelmeni">
                           <span class="menu-list__name">
                             С семгой
@@ -167,7 +185,14 @@
                           </span>
                           <span class="menu-list__dots" aria-hidden="true"></span>
                           <span class="menu-list__weight">200&nbsp;г</span>
+                          <span class="menu-list__dots menu-list__dots--meta" aria-hidden="true"></span>
                           <span class="menu-list__price">24,00<span class="byn" role="img" aria-label="белорусский рубль"></span></span>
+                        </a>
+                      </li>
+                      <li class="menu-list__more">
+                        <a class="menu-list__row" href="/menu#cat-pelmeni">
+                          <span class="menu-list__name">И другие вкусные пельмени</span>
+                          <span class="menu-list__dots" aria-hidden="true"></span>
                         </a>
                       </li>
                     </ul>
@@ -201,6 +226,7 @@
                           </span>
                           <span class="menu-list__dots" aria-hidden="true"></span>
                           <span class="menu-list__weight">250/430/630&nbsp;г</span>
+                          <span class="menu-list__dots menu-list__dots--meta" aria-hidden="true"></span>
                           <span class="menu-list__price">11,00/15,00/19,50<span class="byn" role="img" aria-label="белорусский рубль"></span></span>
                         </a>
                       </li>
@@ -209,6 +235,7 @@
                           <span class="menu-list__name">Свинина-говядина (3&nbsp;шт / 5&nbsp;шт / 7&nbsp;шт)</span>
                           <span class="menu-list__dots" aria-hidden="true"></span>
                           <span class="menu-list__weight">250/430/630&nbsp;г</span>
+                          <span class="menu-list__dots menu-list__dots--meta" aria-hidden="true"></span>
                           <span class="menu-list__price">11,00/15,00/19,50<span class="byn" role="img" aria-label="белорусский рубль"></span></span>
                         </a>
                       </li>
@@ -217,6 +244,7 @@
                           <span class="menu-list__name">Баранина (3&nbsp;шт / 5&nbsp;шт / 7&nbsp;шт)</span>
                           <span class="menu-list__dots" aria-hidden="true"></span>
                           <span class="menu-list__weight">250/430/630&nbsp;г</span>
+                          <span class="menu-list__dots menu-list__dots--meta" aria-hidden="true"></span>
                           <span class="menu-list__price">15,00/20,50/25,00<span class="byn" role="img" aria-label="белорусский рубль"></span></span>
                         </a>
                       </li>
@@ -225,6 +253,7 @@
                           <span class="menu-list__name">Ассорти из 3 видов (3&nbsp;шт)</span>
                           <span class="menu-list__dots" aria-hidden="true"></span>
                           <span class="menu-list__weight">250&nbsp;г</span>
+                          <span class="menu-list__dots menu-list__dots--meta" aria-hidden="true"></span>
                           <span class="menu-list__price">13,00<span class="byn" role="img" aria-label="белорусский рубль"></span></span>
                         </a>
                       </li>
@@ -367,25 +396,9 @@
           <div class="band__inner band__inner--promos">
             <h2 id="promos-title" class="band__title band__title--promos">Акции и события</h2>
             <div class="promo-rail" data-promo-rail>
-              <button
-                class="shop-rail__arrow shop-rail__arrow--prev"
-                type="button"
-                data-promo-prev
-                aria-label="Предыдущие акции"
-              >
-                <span aria-hidden="true">‹</span>
-              </button>
               <ul class="promo-teaser" data-promo-track aria-label="Акции и события">
                 <!-- filled from /api/promos -->
               </ul>
-              <button
-                class="shop-rail__arrow shop-rail__arrow--next"
-                type="button"
-                data-promo-next
-                aria-label="Следующие акции"
-              >
-                <span aria-hidden="true">›</span>
-              </button>
             </div>
           </div>
         </section>
@@ -476,7 +489,6 @@
               <div class="band__actions">
                 <a class="button" href="tel:+375295505545" data-analytics="click_phone">Позвонить</a>
                 <a class="button button--secondary" href="/contacts">Все контакты</a>
-                <a class="button button--secondary" href="/gift">Сертификат в зале</a>
               </div>
             </div>
             <div class="band__map">
@@ -503,24 +515,23 @@
     <footer class="site-footer">
       <div class="site-footer__inner">
         <p class="site-footer__brand">ПельМесто</p>
-        <p class="site-footer__about">
-          ПельМесто — пельменная в Гомеле на улице Советской, 44. Лепим вручную пельмени, вареники,
-          хинкали, чебуреки и блинчики. В зале — цветное тесто на овощных соках, сырники с утра и
-          детские порции: до 6 лет пельмени с куриным филе бесплатно при взрослой порции. Заморозку
-          ручной лепки берут с собой домой. Своих курьеров нет — доставку готового гость заказывает
-          сам.
-        </p>
         <p class="site-footer__nap">
           Гомель, ул. Советская, 44 ·
-          <a href="tel:+375295505545" data-analytics="click_phone">+375 29 550-55-45</a>
-        </p>
-        <p class="site-footer__legal">
-          ООО «Изысканная кухня», УНП 491332090, ул. Советская, 44/12
+          <a href="tel:+375295505545" data-analytics="click_phone">+375 29 550-55-45</a> · Ежедневно
+          09:00–22:00
         </p>
         <p class="site-footer__links">
-          <a href="/privacy">Политика ПДн</a>
+          <a href="/">Главная</a>
+          <a href="/menu">Меню</a>
           <a href="/about">О нас</a>
-          <a href="/booking">Забронировать стол</a>
+          <a href="/contacts">Контакты</a>
+          <a href="/privacy">Политика ПДн</a>
+          <a
+            href="https://instagram.com/pelmesto_gomel"
+            target="_blank"
+            rel="noopener noreferrer"
+            >Instagram</a
+          >
         </p>
       </div>
     </footer>
@@ -638,6 +649,17 @@
       let cachedHomeTop = 0;
       let cachedHomeScroll = 1;
       let cachedMenuPin = 0;
+      let cachedMediaDocTop = 0;
+      let cachedMediaDocLeft = 0;
+      let cachedMediaDocW = 0;
+      let cachedMediaDocH = 0;
+      /** Scroll Y at which the fly should finish (media slot in place). */
+      let cachedLandScroll = 0;
+      /** On-screen hero-a plane (includes CSS scale) — fly starts here. */
+      let cachedFlyFromW = 0;
+      let cachedFlyFromH = 0;
+      let cachedFlyFromLeft = 0;
+      let cachedFlyFromTop = 0;
       let startWidth = 0;
       let startHeight = 0;
       let startLeft = 0;
@@ -652,25 +674,112 @@
       const lerp = (from, to, amount) => from + (to - from) * amount;
 
       const videoShell = document.querySelector(".hero__video-shell");
+      const mobileHeroMq = window.matchMedia("(max-width: 900px)");
+      /** Keep in sync with styles.css `.hero__video { transform: scale(…) }` on mobile. */
+      const MOBILE_HERO_VIDEO_SCALE = 3;
+      /** Hero-b opens a bit larger than the dumpling in the last hero-a frame — nudge down uniformly. */
+      const FLY_START_SIZE_MATCH = 0.93;
+
+      const frameAspectOf = (frame) => {
+        const frameW = frame?.width || frame?.naturalWidth || 1920;
+        const frameH = frame?.height || frame?.naturalHeight || 1080;
+        return frameW / Math.max(1, frameH);
+      };
+
+      const fitAspectInBox = (boxW, boxH, aspect) => {
+        let w = boxW;
+        let h = boxW / aspect;
+        if (h > boxH) {
+          h = boxH;
+          w = boxH * aspect;
+        }
+        return { w, h };
+      };
 
       const cacheLayout = () => {
         cachedHomeTop = homeSection.offsetTop;
         cachedHomeScroll = Math.max(1, homeSection.offsetHeight - window.innerHeight);
         cachedMenuPin = menuSection.offsetTop;
 
-        // Fly start must match the sticky hero shell in the viewport (85% box,
-        // centered, bottom-aligned). Do NOT read getBoundingClientRect during the
-        // fly: by then the shell has scrolled off-screen and top becomes negative,
-        // so reverse-fly parks the dumpling too high.
-        startWidth = window.innerWidth * 0.85;
-        startHeight = window.innerHeight * 0.85;
-        startLeft = (window.innerWidth - startWidth) / 2;
-        startTop = window.innerHeight - startHeight;
+        const scrollY = window.scrollY || window.pageYOffset;
+        const homeProgress = clamp((scrollY - cachedHomeTop) / cachedHomeScroll, 0, 1);
+        const homeEnd = cachedHomeTop + cachedHomeScroll;
 
-        if (!pelmenDocked) {
-          flyCanvas.style.width = `${startWidth}px`;
-          flyCanvas.style.height = `${startHeight}px`;
+        // Freeze fly-start shell while sticky; freeze land metrics once the fly
+        // begins so progress/endpoints don't drift mid-scroll.
+        if (homeProgress < 0.85) {
+          const rect = videoShell.getBoundingClientRect();
+          if (rect.width > 40 && rect.height > 40) {
+            startWidth = rect.width;
+            startHeight = rect.height;
+            startLeft = rect.left;
+            startTop = rect.top;
+          }
         }
+
+        if (!startWidth || !startHeight) {
+          if (mobileHeroMq.matches) {
+            startWidth = Math.min(window.innerWidth * 0.78, 360);
+            startHeight = startWidth;
+            startLeft = (window.innerWidth - startWidth) / 2;
+            startTop = (window.innerHeight - startHeight) / 2;
+          } else {
+            startWidth = window.innerWidth * 0.85;
+            startHeight = window.innerHeight * 0.85;
+            startLeft = (window.innerWidth - startWidth) / 2;
+            startTop = window.innerHeight - startHeight;
+          }
+        }
+
+        if (homeProgress < 0.999) {
+          const mediaRect = menuMedia.getBoundingClientRect();
+          if (mediaRect.width > 20 && mediaRect.height > 20) {
+            cachedMediaDocTop = scrollY + mediaRect.top;
+            cachedMediaDocLeft = mediaRect.left;
+            cachedMediaDocW = mediaRect.width;
+            cachedMediaDocH = mediaRect.height;
+          }
+
+          // Finish when the media slot sits in the lower half (mobile has a tall
+          // copy block above it — pinning to menuSection.offsetTop was way early).
+          const landViewportTop = mobileHeroMq.matches
+            ? window.innerHeight * 0.55
+            : window.innerHeight * 0.28;
+          cachedLandScroll = Math.max(
+            homeEnd + window.innerHeight * 0.4,
+            cachedMediaDocTop - landViewportTop,
+          );
+
+          // Fly start = shell contain-fit × mobile CSS video scale, always with
+          // the pelmen frame aspect (not the 16:9 hero-a plane — that squashed it).
+          const pelmenFrame = frames[0];
+          if (pelmenFrame) {
+            const aspect = frameAspectOf(pelmenFrame);
+            const scale = mobileHeroMq.matches ? MOBILE_HERO_VIDEO_SCALE : 1;
+            const fit = fitAspectInBox(startWidth * scale, startHeight * scale, aspect);
+            cachedFlyFromW = fit.w * FLY_START_SIZE_MATCH;
+            cachedFlyFromH = cachedFlyFromW / aspect;
+            cachedFlyFromLeft = startLeft + startWidth / 2 - cachedFlyFromW / 2;
+            cachedFlyFromTop = mobileHeroMq.matches
+              ? startTop + startHeight / 2 - cachedFlyFromH / 2
+              : startTop + startHeight - cachedFlyFromH;
+          }
+        }
+
+        if (!pelmenDocked && cachedFlyFromW) {
+          flyCanvas.style.width = `${cachedFlyFromW}px`;
+          flyCanvas.style.height = `${cachedFlyFromH}px`;
+        }
+      };
+
+      const flyProgressAt = (scrollY) => {
+        const homeEnd = cachedHomeTop + cachedHomeScroll;
+        const moveDistance = Math.max(1, cachedLandScroll - homeEnd);
+        return {
+          homeEnd,
+          moveDistance,
+          moveProgress: clamp((scrollY - homeEnd) / moveDistance, 0, 1),
+        };
       };
 
       const clearFlyStyles = () => {
@@ -690,16 +799,10 @@
         const boxW = Math.max(1, box.width || menuMedia.clientWidth || 1);
         const boxH = Math.max(1, box.height || menuMedia.clientHeight || 1);
         const aspect = frameW / frameH;
+        const fit = fitAspectInBox(boxW, boxH, aspect);
 
-        let displayW = boxW;
-        let displayH = boxW / aspect;
-        if (displayH > boxH) {
-          displayH = boxH;
-          displayW = boxH * aspect;
-        }
-
-        flyCanvas.style.width = `${displayW}px`;
-        flyCanvas.style.height = `${displayH}px`;
+        flyCanvas.style.width = `${fit.w}px`;
+        flyCanvas.style.height = `${fit.w / aspect}px`;
         flyCanvas.style.aspectRatio = `${frameW} / ${frameH}`;
         flyCanvas.style.background = "transparent";
         flyCanvas.style.backgroundColor = "transparent";
@@ -716,9 +819,8 @@
           if (flyCanvas.parentElement !== menuMedia) {
             menuMedia.appendChild(flyCanvas);
           }
+          fitPelmenInMedia();
         }
-
-        fitPelmenInMedia();
       };
 
       const undockPelmen = () => {
@@ -729,18 +831,15 @@
           document.body.appendChild(flyCanvas);
         }
 
-        // Size the element to the frame aspect so we never letterbox a canvas
-        // (letterboxing is a common source of opaque white/black mats).
-        const frame = frames[currentFrame] || frames[0];
-        const frameW = frame?.width || frame?.naturalWidth || 1920;
-        const frameH = frame?.height || frame?.naturalHeight || 1080;
-        const aspect = frameW / Math.max(1, frameH);
-        let displayW = startWidth;
-        let displayH = startWidth / aspect;
-        if (displayH > startHeight) {
-          displayH = startHeight;
-          displayW = startHeight * aspect;
+        const aspect = frameAspectOf(frames[currentFrame] || frames[0]);
+        const startScale = mobileHeroMq.matches ? MOBILE_HERO_VIDEO_SCALE : 1;
+        let displayW = cachedFlyFromW;
+        if (!displayW) {
+          displayW =
+            fitAspectInBox(startWidth * startScale, startHeight * startScale, aspect).w *
+            FLY_START_SIZE_MATCH;
         }
+        const displayH = displayW / aspect;
 
         flyCanvas.style.width = `${displayW}px`;
         flyCanvas.style.height = `${displayH}px`;
@@ -787,8 +886,12 @@
         let sh = srcHeight;
 
         if (cropCenter) {
+          // Uniform zoom — cropping only X changed the bitmap aspect and
+          // stretched the dumpling when CSS size used a different ratio.
           sw = Math.round(srcWidth * 0.8);
+          sh = Math.round(srcHeight * 0.8);
           sx = Math.round((srcWidth - sw) / 2);
+          sy = Math.round((srcHeight - sh) / 2);
         }
 
         const outWidth = Math.max(1, Math.round(sw * scale));
@@ -919,55 +1022,47 @@
 
       const placeFly = (progress) => {
         const amount = clamp(progress, 0, 1);
-        const viewWidth = window.innerWidth;
-        const viewHeight = window.innerHeight;
-        const edge = 12;
-        const target = menuMedia.getBoundingClientRect();
+        const aspect = frameAspectOf(frames[currentFrame] || frames[0]);
+        if (!aspect) return;
 
-        const frame = frames[currentFrame] || frames[0];
-        const frameW = frame?.width || frame?.naturalWidth || 1920;
-        const frameH = frame?.height || frame?.naturalHeight || 1080;
-        const aspect = frameW / Math.max(1, frameH);
-
-        let fromW = startWidth;
-        let fromH = startWidth / aspect;
-        if (fromH > startHeight) {
-          fromH = startHeight;
-          fromW = startHeight * aspect;
+        const startScale = mobileHeroMq.matches ? MOBILE_HERO_VIDEO_SCALE : 1;
+        let fromW = cachedFlyFromW;
+        let fromH = cachedFlyFromH;
+        if (!fromW || !fromH) {
+          const fit = fitAspectInBox(startWidth * startScale, startHeight * startScale, aspect);
+          fromW = fit.w * FLY_START_SIZE_MATCH;
+          fromH = fromW / aspect;
+        } else {
+          // Re-assert aspect in case cache was written before frames loaded.
+          fromH = fromW / aspect;
         }
 
-        const targetWidth = Math.max(1, target.width || fromW);
-        const targetHeight = Math.max(1, target.height || fromH);
-        const targetLeft = target.width ? target.left : startLeft;
-        const targetTop = target.height ? target.top : startTop;
+        const fromCenterX = startLeft + startWidth / 2;
+        const fromCenterY = mobileHeroMq.matches
+          ? startTop + startHeight / 2
+          : startTop + startHeight - fromH / 2;
 
-        // Fit into target box without stretching aspect, then match slide scale.
-        let toW = targetWidth;
-        let toH = targetWidth / aspect;
-        if (toH > targetHeight) {
-          toH = targetHeight;
-          toW = targetHeight * aspect;
-        }
-        toW *= PELMEN_SLIDE_SCALE;
-        toH *= PELMEN_SLIDE_SCALE;
+        const targetWidth = Math.max(1, cachedMediaDocW || fromW);
+        const targetHeight = Math.max(1, cachedMediaDocH || fromH);
+        const toFit = fitAspectInBox(targetWidth, targetHeight, aspect);
+        const toW = toFit.w * PELMEN_SLIDE_SCALE;
 
-        // Hero video uses object-position: center bottom — keep the same anchor
-        // so reverse fly doesn't sit too high under the title.
-        const fromLeft = startLeft + (startWidth - fromW) / 2;
-        const fromTop = startTop + (startHeight - fromH);
-        const toLeft = targetLeft + (targetWidth - toW) / 2;
-        const toTop = targetTop + (targetHeight - toH) / 2;
+        const toCenterX = cachedMediaDocLeft + targetWidth / 2;
+        const toCenterY = cachedMediaDocTop - cachedLandScroll + targetHeight / 2;
 
-        const drawnWidth = lerp(fromW, toW, amount);
-        const drawnHeight = lerp(fromH, toH, amount);
-        let left = lerp(fromLeft, toLeft, amount);
-        let top = lerp(fromTop, toTop, amount);
+        // Lerp one axis only — height always follows aspect (no squash).
+        // Both axes lerp so the hand-off into the media slot doesn't snap;
+        // on mobile from/to X are both ~viewport center → still reads as straight down.
+        const drawnW = lerp(fromW, toW, amount);
+        const drawnH = drawnW / aspect;
+        const centerX = lerp(fromCenterX, toCenterX, amount);
+        const centerY = lerp(fromCenterY, toCenterY, amount);
 
-        left = clamp(left, edge, Math.max(edge, viewWidth - edge - drawnWidth));
-        top = clamp(top, edge, Math.max(edge, viewHeight - edge - drawnHeight));
+        const left = centerX - drawnW / 2;
+        const top = centerY - drawnH / 2;
 
-        flyCanvas.style.width = `${drawnWidth}px`;
-        flyCanvas.style.height = `${drawnHeight}px`;
+        flyCanvas.style.width = `${drawnW}px`;
+        flyCanvas.style.height = `${drawnH}px`;
         flyCanvas.style.transform = `translate3d(${left}px, ${top}px, 0)`;
       };
 
@@ -1010,12 +1105,16 @@
         const scrollY = window.scrollY || window.pageYOffset;
         const homeProgress = clamp((scrollY - cachedHomeTop) / cachedHomeScroll, 0, 1);
 
+        // Refresh shell / land metrics while still in the hero scrub. Frozen once
+        // the fly starts so the path doesn't drift mid-air.
+        if (homeProgress < 0.999) {
+          cacheLayout();
+        }
+
         targetA = homeProgress * clipADuration;
         seekVideoA(targetA);
 
-        const homeEnd = cachedHomeTop + cachedHomeScroll;
-        const moveDistance = Math.max(1, (cachedMenuPin - homeEnd) / 1.5);
-        const moveProgress = clamp((scrollY - homeEnd) / moveDistance, 0, 1);
+        const { moveProgress } = flyProgressAt(scrollY);
         const showPelmen = homeProgress >= 0.999;
         const flying = showPelmen && moveProgress < 1;
         const landed = showPelmen && moveProgress >= 1;
@@ -1033,9 +1132,9 @@
             return;
           }
 
-          cacheLayout();
-          videoA.classList.remove("is-active");
-          undockPelmen();
+          if (pelmenDocked || flyCanvas.parentElement !== document.body) {
+            undockPelmen();
+          }
           flyCanvas.classList.add("is-visible");
           placeFly(moveProgress);
           stopPlayback();
@@ -1113,6 +1212,7 @@
           });
           framesReady = true;
           drawFrame(0);
+          cacheLayout();
           requestSceneUpdate();
         } catch (error) {
           console.warn("Pelmen frame failed", 1, error);
@@ -1131,6 +1231,7 @@
         });
 
         framesReady = frames.some(Boolean);
+        cacheLayout();
         requestSceneUpdate();
       };
 
@@ -1141,6 +1242,19 @@
         if (pelmenDocked) fitPelmenInMedia();
         requestSceneUpdate();
       });
+      if (typeof mobileHeroMq.addEventListener === "function") {
+        mobileHeroMq.addEventListener("change", () => {
+          cacheLayout();
+          if (pelmenDocked) fitPelmenInMedia();
+          requestSceneUpdate();
+        });
+      } else if (typeof mobileHeroMq.addListener === "function") {
+        mobileHeroMq.addListener(() => {
+          cacheLayout();
+          if (pelmenDocked) fitPelmenInMedia();
+          requestSceneUpdate();
+        });
+      }
 
       const carousel = document.querySelector("[data-carousel]");
       const carouselTrack = document.querySelector("[data-carousel-track]");
@@ -1319,9 +1433,7 @@
 
           if (carouselIndex === 0 && returningToPelmen) {
             const scrollY = window.scrollY || window.pageYOffset;
-            const homeEnd = cachedHomeTop + cachedHomeScroll;
-            const moveDistance = Math.max(1, (cachedMenuPin - homeEnd) / 1.5);
-            const moveProgress = clamp((scrollY - homeEnd) / moveDistance, 0, 1);
+            const { moveProgress } = flyProgressAt(scrollY);
 
             if (moveProgress >= 1) {
               dockPelmen();
@@ -1468,6 +1580,17 @@
       });
       setTimeout(syncTealToPinkTip, 300);
       setTimeout(syncTealToPinkTip, 1000);
+      if (shopSection && typeof ResizeObserver === "function") {
+        let tealRoTick = 0;
+        const tealRo = new ResizeObserver(() => {
+          if (tealRoTick) cancelAnimationFrame(tealRoTick);
+          tealRoTick = requestAnimationFrame(() => {
+            tealRoTick = 0;
+            syncTealToPinkTip();
+          });
+        });
+        tealRo.observe(shopSection);
+      }
 
       const shopTrack = document.querySelector("[data-shop-track]");
       const shopPrev = document.querySelector("[data-shop-prev]");
@@ -1475,6 +1598,8 @@
 
       const bindRail = (track, prevBtn, nextBtn, cardSelector) => {
         if (!track) return;
+        const smoothScroll =
+          !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
         const step = () => {
           const card = track.querySelector(cardSelector);
           if (!card) return track.clientWidth * 0.8;
@@ -1488,14 +1613,71 @@
           if (prevBtn) prevBtn.disabled = x <= 2;
           if (nextBtn) nextBtn.disabled = x >= max - 2;
         };
+        const cardOffsets = () => {
+          const cards = [...track.querySelectorAll(cardSelector)];
+          if (!cards.length) return [];
+          const origin = track.getBoundingClientRect().left;
+          return cards.map((card) => {
+            return track.scrollLeft + (card.getBoundingClientRect().left - origin);
+          });
+        };
+        let settling = false;
+        let snapAnim = 0;
+        const SHOP_SNAP_MS = 1100;
+        const easeInOutCubic = (t) =>
+          t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+        const animateScrollTo = (targetLeft) => {
+          if (snapAnim) cancelAnimationFrame(snapAnim);
+          const max = Math.max(0, track.scrollWidth - track.clientWidth);
+          const target = Math.max(0, Math.min(max, targetLeft));
+          if (!smoothScroll || Math.abs(track.scrollLeft - target) < 1.5) {
+            track.scrollLeft = target;
+            settling = false;
+            syncArrows();
+            return;
+          }
+          settling = true;
+          const start = track.scrollLeft;
+          const delta = target - start;
+          const t0 = performance.now();
+          const tick = (now) => {
+            const t = Math.min(1, (now - t0) / SHOP_SNAP_MS);
+            track.scrollLeft = start + delta * easeInOutCubic(t);
+            if (t < 1) snapAnim = requestAnimationFrame(tick);
+            else {
+              snapAnim = 0;
+              settling = false;
+              syncArrows();
+            }
+          };
+          snapAnim = requestAnimationFrame(tick);
+        };
+        const snapToNearest = (preferredLeft) => {
+          if (settling) return;
+          const offsets = cardOffsets();
+          if (!offsets.length) {
+            syncArrows();
+            return;
+          }
+          let best = offsets[0];
+          let bestDist = Math.abs(preferredLeft - best);
+          for (let i = 1; i < offsets.length; i += 1) {
+            const dist = Math.abs(preferredLeft - offsets[i]);
+            if (dist < bestDist) {
+              bestDist = dist;
+              best = offsets[i];
+            }
+          }
+          animateScrollTo(best);
+        };
         if (prevBtn) {
           prevBtn.addEventListener("click", () => {
-            track.scrollBy({ left: -step(), behavior: "smooth" });
+            animateScrollTo(track.scrollLeft - step());
           });
         }
         if (nextBtn) {
           nextBtn.addEventListener("click", () => {
-            track.scrollBy({ left: step(), behavior: "smooth" });
+            animateScrollTo(track.scrollLeft + step());
           });
         }
         track.addEventListener("scroll", syncArrows, { passive: true });
@@ -1504,39 +1686,89 @@
 
         let dragPointer = null;
         let dragStartX = 0;
+        let dragStartY = 0;
         let dragStartScroll = 0;
         let dragMoved = false;
         let suppressClick = false;
+        let lastX = 0;
+        let lastAt = 0;
+        let velocity = 0;
+        let glideFrame = 0;
+        const DRAG_THRESHOLD = 10;
+
         track.addEventListener("pointerdown", (event) => {
-          if (event.pointerType === "touch") return;
-          if (event.button !== 0) return;
-          // Only skip real controls; promo cards are full-size links.
-          if (event.target.closest("button, input, textarea, select")) return;
+          if (event.pointerType !== "touch" && event.button !== 0) return;
+          if (event.target.closest("a, button, input, textarea, select")) return;
+          if (snapAnim) cancelAnimationFrame(snapAnim);
+          snapAnim = 0;
+          settling = false;
+          if (glideFrame) cancelAnimationFrame(glideFrame);
+          glideFrame = 0;
           dragPointer = event.pointerId;
           dragStartX = event.clientX;
+          dragStartY = event.clientY;
           dragStartScroll = track.scrollLeft;
           dragMoved = false;
           suppressClick = false;
-          track.setPointerCapture(event.pointerId);
-          track.classList.add("is-dragging");
+          lastX = event.clientX;
+          lastAt = event.timeStamp;
+          velocity = 0;
         });
-        track.addEventListener("pointermove", (event) => {
-          if (dragPointer !== event.pointerId) return;
-          const dx = event.clientX - dragStartX;
-          if (Math.abs(dx) > 6) {
-            dragMoved = true;
+        track.addEventListener(
+          "pointermove",
+          (event) => {
+            if (dragPointer !== event.pointerId) return;
+            const dx = event.clientX - dragStartX;
+            const dy = event.clientY - dragStartY;
+            if (!dragMoved) {
+              if (Math.hypot(dx, dy) < DRAG_THRESHOLD) return;
+              if (Math.abs(dy) > Math.abs(dx)) {
+                dragPointer = null;
+                return;
+              }
+              dragMoved = true;
+              track.classList.add("is-dragging");
+              try {
+                track.setPointerCapture(event.pointerId);
+              } catch (_) {
+                /* ignore */
+              }
+            }
             event.preventDefault();
-          }
-          if (!dragMoved) return;
-          track.scrollLeft = dragStartScroll - dx;
-        });
+            const elapsed = event.timeStamp - lastAt;
+            if (elapsed > 0) {
+              velocity = (event.clientX - lastX) / elapsed;
+            }
+            lastX = event.clientX;
+            lastAt = event.timeStamp;
+            track.scrollLeft = dragStartScroll - dx;
+          },
+          { passive: false }
+        );
         const endDrag = (event) => {
           if (dragPointer !== event.pointerId) return;
+          const shouldSnap = dragMoved;
+          // Soft bias toward fling direction — at most ~half a card.
+          const stepPx = step();
+          const fling = Math.max(
+            -stepPx * 0.45,
+            Math.min(stepPx * 0.45, velocity * 90)
+          );
+          const projected = track.scrollLeft - fling;
           dragPointer = null;
           track.classList.remove("is-dragging");
           suppressClick = dragMoved;
           dragMoved = false;
-          syncArrows();
+          velocity = 0;
+          if (glideFrame) cancelAnimationFrame(glideFrame);
+          glideFrame = 0;
+
+          if (!shouldSnap) {
+            syncArrows();
+            return;
+          }
+          // One continuous ease — no separate glide that feels like a second jerk.
+          snapToNearest(projected);
         };
         track.addEventListener("pointerup", endDrag);
         track.addEventListener("pointercancel", endDrag);
@@ -1558,8 +1790,377 @@
       bindRail(shopTrack, shopPrev, shopNext, ".shop-card");
 
       const promoTrack = document.querySelector("[data-promo-track]");
-      const promoPrev = document.querySelector("[data-promo-prev]");
-      const promoNext = document.querySelector("[data-promo-next]");
+      const PROMO_AUTO_MS = 5000;
+      const PROMO_RESUME_MS = 20000;
+      const PROMO_SCROLL_MS = 1200;
+
+      const bindPromoRail = (track) => {
+        if (!track) return;
+        const reduceMotion = window.matchMedia(
+          "(prefers-reduced-motion: reduce)"
+        ).matches;
+        const step = () => {
+          const card = track.querySelector(".promo-card");
+          if (!card) return track.clientWidth * 0.8;
+          const styles = getComputedStyle(track);
+          const gap = parseFloat(styles.columnGap || styles.gap) || 14;
+          return card.getBoundingClientRect().width + gap;
+        };
+
+        let dragPointer = null;
+        let dragStartX = 0;
+        let dragStartY = 0;
+        let dragStartScroll = 0;
+        let dragMoved = false;
+        let activeCard = null;
+        let lastX = 0;
+        let lastAt = 0;
+        let velocity = 0;
+        let glideFrame = 0;
+        let scrollAnim = 0;
+        let autoTimer = 0;
+        let resumeTimer = 0;
+        let awaitingResume = false;
+        let inView = true;
+        const DRAG_THRESHOLD = 10;
+
+        const stopGlide = () => {
+          if (glideFrame) cancelAnimationFrame(glideFrame);
+          glideFrame = 0;
+        };
+
+        const stopScrollAnim = () => {
+          if (scrollAnim) cancelAnimationFrame(scrollAnim);
+          scrollAnim = 0;
+        };
+
+        const stopAuto = () => {
+          if (autoTimer) window.clearInterval(autoTimer);
+          autoTimer = 0;
+        };
+
+        const clearResume = () => {
+          if (resumeTimer) window.clearTimeout(resumeTimer);
+          resumeTimer = 0;
+        };
+
+        const easeInOutCubic = (t) =>
+          t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+
+        const animateScrollTo = (targetLeft) => {
+          stopScrollAnim();
+          const max = Math.max(0, track.scrollWidth - track.clientWidth);
+          const target = Math.max(0, Math.min(max, targetLeft));
+          if (reduceMotion || Math.abs(track.scrollLeft - target) < 1) {
+            track.scrollLeft = target;
+            return;
+          }
+          const start = track.scrollLeft;
+          const delta = target - start;
+          const t0 = performance.now();
+          const tick = (now) => {
+            const t = Math.min(1, (now - t0) / PROMO_SCROLL_MS);
+            track.scrollLeft = start + delta * easeInOutCubic(t);
+            if (t < 1) scrollAnim = requestAnimationFrame(tick);
+            else scrollAnim = 0;
+          };
+          scrollAnim = requestAnimationFrame(tick);
+        };
+
+        const advance = () => {
+          if (track.querySelector(".promo-card.is-expanded")) return;
+          if (dragPointer !== null || track.classList.contains("is-dragging")) {
+            return;
+          }
+          const cards = track.querySelectorAll(".promo-card");
+          if (cards.length < 2) return;
+          const max = track.scrollWidth - track.clientWidth;
+          if (max <= 2) return;
+          if (track.scrollLeft >= max - 4) {
+            animateScrollTo(0);
+          } else {
+            animateScrollTo(track.scrollLeft + step());
+          }
+        };
+
+        const startAuto = () => {
+          stopAuto();
+          clearResume();
+          awaitingResume = false;
+          if (reduceMotion || !inView) return;
+          if (track.querySelectorAll(".promo-card").length < 2) return;
+          autoTimer = window.setInterval(advance, PROMO_AUTO_MS);
+        };
+
+        const bumpAuto = () => {
+          // After the user touches the rail, wait 20s before auto resumes.
+          stopAuto();
+          clearResume();
+          awaitingResume = true;
+          if (reduceMotion || !inView) return;
+          if (track.querySelectorAll(".promo-card").length < 2) return;
+          resumeTimer = window.setTimeout(() => {
+            resumeTimer = 0;
+            awaitingResume = false;
+            if (!inView) return;
+            advance();
+            startAuto();
+          }, PROMO_RESUME_MS);
+        };
+
+        track.addEventListener("pointerdown", (event) => {
+          if (event.target.closest(".promo-card__cta, [data-promo-close]")) return;
+          if (event.pointerType !== "touch" && event.button !== 0) return;
+          if (track.querySelector(".promo-card.is-expanded")) return;
+
+          // Stop auto-scroll so a tap is not eaten by the animation.
+          stopGlide();
+          stopScrollAnim();
+          stopAuto();
+          clearResume();
+          awaitingResume = true;
+
+          dragPointer = event.pointerId;
+          dragStartX = event.clientX;
+          dragStartY = event.clientY;
+          dragStartScroll = track.scrollLeft;
+          dragMoved = false;
+          activeCard = event.target.closest("[data-promo-card]");
+          lastX = event.clientX;
+          lastAt = event.timeStamp;
+          velocity = 0;
+        });
+
+        track.addEventListener(
+          "pointermove",
+          (event) => {
+            if (dragPointer !== event.pointerId) return;
+            const dx = event.clientX - dragStartX;
+            const dy = event.clientY - dragStartY;
+            if (!dragMoved) {
+              if (Math.hypot(dx, dy) < DRAG_THRESHOLD) return;
+              // Vertical intent → let the page scroll; abort rail drag.
+              if (Math.abs(dy) > Math.abs(dx)) {
+                dragPointer = null;
+                activeCard = null;
+                bumpAuto();
+                return;
+              }
+              dragMoved = true;
+              activeCard = null;
+              track.classList.add("is-dragging");
+              try {
+                track.setPointerCapture(event.pointerId);
+              } catch (_) {
+                /* ignore */
+              }
+            }
+            event.preventDefault();
+            const elapsed = event.timeStamp - lastAt;
+            if (elapsed > 0) {
+              velocity = (event.clientX - lastX) / elapsed;
+            }
+            lastX = event.clientX;
+            lastAt = event.timeStamp;
+            track.scrollLeft = dragStartScroll - dx;
+          },
+          { passive: false }
+        );
+
+        const endDrag = (event) => {
+          if (dragPointer !== event.pointerId) return;
+          const card = activeCard;
+          const wasDrag = dragMoved;
+          dragPointer = null;
+          activeCard = null;
+          track.classList.remove("is-dragging");
+          try {
+            if (track.hasPointerCapture?.(event.pointerId)) {
+              track.releasePointerCapture(event.pointerId);
+            }
+          } catch (_) {
+            /* ignore */
+          }
+
+          if (!wasDrag && card) {
+            if (card.classList.contains("is-expanded")) closePromo();
+            else openPromo(card);
+            return;
+          }
+
+          stopGlide();
+          // Stronger fling: higher initial boost, slower decay, longer coast.
+          let perFrame = velocity * 34;
+          velocity = 0;
+          if (wasDrag && !reduceMotion && Math.abs(perFrame) >= 0.6) {
+            const glide = () => {
+              perFrame *= 0.955;
+              track.scrollLeft -= perFrame;
+              if (Math.abs(perFrame) > 0.25) {
+                glideFrame = requestAnimationFrame(glide);
+              } else {
+                glideFrame = 0;
+                bumpAuto();
+              }
+            };
+            glideFrame = requestAnimationFrame(glide);
+          } else {
+            bumpAuto();
+          }
+        };
+
+        const syncTealAfterPromo = () => {
+          if (typeof syncTealToPinkTip !== "function") return;
+          syncTealToPinkTip();
+          // Re-sync after grow animation so the teal tip stays locked to the pink seam.
+          window.setTimeout(syncTealToPinkTip, 420);
+        };
+
+        const revealExpandedPromo = (card) => {
+          if (!card) return;
+          const headerRaw = getComputedStyle(document.documentElement)
+            .getPropertyValue("--header-height")
+            .trim();
+          const headerH = Number.parseFloat(headerRaw) || 72;
+          const pad = headerH + 12;
+
+          // Horizontal: bring the whole card into the rail viewport.
+          const trackBox = track.getBoundingClientRect();
+          const cardBox = card.getBoundingClientRect();
+          if (cardBox.left < trackBox.left + 6) {
+            track.scrollLeft -= trackBox.left + 6 - cardBox.left;
+          } else if (cardBox.right > trackBox.right - 6) {
+            track.scrollLeft += cardBox.right - (trackBox.right - 6);
+          }
+
+          // Vertical: keep the close button under the header.
+          const top = card.getBoundingClientRect().top;
+          if (top < pad) {
+            window.scrollBy({ top: top - pad, behavior: "smooth" });
+          }
+        };
+
+        const closePromo = () => {
+          track.querySelectorAll(".promo-card.is-expanded").forEach((card) => {
+            card.classList.remove("is-expanded");
+            card.setAttribute("aria-expanded", "false");
+          });
+          bumpAuto();
+          requestAnimationFrame(syncTealAfterPromo);
+        };
+
+        const openPromo = (card) => {
+          if (!card || card.classList.contains("is-expanded")) return;
+          stopAuto();
+          clearResume();
+          awaitingResume = true;
+          stopScrollAnim();
+          stopGlide();
+          track.querySelectorAll(".promo-card.is-expanded").forEach((other) => {
+            other.classList.remove("is-expanded");
+            other.setAttribute("aria-expanded", "false");
+          });
+          card.classList.add("is-expanded");
+          card.setAttribute("aria-expanded", "true");
+          requestAnimationFrame(() => {
+            revealExpandedPromo(card);
+            syncTealAfterPromo();
+          });
+          // After grow animation the height changes — re-align once more.
+          window.setTimeout(() => revealExpandedPromo(card), 420);
+        };
+
+        // Remove leftover modal scrim from earlier iterations.
+        document.querySelectorAll("[data-promo-scrim]").forEach((node) => node.remove());
+        document.body.classList.remove("promo-open");
+
+        track.addEventListener("pointerup", endDrag);
+        track.addEventListener("pointercancel", (event) => {
+          if (dragPointer !== event.pointerId) return;
+          dragPointer = null;
+          activeCard = null;
+          dragMoved = false;
+          track.classList.remove("is-dragging");
+          bumpAuto();
+        });
+        // CTA / close still use click; card open is handled on pointerup (tap).
+        track.addEventListener("click", (event) => {
+          if (event.target.closest(".promo-card__cta")) return;
+          if (event.target.closest("[data-promo-close]")) {
+            event.preventDefault();
+            closePromo();
+            return;
+          }
+          // Card taps are opened in pointerup; block ghost clicks after a drag.
+          const card = event.target.closest("[data-promo-card]");
+          if (card && track.contains(card) && !card.classList.contains("is-expanded")) {
+            event.preventDefault();
+            event.stopPropagation();
+          }
+        });
+        track.addEventListener("keydown", (event) => {
+          const card = event.target.closest("[data-promo-card]");
+          if (!card || card !== event.target) return;
+          if (event.key !== "Enter" && event.key !== " ") return;
+          event.preventDefault();
+          if (card.classList.contains("is-expanded")) closePromo();
+          else openPromo(card);
+        });
+        track.addEventListener("dragstart", (event) => {
+          event.preventDefault();
+        });
+        track.addEventListener(
+          "wheel",
+          () => {
+            if (track.querySelector(".promo-card.is-expanded")) return;
+            stopScrollAnim();
+            bumpAuto();
+          },
+          { passive: true }
+        );
+
+        document.addEventListener("keydown", (event) => {
+          if (event.key !== "Escape") return;
+          if (!track.querySelector(".promo-card.is-expanded")) return;
+          closePromo();
+        });
+
+        if ("IntersectionObserver" in window) {
+          const io = new IntersectionObserver(
+            (entries) => {
+              inView = entries.some((entry) => entry.isIntersecting);
+              if (!inView) {
+                stopAuto();
+                return;
+              }
+              if (
+                !awaitingResume &&
+                !track.querySelector(".promo-card.is-expanded")
+              ) {
+                startAuto();
+              }
+            },
+            { threshold: 0.35 }
+          );
+          io.observe(track);
+        } else {
+          startAuto();
+        }
+
+        document.addEventListener("visibilitychange", () => {
+          if (document.hidden) {
+            stopAuto();
+            return;
+          }
+          if (
+            inView &&
+            !awaitingResume &&
+            !track.querySelector(".promo-card.is-expanded")
+          ) {
+            startAuto();
+          }
+        });
+      };
 
       const escapeHtml = (value) =>
         String(value || "")
@@ -1578,23 +2179,39 @@
         promoTrack.innerHTML = items
           .map((item) => {
             const rawLink = String(item.link || "").trim();
+            const title = escapeHtml(item.title || "");
+            const text = item.text ? escapeHtml(item.text) : "";
             const img = item.imageUrl
-              ? `<img src="${escapeHtml(item.imageUrl)}" alt="${escapeHtml(item.title)}" width="1550" height="350" loading="lazy" decoding="async" draggable="false" />`
+              ? `<img src="${escapeHtml(item.imageUrl)}" alt="${title}" width="1550" height="350" loading="lazy" decoding="async" draggable="false" />`
               : "";
-            const copy = `<span class="promo-card__copy">
-              <span class="promo-card__title">${escapeHtml(item.title || "")}</span>
-              ${item.text ? `<span class="promo-card__text">${escapeHtml(item.text)}</span>` : ""}
-            </span>`;
-            const body = `<span class="promo-card__media">${img}</span>${copy}`;
-            if (!rawLink) {
-              return `<li class="promo-card"><div class="promo-card__link">${body}</div></li>`;
-            }
             const external = /^https?:\/\//i.test(rawLink);
-            const attrs = external
-              ? ` href="${escapeHtml(rawLink)}" target="_blank" rel="noopener noreferrer"`
-              : ` href="${escapeHtml(rawLink)}"`;
-            return `<li class="promo-card">
-              <a class="promo-card__link"${attrs}>${body}</a>
+            const ctaAttrs = rawLink
+              ? external
+                ? ` href="${escapeHtml(rawLink)}" target="_blank" rel="noopener noreferrer"`
+                : ` href="${escapeHtml(rawLink)}"`
+              : "";
+            const cta = rawLink
+              ? `<a class="promo-card__cta button"${ctaAttrs}>К акции</a>`
+              : "";
+            return `<li
+              class="promo-card"
+              data-promo-card
+              tabindex="0"
+              aria-expanded="false"
+              aria-label="${title || "Открыть акцию"}"
+            >
+              <span class="promo-card__media">${img}</span>
+              <span class="promo-card__copy">
+                <span class="promo-card__title">${title}</span>
+                ${text ? `<span class="promo-card__text">${text}</span>` : ""}
+                ${cta}
+              </span>
+              <button
+                type="button"
+                class="promo-card__close"
+                data-promo-close
+                aria-label="Закрыть"
+              >×</button>
             </li>`;
           })
           .join("");
@@ -1610,19 +2227,19 @@
           renderPromos([
             {
               title: "Всё начинается с любви...",
-              text: "Акция с сердечными пельменями",
+              text: "Акция с сердечными пельменями. Полные условия уточняйте в зале.",
               imageUrl: "/assets/promos/love.png",
-              link: "",
+              link: "/menu",
             },
             {
               title: "Смузи — новинка сезона",
-              text: "Новые смузи в меню",
+              text: "Новые смузи в меню. Попробуйте фирменные вкусы.",
               imageUrl: "/assets/promos/smoothie.png",
-              link: "",
+              link: "/menu",
             },
           ]);
         }
-        bindRail(promoTrack, promoPrev, promoNext, ".promo-card");
+        bindPromoRail(promoTrack);
         if (typeof syncTealToPinkTip === "function") syncTealToPinkTip();
       };
       loadPromos();
