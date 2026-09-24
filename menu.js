@@ -352,8 +352,25 @@
   function scrollToCategory(slug) {
     var target = document.getElementById("cat-" + slug);
     if (!target) return;
+    // Lock the chip spy so intermediate categories don't yank the strip left/right.
+    chipSpyLocked = true;
+    if (chipSpyUnlockTimer) clearTimeout(chipSpyUnlockTimer);
+    var chip = chipsEl && chipsEl.querySelector('a[href="#cat-' + slug + '"]');
+    if (chip) {
+      if (activeChip) activeChip.classList.remove("is-active");
+      activeChip = chip;
+      chip.classList.add("is-active");
+      centerChip(chip);
+    }
     target.scrollIntoView({ behavior: scrollMode, block: "start" });
     if (history.replaceState) history.replaceState(null, "", "#cat-" + slug);
+    chipSpyUnlockTimer = setTimeout(
+      function () {
+        chipSpyLocked = false;
+        updateActiveChip();
+      },
+      reduceMotion ? 80 : 900
+    );
   }
 
   /** Slides the strip so the given chip sits in the middle of its own row. */
@@ -367,9 +384,12 @@
   }
 
   var activeChip = null;
+  var chipSpyLocked = false;
+  var chipSpyUnlockTimer = 0;
 
   /** Marks the chip whose group currently sits across the middle of the screen. */
   function updateActiveChip() {
+    if (chipSpyLocked) return;
     if (!chipsEl || !groupsEl) return;
     var groups = groupsEl.querySelectorAll(".menu-group");
     if (!groups.length) return;
@@ -555,7 +575,9 @@
 
   function changeQty(itemId, variantId, delta) {
     var item = itemsById[itemId];
-    if (!item) return;
+    if (!item || item.orderable === false) return;
+    var price = unitPrice(item, variantId);
+    if (price === null || price === undefined) return;
     var key = lineKey(itemId, variantId);
     var current = cart[key] ? cart[key].qty : 0;
     var next = current + delta;
@@ -570,7 +592,8 @@
 
   function addToCart(itemId, variantId) {
     var item = itemsById[itemId];
-    if (!item) return;
+    if (!item || item.orderable === false) return;
+    if (unitPrice(item, variantId) == null) return;
     var step = item.variants && item.variants.length ? 1 : item.step || 1;
     changeQty(itemId, variantId, step);
   }
@@ -776,9 +799,15 @@
         itemsById[item.id] = item;
       });
 
-      /* Drop lines for items that no longer exist. */
+      /* Drop lines that vanished, are hall-only, or lost a price. */
       Object.keys(cart).forEach(function (key) {
-        if (!itemsById[cart[key] && cart[key].itemId]) delete cart[key];
+        var entry = cart[key];
+        var item = itemsById[entry && entry.itemId];
+        if (!item || item.orderable === false) {
+          delete cart[key];
+          return;
+        }
+        if (unitPrice(item, entry.variantId) == null) delete cart[key];
       });
       saveCart();
 
