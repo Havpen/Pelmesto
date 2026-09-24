@@ -1918,14 +1918,6 @@ h2 {
 @media (max-width: 900px) {
   :root {
     --decor-size: min(78vw, 640px);
-    /*
-     * Pink tip must be tall like desktop (~0.5× viewport). Old 78/88vw tip was
-     * only ~200px — by the time tip bottom sits under the header the hypotenuse
-     * is already flat across the phone → solid pink “window”. 30° via
-     * width = height / tan(30°) (may exceed 100vw; stage overflow is visible).
-     */
-    --pink-tip-height: min(48svh, 400px);
-    --pink-tip-size: calc(var(--pink-tip-height) / tan(30deg));
     --bg-pattern-balloons-size: 1680px;
     --bg-pattern-balloons-size-y: calc(1680px * 689 / 1024);
   }
@@ -2132,9 +2124,12 @@ h2 {
   }
 
   /*
-   * Mobile pink = desktop geometry with a taller tip (see --decor-height above):
-   * tip triangle + pink-menu plane (left strip + rotate from decor-size).
-   * Shared 30° line: tip hypotenuse → menu diagonal. No rail.
+   * Mobile pink:
+   * - tip: classic 30° corner on the sticky stage (same as desktop tip)
+   * - menu: ONE half-plane rotate(30deg) from the LEFT edge of #menu
+   *   (desktop’s left-strip + after-from-decor-size puts the diagonal past
+   *   the right edge on a ~390px phone → solid pink “window”)
+   * Tip seals the seam with bottom:-2px; no rail.
    */
   .pink-host {
     display: contents;
@@ -2174,20 +2169,15 @@ h2 {
   }
 
   .decor--pink-menu::before {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: var(--decor-size);
-    height: 100%;
-    background: var(--decor-pink);
-    content: "";
-    display: block;
+    content: none;
+    display: none;
   }
 
+  /* 30° slash from the left edge — visible on a phone-width screen. */
   .decor--pink-menu::after {
     position: absolute;
     top: 0;
-    left: var(--decor-size);
+    left: 0;
     width: 300vmax;
     height: 300vmax;
     background: var(--decor-pink);
@@ -2710,8 +2700,7 @@ h2 {
 @media (max-width: 600px) {
   :root {
     --header-height: calc(8px + 48px + 8px + 1px);
-    --decor-height: min(48svh, 380px);
-    --decor-size: calc(var(--decor-height) / tan(30deg));
+    --decor-size: min(88vw, 420px);
     --bg-pattern-balloons-size: 1320px;
     --bg-pattern-balloons-size-y: calc(1320px * 689 / 1024);
   }
