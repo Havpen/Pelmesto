@@ -2124,27 +2124,26 @@ h2 {
   }
 
   /*
-   * ONE continuous 30° pink plane across hero tip → menu:
-   * - pink-home: sticky tip window (same rotate plane, not a different clip triangle)
-   * - pink-rail: same plane origin, continues through home spacer + menu
-   * Desktop tip/menu left untouched (display:contents host, rail hidden).
+   * ONE continuous 30° pink half-plane (hero tip → «Меню зала»).
+   * A single rotate(30deg) from the tip apex (0, stageBottom − decor-height).
+   * Tip = sticky window into that plane; rail = the same plane below the seam.
+   * pink-menu stays off on mobile so a second origin can't open a white notch.
    */
   .pink-host {
     display: block;
     position: relative;
   }
 
-  .decor--pink-span {
-    display: none !important;
-  }
-
+  .decor--pink-span,
   .decor--pink-menu {
     display: none !important;
   }
 
+  /* Sticky tip window — same half-plane, clipped to the tip band. */
   .decor--pink-home {
     bottom: 0;
     left: 0;
+    z-index: 1;
     width: 100%;
     height: var(--decor-height);
     overflow: hidden;
@@ -2153,19 +2152,14 @@ h2 {
   }
 
   .decor--pink-home::before {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: var(--decor-size);
-    height: 100vmax;
-    background: var(--decor-pink);
-    content: "";
+    content: none;
+    display: none;
   }
 
   .decor--pink-home::after {
     position: absolute;
     top: 0;
-    left: var(--decor-size);
+    left: 0;
     width: 300vmax;
     height: 300vmax;
     background: var(--decor-pink);
@@ -2180,34 +2174,36 @@ h2 {
     z-index: 0;
     left: 0;
     right: 0;
-    top: var(--hero-stage-h, 100svh);
+    /* 2px under the tip so the seam can't flash. */
+    top: calc(var(--hero-stage-h, 100svh) - 2px);
     bottom: 0;
     overflow: hidden;
     pointer-events: none;
     background: transparent;
   }
 
-  /* Same plane origin as pink-home tip (origin is decor-height above rail top). */
   .decor--pink-rail::before {
-    position: absolute;
-    top: calc(-1 * var(--decor-height));
-    left: 0;
-    width: var(--decor-size);
-    height: calc(100% + var(--decor-height));
-    background: var(--decor-pink);
-    content: "";
+    content: none;
+    display: none;
   }
 
+  /* Apex = tip top = stageBottom − decor-height (matches pink-home::after). */
   .decor--pink-rail::after {
     position: absolute;
-    top: calc(-1 * var(--decor-height));
-    left: var(--decor-size);
+    top: calc(-1 * var(--decor-height) + 2px);
+    left: 0;
     width: 300vmax;
     height: 300vmax;
     background: var(--decor-pink);
     transform: rotate(30deg);
     transform-origin: 0 0;
     content: "";
+  }
+
+  .menu {
+    position: relative;
+    z-index: 1;
+    background: transparent;
   }
 
   .decor--teal,
