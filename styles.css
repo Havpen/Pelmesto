@@ -2124,74 +2124,63 @@ h2 {
   }
 
   /*
-   * ONE continuous 30° pink half-plane (hero tip → «Меню зала»).
-   * A single rotate(30deg) from the tip apex (0, stageBottom − decor-height).
-   * Tip = sticky window into that plane; rail = the same plane below the seam.
-   * pink-menu stays off on mobile so a second origin can't open a white notch.
+   * Mobile pink = same two pieces as desktop (one 30° object):
+   * 1) tip triangle on the sticky stage
+   * 2) pink-menu plane with origin at menu top (diagonal stays visible in «Меню зала»)
+   * A tip-apex rail was wrong: once you scroll into the menu the diagonal is
+   * above the viewport → solid pink “window”. No rail on mobile.
    */
   .pink-host {
-    display: block;
-    position: relative;
+    display: contents;
   }
 
   .decor--pink-span,
-  .decor--pink-menu {
+  .decor--pink-rail {
     display: none !important;
   }
 
-  /* Sticky tip window — same half-plane, clipped to the tip band. */
   .decor--pink-home {
-    bottom: 0;
+    bottom: -2px;
     left: 0;
     z-index: 1;
-    width: 100%;
+    width: var(--decor-size);
     height: var(--decor-height);
-    overflow: hidden;
-    background: transparent;
-    clip-path: none;
+    overflow: visible;
+    background: var(--decor-pink);
+    clip-path: polygon(0 0, 0 100%, 100% 100%);
   }
 
-  .decor--pink-home::before {
+  .decor--pink-home::before,
+  .decor--pink-home::after {
     content: none;
     display: none;
   }
 
-  .decor--pink-home::after {
+  .decor--pink-menu {
+    display: block;
+    top: 0;
+    left: 0;
+    z-index: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: transparent;
+  }
+
+  .decor--pink-menu::before {
     position: absolute;
     top: 0;
     left: 0;
-    width: 300vmax;
-    height: 300vmax;
+    width: var(--decor-size);
+    height: 100%;
     background: var(--decor-pink);
-    transform: rotate(30deg);
-    transform-origin: 0 0;
     content: "";
   }
 
-  .decor--pink-rail {
-    display: block;
+  .decor--pink-menu::after {
     position: absolute;
-    z-index: 0;
-    left: 0;
-    right: 0;
-    /* 2px under the tip so the seam can't flash. */
-    top: calc(var(--hero-stage-h, 100svh) - 2px);
-    bottom: 0;
-    overflow: hidden;
-    pointer-events: none;
-    background: transparent;
-  }
-
-  .decor--pink-rail::before {
-    content: none;
-    display: none;
-  }
-
-  /* Apex = tip top = stageBottom − decor-height (matches pink-home::after). */
-  .decor--pink-rail::after {
-    position: absolute;
-    top: calc(-1 * var(--decor-height) + 2px);
-    left: 0;
+    top: 0;
+    left: var(--decor-size);
     width: 300vmax;
     height: 300vmax;
     background: var(--decor-pink);
