@@ -22,7 +22,7 @@
       rel="stylesheet"
     />
     <link rel="preload" href="assets/hero-a-frames/frame-0001.webp" as="image" type="image/webp" />
-    <link rel="stylesheet" href="styles.css?v=75" />
+    <link rel="stylesheet" href="styles.css?v=76" />
   </head>
   <body>
     <div class="bg-pattern-balloons" data-bg-balloons aria-hidden="true"></div>
@@ -676,7 +676,7 @@
       const videoShell = document.querySelector(".hero__video-shell");
       const mobileHeroMq = window.matchMedia("(max-width: 900px)");
       /** Keep in sync with styles.css `.hero__video { transform: scale(…) }` on mobile. */
-      const MOBILE_HERO_VIDEO_SCALE = 1.9;
+      const MOBILE_HERO_VIDEO_SCALE = 1.75;
       /** Source hero-a frame size used by knob-patch coordinates. */
       const HERO_A_NATIVE_W = 1600;
       /** Hero-b opens a bit larger than the dumpling in the last hero-a frame — nudge down uniformly. */
@@ -1525,7 +1525,10 @@
         if (h < 200) return;
         document.documentElement.style.setProperty("--hero-stage-h", `${h}px`);
         if (mobileHeroMq.matches) {
-          const decorPx = Math.min(h < 700 ? 420 : 640, Math.round(window.innerWidth * (h < 700 ? 0.88 : 0.78)));
+          const decorPx = Math.min(
+            h < 700 ? 300 : 360,
+            Math.round(window.innerWidth * (h < 700 ? 0.62 : 0.58)),
+          );
           document.documentElement.style.setProperty("--decor-size", `${decorPx}px`);
         } else {
           document.documentElement.style.removeProperty("--decor-size");
