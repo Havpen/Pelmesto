@@ -506,16 +506,21 @@
     );
   }
 
-  /** Re-renders one card foot so changing quantity does not reload the photo. */
+  /** Re-renders card body only so quantity/variant updates do not reload the photo. */
   function renderDish(itemId) {
     var item = itemsById[itemId];
     var node = groupsEl.querySelector('[data-dish="' + itemId + '"]');
     if (!item || !node) return;
 
-    var foot = node.querySelector(".dish__foot");
-    if (foot) {
-      foot.outerHTML = footHtml(item);
-      return;
+    var body = node.querySelector(".dish__body");
+    if (body) {
+      var tmp = document.createElement("div");
+      tmp.innerHTML = dishHtml(item);
+      var nextBody = tmp.querySelector(".dish__body");
+      if (nextBody) {
+        body.replaceWith(nextBody);
+        return;
+      }
     }
 
     node.outerHTML = dishHtml(item);
