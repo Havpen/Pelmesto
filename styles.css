@@ -2367,7 +2367,17 @@ h2 {
     font-size: clamp(30px, 8vw, 48px);
   }
 
-  .menu__slide[data-menu-slide="pelmeni"] .hero__text {
+  .menu__slide[data-menu-slide="pelmeni"] .hero__text,
+  .menu__slide[data-menu-slide="khinkali"] .hero__text {
+    display: none;
+  }
+
+  /* One fewer price row so the card can shrink to the remaining names. */
+  .menu__slide[data-menu-slide="pelmeni"] .menu-list > li:nth-child(3) {
+    display: none;
+  }
+
+  .menu__slide[data-menu-slide="khinkali"] .menu-list > li:nth-child(n + 3) {
     display: none;
   }
 
@@ -2379,17 +2389,27 @@ h2 {
     display: none;
   }
 
-  .menu__dish-block,
-  .menu-list {
-    width: 100%;
-    max-width: 100%;
+  .menu__layout {
+    grid-template-columns: minmax(0, 1fr);
   }
-
   .menu__dish-block {
+    width: max-content;
+    max-width: 100%;
     padding: 14px 14px;
   }
 
-  /* Compact card: 3 dishes + teaser → list + pelmen fit one mobile screen. */
+  .menu-list {
+    width: max-content;
+    max-width: 100%;
+  }
+
+  .menu-list__name {
+    flex: 1 0 auto;
+    width: max-content;
+    max-width: 100%;
+    white-space: nowrap;
+  }
+
   .menu-list__extra {
     display: none;
   }
@@ -2405,13 +2425,6 @@ h2 {
     font-size: 15px;
   }
 
-  .menu-list__name {
-    flex: 1 1 100%;
-    max-width: 100%;
-    white-space: normal;
-  }
-
-  /* Name on its own row; dotted leader between weight and price. */
   .menu-list__dots {
     display: none;
   }
@@ -2694,7 +2707,7 @@ h2 {
   }
 
   .menu__layout {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .menu__media,
@@ -2711,18 +2724,36 @@ h2 {
     margin: 8px auto 0;
   }
 
-  /* Exploded frame is 16:9 with empty bands above and below the layers.
-     A square box reserved that padding. Hug the scaled subject instead. */
+  /* 16:9 frame, scale 1, so the open pelmen is fully inside the box. */
   .menu__media--pelmen {
-    aspect-ratio: 2.15 / 1;
+    aspect-ratio: 16 / 9;
     margin-top: 0;
     margin-bottom: 0;
   }
 
-  /* Over the pelmen media (shorter box). Khinkali keeps the square center. */
+  .menu__media--pelmen .pelmen-fly:not(.is-flying) {
+    transform: translate(-50%, -50%) scale(1);
+  }
+
+  /* 9:16 clip, subject sits in the middle ~68%. Box height matches that band. */
+  .menu__media--khinkali {
+    aspect-ratio: 5 / 6;
+    width: min(300px, 76vw);
+    margin: 0 auto;
+  }
+
+  .menu__media--khinkali .menu__khinkali-canvas {
+    width: auto;
+    height: 100%;
+    max-width: none;
+    max-height: none;
+    transform: translate(-50%, -50%) scale(1.4);
+  }
+
+  /* Over the pelmen media. Khinkali recenters when that slide is active. */
   .menu__arrow {
     top: auto;
-    bottom: calc(min(520px, 92vw) / 4.3 - 24px);
+    bottom: calc(min(520px, 92vw) * 9 / 32 - 24px);
     width: 48px;
     height: 48px;
     min-width: 48px;
@@ -2744,7 +2775,7 @@ h2 {
   }
 
   .menu__carousel:has([data-menu-slide="khinkali"].is-active) .menu__arrow {
-    bottom: calc(min(520px, 92vw) / 2 - 24px);
+    bottom: calc(min(300px, 76vw) * 0.6 - 24px);
   }
 }
 

@@ -22,7 +22,7 @@
       rel="stylesheet"
     />
     <link rel="preload" href="assets/hero-a-frames/frame-0001.webp" as="image" type="image/webp" />
-    <link rel="stylesheet" href="styles.css?v=98" />
+    <link rel="stylesheet" href="styles.css?v=99" />
   </head>
   <body>
     <div class="bg-pattern-balloons" data-bg-balloons aria-hidden="true"></div>
@@ -897,8 +897,10 @@
         if (cropCenter) {
           // Uniform zoom — cropping only X changed the bitmap aspect and
           // stretched the dumpling when CSS size used a different ratio.
-          sw = Math.round(srcWidth * 0.8);
-          sh = Math.round(srcHeight * 0.8);
+          // 4% each side: the open pelmen sits ~9% from the frame edge,
+          // so a tighter crop sliced the dough.
+          sw = Math.round(srcWidth * 0.92);
+          sh = Math.round(srcHeight * 0.92);
           sx = Math.round((srcWidth - sw) / 2);
           sy = Math.round((srcHeight - sh) / 2);
         }
@@ -1061,7 +1063,8 @@
         const targetWidth = Math.max(1, cachedMediaDocW || fromW);
         const targetHeight = Math.max(1, cachedMediaDocH || fromH);
         const toFit = fitAspectInBox(targetWidth, targetHeight, aspect);
-        const toW = toFit.w * PELMEN_SLIDE_SCALE;
+        const slideScale = mobileHeroMq.matches ? 1 : PELMEN_SLIDE_SCALE;
+        const toW = toFit.w * slideScale;
 
         const toCenterX = cachedMediaDocLeft + targetWidth / 2;
         const toCenterY = cachedMediaDocTop - cachedLandScroll + targetHeight / 2;
