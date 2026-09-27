@@ -22,7 +22,7 @@
       rel="stylesheet"
     />
     <link rel="preload" href="assets/hero-a-frames/frame-0001.webp" as="image" type="image/webp" />
-    <link rel="stylesheet" href="styles.css?v=99" />
+    <link rel="stylesheet" href="styles.css?v=100" />
   </head>
   <body>
     <div class="bg-pattern-balloons" data-bg-balloons aria-hidden="true"></div>
@@ -111,7 +111,8 @@
                       <li>
                         <a class="menu-list__row" href="/Pelmesto/menu#cat-pelmeni">
                           <span class="menu-list__name">
-                            Фирменные (свинина-говядина)
+                            Фирменные
+                            <span class="menu-list__note">(свинина-говядина)</span>
                             <span class="menu-list__badge">топ</span>
                           </span>
                           <span class="menu-list__dots" aria-hidden="true"></span>
@@ -1427,7 +1428,7 @@
           carouselViewport.style.height = "";
           return;
         }
-        const slide = carouselSlides[carouselIndex];
+        const slide = carouselSlides[0];
         if (!slide) return;
         carouselViewport.style.height = `${slide.offsetHeight}px`;
       };

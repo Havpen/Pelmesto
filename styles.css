@@ -2398,6 +2398,67 @@ h2 {
     padding: 14px 14px;
   }
 
+  .menu__slide[data-menu-slide="pelmeni"] .menu__dish-block,
+  .menu__slide[data-menu-slide="pelmeni"] .menu-list {
+    width: 100%;
+  }
+
+  /* Name on the first line. Weight sits next to it — or next to the
+     parenthetical on the second line — then a dotted leader to the price. */
+  .menu__slide[data-menu-slide="pelmeni"] .menu-list__row {
+    display: grid;
+    grid-template-columns: auto auto minmax(12px, 1fr) auto;
+    align-items: baseline;
+    column-gap: 8px;
+    row-gap: 2px;
+    width: 100%;
+  }
+
+  .menu__slide[data-menu-slide="pelmeni"] .menu-list__name {
+    display: contents;
+  }
+
+  .menu__slide[data-menu-slide="pelmeni"] .menu-list__badge {
+    grid-column: 2;
+    grid-row: 1;
+    justify-self: start;
+    margin-left: 2px;
+  }
+
+  .menu__slide[data-menu-slide="pelmeni"] .menu-list__note {
+    grid-column: 1;
+    grid-row: 2;
+  }
+
+  .menu__slide[data-menu-slide="pelmeni"] .menu-list__weight {
+    grid-column: 2;
+    grid-row: 1;
+    margin-left: 6px;
+  }
+
+  .menu__slide[data-menu-slide="pelmeni"] .menu-list__row:has(.menu-list__note) .menu-list__weight {
+    grid-row: 2;
+    margin-left: 8px;
+  }
+
+  .menu__slide[data-menu-slide="pelmeni"] .menu-list__dots--meta {
+    grid-column: 3;
+    grid-row: 1;
+    min-width: 12px;
+    align-self: center;
+  }
+
+  .menu__slide[data-menu-slide="pelmeni"] .menu-list__price {
+    grid-column: 4;
+    grid-row: 1;
+    min-width: 0;
+  }
+
+  .menu__slide[data-menu-slide="pelmeni"] .menu-list__row:has(.menu-list__note) .menu-list__dots--meta,
+  .menu__slide[data-menu-slide="pelmeni"] .menu-list__row:has(.menu-list__note) .menu-list__price {
+    grid-row: 2;
+  }
+
   .menu-list {
     width: max-content;
     max-width: 100%;
@@ -2735,10 +2796,11 @@ h2 {
     transform: translate(-50%, -50%) scale(1);
   }
 
-  /* 9:16 clip, subject sits in the middle ~68%. Box height matches that band. */
+  /* Same stage as the pelmen slide, so both gallery pages are one height. */
   .menu__media--khinkali {
-    aspect-ratio: 5 / 6;
-    width: min(300px, 76vw);
+    aspect-ratio: 16 / 9;
+    width: 100%;
+    max-width: min(520px, 92vw);
     margin: 0 auto;
   }
 
@@ -2746,8 +2808,8 @@ h2 {
     width: auto;
     height: 100%;
     max-width: none;
-    max-height: none;
-    transform: translate(-50%, -50%) scale(1.4);
+    max-height: 100%;
+    transform: translate(-50%, -50%) scale(1.28);
   }
 
   /* Over the pelmen media. Khinkali recenters when that slide is active. */
@@ -2775,7 +2837,7 @@ h2 {
   }
 
   .menu__carousel:has([data-menu-slide="khinkali"].is-active) .menu__arrow {
-    bottom: calc(min(300px, 76vw) * 0.6 - 24px);
+    bottom: calc(min(520px, 92vw) * 9 / 32 - 24px);
   }
 }
 
