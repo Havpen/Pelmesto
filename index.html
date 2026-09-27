@@ -22,7 +22,7 @@
       rel="stylesheet"
     />
     <link rel="preload" href="assets/hero-a-frames/frame-0001.webp" as="image" type="image/webp" />
-    <link rel="stylesheet" href="styles.css?v=104" />
+    <link rel="stylesheet" href="styles.css?v=105" />
   </head>
   <body>
     <div class="bg-pattern-balloons" data-bg-balloons aria-hidden="true"></div>
@@ -1615,10 +1615,15 @@
       const shopSection = document.getElementById("shop");
       const balloonsBg = document.querySelector("[data-bg-balloons]");
       const siteTeal = document.querySelector(".site-teal");
+      const footerEl = document.querySelector(".site-footer");
+      const footerBandMq = window.matchMedia("(max-width: 900px)");
       const syncBalloonsBg = () => {
+        const footerCut =
+          footerBandMq.matches && footerEl ? footerEl.offsetHeight : 0;
+        document.documentElement.style.setProperty("--footer-h", `${footerCut}px`);
         if (!shopSection || !balloonsBg) return;
         const top = Math.max(0, shopSection.getBoundingClientRect().top);
-        balloonsBg.style.clipPath = `inset(${top}px 0 0 0)`;
+        balloonsBg.style.clipPath = `inset(${top}px 0 ${footerCut}px 0)`;
       };
       const syncTealToPinkTip = () => {
         if (!shopSection || !siteTeal) return;

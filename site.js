@@ -39,6 +39,17 @@
     if (window.matchMedia("(min-width: 901px)").matches) setNavOpen(false);
   });
 
+  var footerEl = document.querySelector(".site-footer");
+  var footerBandMq = window.matchMedia("(max-width: 900px)");
+  function syncFooterBand() {
+    if (!footerEl) return;
+    var h = footerBandMq.matches ? footerEl.offsetHeight : 0;
+    document.documentElement.style.setProperty("--footer-h", h + "px");
+  }
+  syncFooterBand();
+  window.addEventListener("resize", syncFooterBand);
+  window.addEventListener("load", syncFooterBand);
+
   document.addEventListener("click", function (event) {
     var target = event.target.closest("[data-analytics]");
     if (!target) return;

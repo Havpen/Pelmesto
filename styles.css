@@ -2220,30 +2220,23 @@ h2 {
     backface-visibility: hidden;
   }
 
-  /* Patterns stay fixed (desktop behavior). Soften blur only — do not remove. */
+  /* Patterns stay fixed (desktop behavior). Soften blur only — do not remove.
+     A footer-colored band sits at the bottom of this layer, same height as the footer. */
   body::before {
     filter: blur(0.8px) saturate(0.72) brightness(1.08) contrast(0.94);
+    background-image: linear-gradient(#171717, #171717), var(--bg-pattern);
+    background-repeat: no-repeat, no-repeat;
+    background-size: 100% var(--footer-h, 200px), cover;
+    background-position: center bottom, center center;
+  }
+
+  /* Keep the white veil off the footer band so the band stays #171717. */
+  body::after {
+    bottom: var(--footer-h, 200px);
   }
 
   .bg-pattern-balloons {
     filter: blur(1.8px) saturate(0.64) brightness(1.14) contrast(0.9);
-  }
-
-  /* Layer under footer: same color, same height as the footer (overscroll cushion). */
-  .site-footer::after {
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: 100%;
-    height: 100%;
-    background: #171717;
-    content: "";
-    pointer-events: none;
-    z-index: -1;
-  }
-
-  html {
-    background-color: #171717;
   }
 
   /* Promo expand: no scaleY on mobile (it turns round buttons into ellipses). */
@@ -2774,7 +2767,7 @@ h2 {
   }
 
   .site-footer {
-    padding: 32px 20px max(96px, calc(72px + env(safe-area-inset-bottom)));
+    padding: 28px 20px max(20px, env(safe-area-inset-bottom));
   }
 
   .menu__layout {
@@ -2997,7 +2990,7 @@ h2 {
   }
 
   .site-footer {
-    padding: 32px 20px max(72px, calc(48px + env(safe-area-inset-bottom)));
+    padding: 28px 20px max(20px, env(safe-area-inset-bottom));
   }
 }
 
