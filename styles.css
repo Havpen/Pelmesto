@@ -2687,9 +2687,12 @@ h2 {
     padding-bottom: 16px;
     padding-left: 0;
     gap: var(--shop-card-gap);
-    /* Vertical page scroll stays native. Horizontal movement is the rail's. */
-    touch-action: pan-y;
-    scroll-snap-type: none;
+    /* Both axes stay with the browser: sideways moves the rail, vertical moves the page. */
+    overflow-y: hidden;
+    touch-action: pan-x pan-y;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: 0;
+    -webkit-overflow-scrolling: touch;
   }
 
   .shop-card {
@@ -2701,8 +2704,10 @@ h2 {
     min-height: 0;
     align-items: center;
     gap: 10px;
-    padding: 12px;
-    border-radius: 28px;
+    padding: 14px 18px;
+    border-radius: 999px;
+    scroll-snap-align: start;
+    scroll-snap-stop: normal;
   }
 
   .shop-card__copy {
@@ -2932,7 +2937,7 @@ h2 {
     min-width: 100%;
     max-width: 100%;
     gap: 8px;
-    padding: 10px 12px;
+    padding: 12px 16px;
   }
 
   .shop-card__title {

@@ -22,7 +22,7 @@
       rel="stylesheet"
     />
     <link rel="preload" href="assets/hero-a-frames/frame-0001.webp" as="image" type="image/webp" />
-    <link rel="stylesheet" href="styles.css?v=102" />
+    <link rel="stylesheet" href="styles.css?v=103" />
   </head>
   <body>
     <div class="bg-pattern-balloons" data-bg-balloons aria-hidden="true"></div>
@@ -324,7 +324,7 @@
                 <a class="shop-card__more" href="/Pelmesto/menu#cat-frozen-pelmeni">Начинки</a>
               </div>
               <div class="shop-card__media" aria-hidden="true">
-                <img src="assets/shop/pelmeni.png" alt="" width="280" height="280" loading="lazy" />
+                <img src="assets/shop/pelmeni.webp" alt="" width="480" height="480" decoding="async" loading="lazy" />
               </div>
             </li>
             <li class="shop-card">
@@ -333,7 +333,7 @@
                 <a class="shop-card__more" href="/Pelmesto/menu#cat-frozen-vareniki">Начинки</a>
               </div>
               <div class="shop-card__media" aria-hidden="true">
-                <img src="assets/shop/vareniki.png" alt="" width="280" height="280" loading="lazy" />
+                <img src="assets/shop/vareniki.webp" alt="" width="480" height="480" decoding="async" loading="lazy" />
               </div>
             </li>
             <li class="shop-card">
@@ -342,7 +342,7 @@
                 <a class="shop-card__more" href="/Pelmesto/menu#cat-frozen-hinkali">Начинки</a>
               </div>
               <div class="shop-card__media" aria-hidden="true">
-                <img src="assets/shop/khinkali.png" alt="" width="280" height="280" loading="lazy" />
+                <img src="assets/shop/khinkali.webp" alt="" width="480" height="480" decoding="async" loading="lazy" />
               </div>
             </li>
             <li class="shop-card">
@@ -351,7 +351,7 @@
                 <a class="shop-card__more" href="/Pelmesto/menu#cat-frozen-blinchiki">Начинки</a>
               </div>
               <div class="shop-card__media" aria-hidden="true">
-                <img src="assets/shop/blini.png" alt="" width="280" height="280" loading="lazy" />
+                <img src="assets/shop/blini.webp" alt="" width="480" height="480" decoding="async" loading="lazy" />
               </div>
             </li>
             <li class="shop-card">
@@ -360,7 +360,7 @@
                 <a class="shop-card__more" href="/Pelmesto/menu#cat-frozen-chebureki">Начинки</a>
               </div>
               <div class="shop-card__media" aria-hidden="true">
-                <img src="assets/shop/chebureki.png" alt="" width="280" height="280" loading="lazy" />
+                <img src="assets/shop/chebureki.webp" alt="" width="480" height="480" decoding="async" loading="lazy" />
               </div>
             </li>
             <li class="shop-card">
@@ -369,7 +369,7 @@
                 <a class="shop-card__more" href="/Pelmesto/menu#cat-frozen-syrniki">Начинки</a>
               </div>
               <div class="shop-card__media" aria-hidden="true">
-                <img src="assets/shop/syrniki.png" alt="" width="280" height="280" loading="lazy" />
+                <img src="assets/shop/syrniki.webp" alt="" width="480" height="480" decoding="async" loading="lazy" />
               </div>
             </li>
             <li class="shop-card">
@@ -378,7 +378,7 @@
                 <a class="shop-card__more" href="/Pelmesto/menu#cat-frozen-pelmeni">Начинки</a>
               </div>
               <div class="shop-card__media" aria-hidden="true">
-                <img src="assets/shop/kotlety.png" alt="" width="280" height="280" loading="lazy" />
+                <img src="assets/shop/kotlety.webp" alt="" width="480" height="480" decoding="async" loading="lazy" />
               </div>
             </li>
           </ul>
@@ -1764,7 +1764,10 @@
         const DRAG_THRESHOLD = 10;
 
         track.addEventListener("pointerdown", (event) => {
-          if (event.pointerType !== "touch" && event.button !== 0) return;
+          // Touch uses native overflow scrolling. Driving scrollLeft from
+          // pointermove fought iOS, snapped backward, and ignored a left swipe.
+          if (event.pointerType === "touch") return;
+          if (event.button !== 0) return;
           if (event.target.closest("button, input, textarea, select")) return;
           if (snapAnim) cancelAnimationFrame(snapAnim);
           snapAnim = 0;
@@ -1876,6 +1879,31 @@
       };
 
       bindRail(shopTrack, shopPrev, shopNext, ".shop-card");
+
+      if (shopTrack) {
+        const warmShopImages = () => {
+          shopTrack.querySelectorAll("img").forEach((img) => {
+            if (img.complete && img.naturalWidth > 0) return;
+            const src = img.getAttribute("src");
+            if (!src) return;
+            img.loading = "eager";
+            img.src = src;
+          });
+        };
+        if ("IntersectionObserver" in window) {
+          const shopImages = new IntersectionObserver(
+            (entries) => {
+              if (!entries.some((entry) => entry.isIntersecting)) return;
+              warmShopImages();
+              shopImages.disconnect();
+            },
+            { rootMargin: "700px 0px" }
+          );
+          shopImages.observe(shopTrack);
+        } else {
+          warmShopImages();
+        }
+      }
 
       const promoTrack = document.querySelector("[data-promo-track]");
       const PROMO_AUTO_MS = 5000;
