@@ -2292,7 +2292,7 @@ h2 {
      which trapped .menu__content below the dumpling (z-index:2). Raise the
      whole carousel so copy + dish card paint above the flight. */
   .pelmen-fly.is-flying {
-    z-index: 4;
+    z-index: 1;
   }
 
   .menu__carousel {
@@ -2301,7 +2301,7 @@ h2 {
 
   .menu__content {
     position: relative;
-    z-index: 2;
+    z-index: 3;
   }
 
   .menu__media {
@@ -2346,6 +2346,10 @@ h2 {
 
   .menu__content--dish h2 {
     font-size: clamp(30px, 8vw, 48px);
+  }
+
+  .menu__slide[data-menu-slide="pelmeni"] .hero__text {
+    display: none;
   }
 
   .menu__content--dish .hero__text {
