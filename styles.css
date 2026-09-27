@@ -2112,7 +2112,6 @@ h2 {
   .hero__stage {
     height: var(--hero-stage-h, 100svh);
     overflow: visible;
-    z-index: 2;
   }
 
   /* Mobile teal: clean 30° corner (desktop keeps the header stub). */
@@ -2142,7 +2141,7 @@ h2 {
     top: calc(100% - var(--decor-height));
     bottom: auto;
     left: 0;
-    z-index: 1;
+    z-index: 0;
     width: 100%;
     /* Same 30° cut, continued through the rest of the sticky first page
        (the scrub length below the stage) so that strip is pink, not pattern. */
