@@ -2139,20 +2139,34 @@ h2 {
   }
 
   .decor--pink-home {
-    bottom: -2px;
+    top: calc(100% - var(--decor-height));
+    bottom: auto;
     left: 0;
     z-index: 1;
-    width: var(--decor-size);
-    height: var(--decor-height);
-    overflow: visible;
-    background: var(--decor-pink);
-    clip-path: polygon(0 0, 0 100%, 100% 100%);
+    width: 100%;
+    /* Same 30° cut, continued through the rest of the sticky first page
+       (the scrub length below the stage) so that strip is pink, not pattern. */
+    height: calc(var(--decor-height) + (var(--hero-stage-h, 100svh) * 0.85625));
+    overflow: hidden;
+    background: transparent;
+    clip-path: none;
   }
 
-  .decor--pink-home::before,
-  .decor--pink-home::after {
+  .decor--pink-home::before {
     content: none;
     display: none;
+  }
+
+  .decor--pink-home::after {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 300vmax;
+    height: 300vmax;
+    background: var(--decor-pink);
+    transform: rotate(30deg);
+    transform-origin: 0 0;
+    content: "";
   }
 
   .decor--pink-menu {
