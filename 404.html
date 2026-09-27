@@ -22,7 +22,7 @@
       rel="stylesheet"
     />
     <link rel="preload" href="assets/hero-a-frames/frame-0001.webp" as="image" type="image/webp" />
-    <link rel="stylesheet" href="styles.css?v=105" />
+    <link rel="stylesheet" href="styles.css?v=106" />
   </head>
   <body>
     <div class="bg-pattern-balloons" data-bg-balloons aria-hidden="true"></div>
@@ -545,6 +545,7 @@
         </p>
       </div>
     </footer>
+    <div class="bg-footer-band" aria-hidden="true"></div>
 
     <a
       class="float-pill"
@@ -1623,7 +1624,7 @@
         document.documentElement.style.setProperty("--footer-h", `${footerCut}px`);
         if (!shopSection || !balloonsBg) return;
         const top = Math.max(0, shopSection.getBoundingClientRect().top);
-        balloonsBg.style.clipPath = `inset(${top}px 0 ${footerCut}px 0)`;
+        balloonsBg.style.clipPath = `inset(${top}px 0 0 0)`;
       };
       const syncTealToPinkTip = () => {
         if (!shopSection || !siteTeal) return;

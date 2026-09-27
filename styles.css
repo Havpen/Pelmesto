@@ -2220,23 +2220,23 @@ h2 {
     backface-visibility: hidden;
   }
 
-  /* Patterns stay fixed (desktop behavior). Soften blur only — do not remove.
-     A footer-colored band sits at the bottom of this layer, same height as the footer. */
+  /* Patterns stay fixed (desktop behavior). Soften blur only — do not remove. */
   body::before {
     filter: blur(0.8px) saturate(0.72) brightness(1.08) contrast(0.94);
-    background-image: linear-gradient(#171717, #171717), var(--bg-pattern);
-    background-repeat: no-repeat, no-repeat;
-    background-size: 100% var(--footer-h, 200px), cover;
-    background-position: center bottom, center center;
-  }
-
-  /* Keep the white veil off the footer band so the band stays #171717. */
-  body::after {
-    bottom: var(--footer-h, 200px);
   }
 
   .bg-pattern-balloons {
     filter: blur(1.8px) saturate(0.64) brightness(1.14) contrast(0.9);
+  }
+
+  /* Same color as the footer, only behind the homepage footer — not on the viewport. */
+  .bg-footer-band {
+    position: relative;
+    z-index: 1;
+    height: var(--footer-h, 0px);
+    margin-top: calc(-1 * var(--footer-h, 0px));
+    background: #171717;
+    pointer-events: none;
   }
 
   /* Promo expand: no scaleY on mobile (it turns round buttons into ellipses). */
