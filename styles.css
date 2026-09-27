@@ -2112,11 +2112,6 @@ h2 {
   .hero__stage {
     height: var(--hero-stage-h, 100svh);
     overflow: visible;
-    /*
-     * Opaque so the pink rail (scrolling up during scrub) cannot show through
-     * the transparent sticky stage and flood the hero. Tip/teal/video sit on top.
-     */
-    background-color: #ffffff;
   }
 
   /* Mobile teal: clean 30° corner (desktop keeps the header stub). */
@@ -2129,19 +2124,16 @@ h2 {
   }
 
   /*
-   * Mobile pink — one 30° half-plane tip → menu:
-   * - tip: sticky triangle on the stage
-   * - rail: same plane through the hero spacer + menu (kills the white flash
-   *   under the tip while the box scrub plays)
-   * - pink-menu off (rail owns the fill; left-strip geometry was a “window”)
+   * Mobile pink = tip triangle + menu half-plane from the tip apex.
+   * No rail: a rail on the host paints over the sticky hero and floods the
+   * first screen (and a white stage background hides the dumpling pattern).
    */
   .pink-host {
-    display: block;
-    position: relative;
+    display: contents;
   }
 
   .decor--pink-span,
-  .decor--pink-menu {
+  .decor--pink-rail {
     display: none !important;
   }
 
@@ -2162,29 +2154,25 @@ h2 {
     display: none;
   }
 
-  .decor--pink-rail {
+  .decor--pink-menu {
     display: block;
-    position: absolute;
-    z-index: 0;
+    top: calc(-1 * var(--decor-height));
     left: 0;
-    right: 0;
-    /* Overlap tip by 2px — no white flash at the sticky seam during scrub. */
-    top: calc(var(--hero-stage-h, 100svh) - 2px);
-    bottom: 0;
+    z-index: 0;
+    width: 100%;
+    height: calc(100% + var(--decor-height));
     overflow: hidden;
-    pointer-events: none;
     background: transparent;
   }
 
-  .decor--pink-rail::before {
+  .decor--pink-menu::before {
     content: none;
     display: none;
   }
 
-  /* Apex = tip top = stageBottom − decor-height. */
-  .decor--pink-rail::after {
+  .decor--pink-menu::after {
     position: absolute;
-    top: calc(-1 * var(--decor-height) + 2px);
+    top: 0;
     left: 0;
     width: 300vmax;
     height: 300vmax;
@@ -2197,6 +2185,7 @@ h2 {
   .menu {
     position: relative;
     z-index: 1;
+    overflow: visible;
     background: transparent;
   }
 
