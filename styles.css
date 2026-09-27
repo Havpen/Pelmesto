@@ -2112,6 +2112,12 @@ h2 {
   .hero__stage {
     height: var(--hero-stage-h, 100svh);
     overflow: visible;
+    /*
+     * Above #menu. The menu pink reaches up to the tip apex; without this it
+     * scrolls over the sticky hero (pattern, then a triangle rising into place).
+     * Behind the stage that overhang stays hidden until the hero unsticks.
+     */
+    z-index: 2;
   }
 
   /* Mobile teal: clean 30° corner (desktop keeps the header stub). */
@@ -2271,7 +2277,7 @@ h2 {
      which trapped .menu__content below the dumpling (z-index:2). Raise the
      whole carousel so copy + dish card paint above the flight. */
   .pelmen-fly.is-flying {
-    z-index: 1;
+    z-index: 4;
   }
 
   .menu__carousel {
