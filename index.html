@@ -18,11 +18,11 @@
       crossorigin
     />
     <link
-      href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@600;700;900&display=block"
+      href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@600;700;900&display=swap"
       rel="stylesheet"
     />
     <link rel="preload" href="assets/hero-a-frames/frame-0001.webp" as="image" type="image/webp" />
-    <link rel="stylesheet" href="styles.css?v=107" />
+    <link rel="stylesheet" href="styles.css?v=108" />
   </head>
   <body>
     <div class="bg-pattern-balloons" data-bg-balloons aria-hidden="true"></div>
@@ -686,6 +686,8 @@
 
       const videoShell = document.querySelector(".hero__video-shell");
       const mobileHeroMq = window.matchMedia("(max-width: 900px)");
+      /* Locked once so iOS toolbar show/hide doesn't jump the box-open scrub. */
+      let scrubViewportH = Math.round(window.innerHeight);
       /** Keep in sync with styles.css `.hero__video { transform: scale(…) }` on mobile. */
       const MOBILE_HERO_VIDEO_SCALE = 2.15;
       /** Source hero-a frame size used by knob-patch coordinates. */
@@ -711,7 +713,8 @@
 
       const cacheLayout = () => {
         cachedHomeTop = homeSection.offsetTop;
-        cachedHomeScroll = Math.max(1, homeSection.offsetHeight - window.innerHeight);
+        const viewH = mobileHeroMq.matches ? scrubViewportH : window.innerHeight;
+        cachedHomeScroll = Math.max(1, homeSection.offsetHeight - viewH);
         cachedMenuPin = menuSection.offsetTop;
 
         const scrollY = window.scrollY || window.pageYOffset;
@@ -993,11 +996,23 @@
         heroADrawn = index;
       };
 
-      const seekVideoA = (time) => {
-        if (!heroAFrames[0] && !heroAReady) return;
+      let heroATarget = 0;
+      let pumpHeroA = () => {};
 
-        const index = clamp(Math.round(time * heroAFps), 0, heroAFrameCount - 1);
+      const nearestReadyHeroA = (index) => {
+        if (heroAFrames[index]) return index;
+        for (let i = index - 1; i >= 0; i -= 1) {
+          if (heroAFrames[i]) return i;
+        }
+        return -1;
+      };
+
+      const seekVideoA = (time) => {
+        heroATarget = clamp(Math.round(time * heroAFps), 0, heroAFrameCount - 1);
+        const index = nearestReadyHeroA(heroATarget);
+        if (index < 0) return;
         drawHeroAFrame(index);
+        pumpHeroA();
       };
 
       const stopPlayback = () => {
@@ -1130,12 +1145,13 @@
         sceneRaf = null;
 
         const scrollY = window.scrollY || window.pageYOffset;
-        const homeProgress = clamp((scrollY - cachedHomeTop) / cachedHomeScroll, 0, 1);
+        let homeProgress = clamp((scrollY - cachedHomeTop) / cachedHomeScroll, 0, 1);
 
         // Refresh shell / land metrics while still in the hero scrub. Frozen once
         // the fly starts so the path doesn't drift mid-air.
         if (homeProgress < 0.999) {
           cacheLayout();
+          homeProgress = clamp((scrollY - cachedHomeTop) / cachedHomeScroll, 0, 1);
         }
 
         targetA = homeProgress * clipADuration;
@@ -1207,29 +1223,74 @@
         });
       };
 
-      const preloadHeroA = async () => {
-        try {
-          heroAFrames[0] = await loadFrameBitmap(`assets/hero-a-frames/frame-0001.webp`);
-          heroAReady = true;
-          drawHeroAFrame(0);
-          requestSceneUpdate();
-        } catch (error) {
-          console.warn("Hero A frame failed", 1, error);
-        }
-
-        await mapPool(heroAFrameCount - 1, async (offset) => {
-          const index = offset + 1;
-          try {
-            heroAFrames[index] = await loadFrameBitmap(
-              `assets/hero-a-frames/frame-${pad(index + 1)}.webp`,
-            );
-          } catch (error) {
-            console.warn("Hero A frame failed", index + 1, error);
-          }
+      const preloadHeroA = () => {
+        const queued = new Set();
+        const loading = new Set();
+        let active = 0;
+        let settled = false;
+        let resolveReady = () => {};
+        const ready = new Promise((resolve) => {
+          resolveReady = resolve;
         });
+        const parallel = mobileHeroMq.matches ? 3 : 6;
 
-        heroAReady = heroAFrames.some(Boolean);
-        requestSceneUpdate();
+        const finishIfDone = () => {
+          if (settled) return;
+          if (queued.size || loading.size || active) return;
+          settled = true;
+          heroAReady = heroAFrames.some(Boolean);
+          resolveReady();
+          requestSceneUpdate();
+        };
+
+        const pump = () => {
+          while (active < parallel && queued.size) {
+            let best = -1;
+            let bestDist = Infinity;
+            queued.forEach((index) => {
+              const dist = Math.abs(index - heroATarget);
+              if (dist < bestDist || (dist === bestDist && (best < 0 || index < best))) {
+                bestDist = dist;
+                best = index;
+              }
+            });
+            if (best < 0) break;
+            const index = best;
+            queued.delete(index);
+            loading.add(index);
+            active += 1;
+            loadFrameBitmap(`assets/hero-a-frames/frame-${pad(index + 1)}.webp`)
+              .then((frame) => {
+                heroAFrames[index] = frame;
+                heroAReady = true;
+                if (index === 0 && heroADrawn < 0) drawHeroAFrame(0);
+                const show = nearestReadyHeroA(heroATarget);
+                if (show >= 0) drawHeroAFrame(show);
+              })
+              .catch((error) => {
+                console.warn("Hero A frame failed", index + 1, error);
+              })
+              .finally(() => {
+                loading.delete(index);
+                active -= 1;
+                if (mobileHeroMq.matches) {
+                  requestAnimationFrame(() => {
+                    pumpHeroA();
+                    finishIfDone();
+                  });
+                } else {
+                  pumpHeroA();
+                  finishIfDone();
+                }
+              });
+          }
+          finishIfDone();
+        };
+
+        pumpHeroA = pump;
+        for (let index = 0; index < heroAFrameCount; index += 1) queued.add(index);
+        pumpHeroA();
+        return ready;
       };
 
       const preloadFrames = async () => {
@@ -1530,7 +1591,8 @@
       // Khinkali only when menu is near or user is about to open that slide.
       const warmKhinkali = () => {
         const menuTop = menuSection.getBoundingClientRect().top;
-        if (menuTop < window.innerHeight * 1.35) {
+        const lead = mobileHeroMq.matches ? 0.45 : 1.35;
+        if (menuTop < window.innerHeight * lead) {
           ensureKhinkaliLoaded();
           return true;
         }
@@ -1538,7 +1600,11 @@
       };
 
       const onScrollWarm = () => {
-        if (window.scrollY > 24) warmHeroB();
+        if (mobileHeroMq.matches) {
+          if (window.scrollY > cachedHomeScroll * 0.45) warmHeroB();
+        } else if (window.scrollY > 24) {
+          warmHeroB();
+        }
         if (warmKhinkali()) {
           window.removeEventListener("scroll", onScrollWarm);
         }
@@ -1554,6 +1620,7 @@
       const lockHeroViewport = () => {
         const h = Math.round(window.innerHeight);
         if (h < 200) return;
+        scrubViewportH = h;
         document.documentElement.style.setProperty("--hero-stage-h", `${h}px`);
         document.documentElement.style.removeProperty("--decor-size");
       };
