@@ -2124,19 +2124,19 @@ h2 {
   }
 
   /*
-   * Mobile pink:
-   * - tip: classic 30° corner on the sticky stage (same as desktop tip)
-   * - menu: ONE half-plane rotate(30deg) from the LEFT edge of #menu
-   *   (desktop’s left-strip + after-from-decor-size puts the diagonal past
-   *   the right edge on a ~390px phone → solid pink “window”)
-   * Tip seals the seam with bottom:-2px; no rail.
+   * Mobile pink — one 30° half-plane tip → menu:
+   * - tip: sticky triangle on the stage
+   * - rail: same plane through the hero spacer + menu (kills the white flash
+   *   under the tip while the box scrub plays)
+   * - pink-menu off (rail owns the fill; left-strip geometry was a “window”)
    */
   .pink-host {
-    display: contents;
+    display: block;
+    position: relative;
   }
 
   .decor--pink-span,
-  .decor--pink-rail {
+  .decor--pink-menu {
     display: none !important;
   }
 
@@ -2157,27 +2157,29 @@ h2 {
     display: none;
   }
 
-  .decor--pink-menu {
+  .decor--pink-rail {
     display: block;
-    /* Reach tip apex so tip hypotenuse + menu slash are one 30° line. */
-    top: calc(-1 * var(--decor-height));
-    left: 0;
+    position: absolute;
     z-index: 0;
-    width: 100%;
-    height: calc(100% + var(--decor-height));
+    left: 0;
+    right: 0;
+    /* Overlap tip by 2px — no white flash at the sticky seam during scrub. */
+    top: calc(var(--hero-stage-h, 100svh) - 2px);
+    bottom: 0;
     overflow: hidden;
+    pointer-events: none;
     background: transparent;
   }
 
-  .decor--pink-menu::before {
+  .decor--pink-rail::before {
     content: none;
     display: none;
   }
 
-  /* Same apex as the tip triangle (menuTop − decor-height). */
-  .decor--pink-menu::after {
+  /* Apex = tip top = stageBottom − decor-height. */
+  .decor--pink-rail::after {
     position: absolute;
-    top: 0;
+    top: calc(-1 * var(--decor-height) + 2px);
     left: 0;
     width: 300vmax;
     height: 300vmax;
@@ -2185,13 +2187,11 @@ h2 {
     transform: rotate(30deg);
     transform-origin: 0 0;
     content: "";
-    display: block;
   }
 
   .menu {
     position: relative;
     z-index: 1;
-    overflow: visible;
     background: transparent;
   }
 
