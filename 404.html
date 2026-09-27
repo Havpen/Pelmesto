@@ -22,7 +22,7 @@
       rel="stylesheet"
     />
     <link rel="preload" href="assets/hero-a-frames/frame-0001.webp" as="image" type="image/webp" />
-    <link rel="stylesheet" href="styles.css?v=103" />
+    <link rel="stylesheet" href="styles.css?v=104" />
   </head>
   <body>
     <div class="bg-pattern-balloons" data-bg-balloons aria-hidden="true"></div>
@@ -1690,34 +1690,48 @@
         };
         let settling = false;
         let snapAnim = 0;
-        const SHOP_SNAP_MS = 420;
-        const easeInOutCubic = (t) =>
-          t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+        const SHOP_SNAP_MS = 480;
+        const easeOutCubic = (t) => 1 - Math.pow(1 - t, 3);
         const animateScrollTo = (targetLeft) => {
           if (snapAnim) cancelAnimationFrame(snapAnim);
           const max = Math.max(0, track.scrollWidth - track.clientWidth);
           const target = Math.max(0, Math.min(max, targetLeft));
           if (!smoothScroll || Math.abs(track.scrollLeft - target) < 1.5) {
+            track.style.scrollSnapType = "";
             track.scrollLeft = target;
             settling = false;
             syncArrows();
             return;
           }
           settling = true;
+          // Snap would finish the jump on the first frame and hide the slide.
+          track.style.scrollSnapType = "none";
           const start = track.scrollLeft;
           const delta = target - start;
           const t0 = performance.now();
           const tick = (now) => {
             const t = Math.min(1, (now - t0) / SHOP_SNAP_MS);
-            track.scrollLeft = start + delta * easeInOutCubic(t);
+            track.scrollLeft = start + delta * easeOutCubic(t);
             if (t < 1) snapAnim = requestAnimationFrame(tick);
             else {
               snapAnim = 0;
+              track.scrollLeft = target;
+              track.style.scrollSnapType = "";
               settling = false;
               syncArrows();
             }
           };
           snapAnim = requestAnimationFrame(tick);
+        };
+        const neighborOffset = (direction) => {
+          const offsets = cardOffsets();
+          if (!offsets.length) return track.scrollLeft;
+          const current = track.scrollLeft;
+          if (direction > 0) {
+            return offsets.find((offset) => offset > current + 4) ?? offsets[offsets.length - 1];
+          }
+          const prevs = offsets.filter((offset) => offset < current - 4);
+          return prevs.length ? prevs[prevs.length - 1] : offsets[0];
         };
         const snapToNearest = (preferredLeft) => {
           if (settling) return;
@@ -1739,12 +1753,12 @@
         };
         if (prevBtn) {
           prevBtn.addEventListener("click", () => {
-            animateScrollTo(track.scrollLeft - step());
+            animateScrollTo(neighborOffset(-1));
           });
         }
         if (nextBtn) {
           nextBtn.addEventListener("click", () => {
-            animateScrollTo(track.scrollLeft + step());
+            animateScrollTo(neighborOffset(1));
           });
         }
         track.addEventListener("scroll", syncArrows, { passive: true });
