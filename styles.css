@@ -2229,6 +2229,16 @@ h2 {
     filter: blur(1.8px) saturate(0.64) brightness(1.14) contrast(0.9);
   }
 
+  /* Fixed patterns stop at the contacts block. Below that, the page is the footer color. */
+  html {
+    background-color: #171717;
+  }
+
+  body::before,
+  body::after {
+    clip-path: inset(0 0 var(--after-contacts, 0px) 0);
+  }
+
   /* Same color as the footer, only behind the homepage footer — not on the viewport. */
   .bg-footer-band {
     position: relative;
