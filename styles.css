@@ -2068,7 +2068,12 @@ h2 {
     line-height: 0.92;
     text-align: center;
     transform: none;
-    z-index: 3;
+    z-index: 5;
+  }
+
+  /* Above the menu track (3) so the box stays in front while the page scrolls. */
+  .hero__video-shell {
+    z-index: 4;
   }
 
   .hero__title-stack {
@@ -2205,7 +2210,7 @@ h2 {
 
   .menu {
     position: relative;
-    z-index: 1;
+    z-index: auto;
     overflow: visible;
     background: transparent;
   }
@@ -2288,33 +2293,47 @@ h2 {
     font-size: 28px;
   }
 
-  /* Fly canvas is fixed on <body>. .menu__carousel used to sit at z-index:1,
-     which trapped .menu__content below the dumpling (z-index:2). Raise the
-     whole carousel so copy + dish card paint above the flight. */
+  /* The flying canvas is moved to <body>, so it is a later root sibling.
+     .menu must not be its own layer, or that canvas paints over the whole
+     section. The track (transform) sits above the fly; transparent parts
+     still show the dumpling on the pink, opaque copy and the dish card cover it. */
   .pelmen-fly.is-flying {
     z-index: 1;
   }
 
   .menu__carousel {
-    z-index: 5;
+    z-index: auto;
+  }
+
+  .menu__track {
+    position: relative;
+    z-index: 3;
+    align-items: flex-start;
   }
 
   .menu__content {
     position: relative;
-    z-index: 3;
+    z-index: 1;
   }
 
   .menu__media {
     position: relative;
-    z-index: 1;
+    z-index: auto;
   }
 
   /* overflow-x: clip + overflow-y: visible → browsers force y to auto/clip too,
      so the scale(1.25) dumpling was shaved at the bottom. Keep bleed on mobile. */
   .menu,
-  .menu__viewport,
   .menu__carousel {
     overflow: visible;
+  }
+
+  /* Taller inactive slide must not leave empty pink under the open pelmen.
+     clip, not hidden: hidden is a scroll container and the browser was
+     anchoring it so the pelmen sat above a blank band. */
+  .menu__viewport {
+    overflow: clip;
+    overflow-anchor: none;
   }
 
   .menu__media--pelmen,
@@ -2692,10 +2711,18 @@ h2 {
     margin: 8px auto 0;
   }
 
-  /* Over the pelmen/khinkali media, vertically centered on it — not by «Всё меню». */
+  /* Exploded frame is 16:9 with empty bands above and below the layers.
+     A square box reserved that padding. Hug the scaled subject instead. */
+  .menu__media--pelmen {
+    aspect-ratio: 2.15 / 1;
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+
+  /* Over the pelmen media (shorter box). Khinkali keeps the square center. */
   .menu__arrow {
     top: auto;
-    bottom: calc(min(520px, 92vw) / 2 - 24px);
+    bottom: calc(min(520px, 92vw) / 4.3 - 24px);
     width: 48px;
     height: 48px;
     min-width: 48px;
@@ -2714,6 +2741,10 @@ h2 {
 
   .menu__arrow--next {
     right: max(8px, calc(50% - min(260px, 46vw) - 56px));
+  }
+
+  .menu__carousel:has([data-menu-slide="khinkali"].is-active) .menu__arrow {
+    bottom: calc(min(520px, 92vw) / 2 - 24px);
   }
 }
 

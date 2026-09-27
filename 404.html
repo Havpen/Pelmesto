@@ -22,7 +22,7 @@
       rel="stylesheet"
     />
     <link rel="preload" href="assets/hero-a-frames/frame-0001.webp" as="image" type="image/webp" />
-    <link rel="stylesheet" href="styles.css?v=97" />
+    <link rel="stylesheet" href="styles.css?v=98" />
   </head>
   <body>
     <div class="bg-pattern-balloons" data-bg-balloons aria-hidden="true"></div>
@@ -1256,23 +1256,27 @@
       window.addEventListener("resize", () => {
         cacheLayout();
         if (pelmenDocked) fitPelmenInMedia();
+        if (typeof syncCarouselHeight === "function") syncCarouselHeight();
         requestSceneUpdate();
       });
       if (typeof mobileHeroMq.addEventListener === "function") {
         mobileHeroMq.addEventListener("change", () => {
           cacheLayout();
           if (pelmenDocked) fitPelmenInMedia();
+          if (typeof syncCarouselHeight === "function") syncCarouselHeight();
           requestSceneUpdate();
         });
       } else if (typeof mobileHeroMq.addListener === "function") {
         mobileHeroMq.addListener(() => {
           cacheLayout();
           if (pelmenDocked) fitPelmenInMedia();
+          if (typeof syncCarouselHeight === "function") syncCarouselHeight();
           requestSceneUpdate();
         });
       }
 
       const carousel = document.querySelector("[data-carousel]");
+      const carouselViewport = carousel.querySelector(".menu__viewport");
       const carouselTrack = document.querySelector("[data-carousel-track]");
       const carouselSlides = Array.from(document.querySelectorAll("[data-carousel-slide]"));
       const carouselPrev = document.querySelector("[data-carousel-prev]");
@@ -1414,6 +1418,17 @@
         preloadKhinkaliFrames();
       };
 
+      const syncCarouselHeight = () => {
+        if (!carouselViewport) return;
+        if (!mobileHeroMq.matches) {
+          carouselViewport.style.height = "";
+          return;
+        }
+        const slide = carouselSlides[carouselIndex];
+        if (!slide) return;
+        carouselViewport.style.height = `${slide.offsetHeight}px`;
+      };
+
       const syncCarousel = () => {
         const previousIndex = Number(carouselTrack.dataset.activeIndex || 0);
         const returningToPelmen = previousIndex === 1 && carouselIndex === 0;
@@ -1425,6 +1440,7 @@
         });
         carouselPrev.disabled = carouselIndex <= 0;
         carouselNext.disabled = carouselIndex >= carouselSlides.length - 1;
+        syncCarouselHeight();
 
         if (previousIndex !== 1 && carouselIndex === 1) {
           ensureKhinkaliLoaded();
