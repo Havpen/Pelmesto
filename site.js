@@ -41,14 +41,29 @@
 
   var footerEl = document.querySelector(".site-footer");
   var footerBandMq = window.matchMedia("(max-width: 900px)");
+  var footerSyncRaf = 0;
   function syncFooterBand() {
+    footerSyncRaf = 0;
     if (!footerEl) return;
-    var h = footerBandMq.matches ? footerEl.offsetHeight : 0;
+    var mobile = footerBandMq.matches;
+    var h = mobile ? footerEl.offsetHeight : 0;
     document.documentElement.style.setProperty("--footer-h", h + "px");
+    var after = 0;
+    if (mobile) {
+      var patternH =
+        parseFloat(getComputedStyle(document.body, "::before").height) || window.innerHeight;
+      after = Math.max(0, patternH - footerEl.getBoundingClientRect().top);
+    }
+    document.documentElement.style.setProperty("--after-contacts", after + "px");
   }
-  syncFooterBand();
-  window.addEventListener("resize", syncFooterBand);
-  window.addEventListener("load", syncFooterBand);
+  function scheduleFooterBand() {
+    if (footerSyncRaf) return;
+    footerSyncRaf = requestAnimationFrame(syncFooterBand);
+  }
+  scheduleFooterBand();
+  window.addEventListener("scroll", scheduleFooterBand, { passive: true });
+  window.addEventListener("resize", scheduleFooterBand);
+  window.addEventListener("load", scheduleFooterBand);
 
   document.addEventListener("click", function (event) {
     var target = event.target.closest("[data-analytics]");

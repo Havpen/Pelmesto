@@ -2229,7 +2229,7 @@ h2 {
     filter: blur(1.8px) saturate(0.64) brightness(1.14) contrast(0.9);
   }
 
-  /* Fixed patterns stop at the contacts block. Below that, the page is the footer color. */
+  /* Fixed patterns stop where the footer starts. Below that, the page is the footer color. */
   html {
     background-color: #171717;
   }
