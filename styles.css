@@ -2112,6 +2112,11 @@ h2 {
   .hero__stage {
     height: var(--hero-stage-h, 100svh);
     overflow: visible;
+    /*
+     * Opaque so the pink rail (scrolling up during scrub) cannot show through
+     * the transparent sticky stage and flood the hero. Tip/teal/video sit on top.
+     */
+    background-color: #ffffff;
   }
 
   /* Mobile teal: clean 30° corner (desktop keeps the header stub). */
