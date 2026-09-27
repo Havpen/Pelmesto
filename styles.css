@@ -2377,7 +2377,7 @@ h2 {
     display: none;
   }
 
-  .menu__slide[data-menu-slide="khinkali"] .menu-list > li:nth-child(n + 3) {
+  .menu__slide[data-menu-slide="khinkali"] .menu-list > li:nth-child(n + 3):not(.menu-list__more) {
     display: none;
   }
 
@@ -2809,7 +2809,7 @@ h2 {
     height: 100%;
     max-width: none;
     max-height: 100%;
-    transform: translate(-50%, -50%) scale(1.28);
+    transform: translate(-50%, -50%) scale(1.42);
   }
 
   /* Over the pelmen media. Khinkali recenters when that slide is active. */
