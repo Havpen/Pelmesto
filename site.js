@@ -77,4 +77,9 @@
       window.ym(window.PELMESTO_YM_ID, "reachGoal", name);
     }
   });
+
+  if ("serviceWorker" in navigator) {
+    var swBase = location.pathname.indexOf("/Pelmesto") === 0 ? "/Pelmesto" : "";
+    navigator.serviceWorker.register(swBase + "/sw.js", { scope: swBase + "/" }).catch(function () {});
+  }
 })();

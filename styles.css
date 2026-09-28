@@ -1,3 +1,52 @@
+@font-face {
+  font-family: "Roboto Slab";
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("assets/fonts/roboto-slab-cyrillic.woff2") format("woff2");
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+@font-face {
+  font-family: "Roboto Slab";
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("assets/fonts/roboto-slab-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "Roboto Slab";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("assets/fonts/roboto-slab-cyrillic.woff2") format("woff2");
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+@font-face {
+  font-family: "Roboto Slab";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("assets/fonts/roboto-slab-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "Roboto Slab";
+  font-style: normal;
+  font-weight: 900;
+  font-display: swap;
+  src: url("assets/fonts/roboto-slab-cyrillic.woff2") format("woff2");
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+@font-face {
+  font-family: "Roboto Slab";
+  font-style: normal;
+  font-weight: 900;
+  font-display: swap;
+  src: url("assets/fonts/roboto-slab-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
 :root {
   color: #171717;
   font-family:
@@ -16,8 +65,8 @@
   --shadow-glass-inset: inset 0 1px 0 rgba(255, 255, 255, 0.78);
   --decor-size: min(68vw, 860px);
   --decor-height: calc(var(--decor-size) * tan(30deg));
-  --bg-pattern: url("assets/pattern-dumplings.png");
-  --bg-pattern-balloons: url("assets/pattern-khinkali-balloons.png");
+  --bg-pattern: url("assets/pattern-dumplings.webp");
+  --bg-pattern-balloons: url("assets/pattern-khinkali-balloons.webp");
   --bg-pattern-balloons-size: 2200px;
   --bg-pattern-balloons-size-y: calc(2200px * 689 / 1024);
   /* 50% right + 50% up for each layered copy of the tile. */
@@ -57,8 +106,6 @@ body::before {
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
-  /* Soften so it stays a backdrop, not a competing photo. */
-  filter: blur(1.2px) saturate(0.72) brightness(1.08) contrast(0.94);
   content: "";
 }
 
@@ -90,7 +137,6 @@ body::after {
   background-position:
     0 0,
     var(--bg-pattern-balloons-ox) var(--bg-pattern-balloons-oy);
-  filter: blur(2.6px) saturate(0.64) brightness(1.14) contrast(0.9);
   clip-path: inset(100% 0 0 0);
 }
 
@@ -108,9 +154,8 @@ body::after {
   padding-top: max(12px, env(safe-area-inset-top));
   padding-right: max(clamp(24px, 6vw, 96px), env(safe-area-inset-right));
   padding-left: max(16px, env(safe-area-inset-left));
-  background: rgba(255, 255, 255, 0.88);
+  background: #ffffff;
   border-bottom: 1px solid rgba(23, 23, 23, 0.06);
-  backdrop-filter: blur(14px) saturate(1.1);
 }
 
 .logo {
@@ -2218,15 +2263,6 @@ h2 {
   .decor--teal {
     transform: translateZ(0);
     backface-visibility: hidden;
-  }
-
-  /* Patterns stay fixed (desktop behavior). Soften blur only — do not remove. */
-  body::before {
-    filter: blur(0.8px) saturate(0.72) brightness(1.08) contrast(0.94);
-  }
-
-  .bg-pattern-balloons {
-    filter: blur(1.8px) saturate(0.64) brightness(1.14) contrast(0.9);
   }
 
   /* Fixed patterns stop where the footer starts. Below that, the page is the footer color. */
