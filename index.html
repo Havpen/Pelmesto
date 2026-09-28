@@ -646,7 +646,6 @@
       let currentFrame = 0;
       let drawnFrame = -1;
       let framesReady = false;
-      let pelmenWindow = null;
       let isPlaying = false;
       let lastPlayTime = 0;
       let playRaf = null;
@@ -937,86 +936,6 @@
         await Promise.all(runners);
       };
 
-      /* Decode only a band around the playhead. Frames further away are dropped
-         so the phone is not holding the whole sequence. */
-      const createFrameWindow = ({
-        count,
-        store,
-        urlFor,
-        loadOptions = {},
-        behind,
-        ahead,
-        keepBehind,
-        keepAhead,
-        parallel,
-      }) => {
-        const queued = new Set();
-        const loading = new Set();
-        let active = 0;
-        let target = 0;
-        let onFrame = () => {};
-
-        const within = (index, back, fore) =>
-          index >= Math.max(0, target - back) && index <= Math.min(count - 1, target + fore);
-
-        const sync = () => {
-          for (let index = 0; index < count; index += 1) {
-            if (within(index, behind, ahead)) {
-              if (!store[index] && !loading.has(index)) queued.add(index);
-            } else {
-              queued.delete(index);
-            }
-            if (store[index] && !within(index, keepBehind, keepAhead)) store[index] = null;
-          }
-        };
-
-        const pump = () => {
-          sync();
-          while (active < parallel && queued.size) {
-            let best = -1;
-            let bestDist = Infinity;
-            queued.forEach((index) => {
-              const dist = Math.abs(index - target) + (index < target ? 0.25 : 0);
-              if (dist < bestDist) {
-                bestDist = dist;
-                best = index;
-              }
-            });
-            if (best < 0) break;
-            const index = best;
-            queued.delete(index);
-            if (store[index] || loading.has(index)) continue;
-            loading.add(index);
-            active += 1;
-            loadFrameBitmap(urlFor(index), loadOptions)
-              .then((frame) => {
-                if (!within(index, keepBehind, keepAhead)) return;
-                store[index] = frame;
-                onFrame(index);
-              })
-              .catch((error) => {
-                console.warn("Frame failed", urlFor(index), error);
-              })
-              .finally(() => {
-                loading.delete(index);
-                active -= 1;
-                if (mobileHeroMq.matches) requestAnimationFrame(pump);
-                else pump();
-              });
-          }
-        };
-
-        return {
-          setTarget(index) {
-            target = Math.max(0, Math.min(count - 1, index | 0));
-            pump();
-          },
-          setOnFrame(fn) {
-            onFrame = fn;
-          },
-        };
-      };
-
       const drawFrame = (index) => {
         if (index === drawnFrame) return;
 
@@ -1072,7 +991,7 @@
       };
 
       let heroATarget = 0;
-      let heroWindow = null;
+      let pumpHeroA = () => {};
 
       const nearestReadyHeroA = (index) => {
         if (heroAFrames[index]) return index;
@@ -1084,10 +1003,10 @@
 
       const seekVideoA = (time) => {
         heroATarget = clamp(Math.round(time * heroAFps), 0, heroAFrameCount - 1);
-        if (heroWindow) heroWindow.setTarget(heroATarget);
         const index = nearestReadyHeroA(heroATarget);
         if (index < 0) return;
         drawHeroAFrame(index);
+        pumpHeroA();
       };
 
       const stopPlayback = () => {
@@ -1105,18 +1024,13 @@
         const elapsed = timestamp - lastPlayTime;
 
         if (elapsed >= 1000 / frameFps) {
+          lastPlayTime = timestamp - (elapsed % (1000 / frameFps));
           const nextFrame = Math.min(frameCount - 1, currentFrame + 1);
-          if (!frames[nextFrame]) {
-            lastPlayTime = timestamp;
-            if (pelmenWindow) pelmenWindow.setTarget(currentFrame);
-          } else {
-            lastPlayTime = timestamp - (elapsed % (1000 / frameFps));
-            drawFrame(nextFrame);
-            if (pelmenWindow) pelmenWindow.setTarget(currentFrame);
-            if (currentFrame >= frameCount - 1) {
-              stopPlayback();
-              return;
-            }
+          drawFrame(nextFrame);
+
+          if (nextFrame >= frameCount - 1) {
+            stopPlayback();
+            return;
           }
         }
 
@@ -1132,25 +1046,13 @@
         playRaf = requestAnimationFrame(playRemaining);
       };
 
-      let pelmenPlayArmed = false;
-      const pelmenLead = () => {
-        const need = Math.min(frameCount, 16);
-        for (let i = 0; i < need; i += 1) if (!frames[i]) return false;
-        return true;
-      };
-
       const restartPlayback = () => {
-        if (pelmenWindow) pelmenWindow.setTarget(0);
-        if (!frames[0]) {
-          pelmenPlayArmed = true;
-          return;
-        }
+        if (!framesReady) return;
         stopPlayback();
         currentFrame = 0;
         drawnFrame = -1;
         drawFrame(0);
-        if (pelmenLead()) startPlayback();
-        else pelmenPlayArmed = true;
+        startPlayback();
       };
 
       const placeFly = (progress) => {
@@ -1316,67 +1218,103 @@
       };
 
       const preloadHeroA = () => {
+        const queued = new Set();
+        const loading = new Set();
+        let active = 0;
         let settled = false;
         let resolveReady = () => {};
         const ready = new Promise((resolve) => {
           resolveReady = resolve;
         });
-        const phone = mobileHeroMq.matches;
-        heroWindow = createFrameWindow({
-          count: heroAFrameCount,
-          store: heroAFrames,
-          urlFor: (index) => `assets/hero-a-frames/frame-${pad(index + 1)}.webp`,
-          behind: phone ? 8 : 12,
-          ahead: phone ? 24 : 40,
-          keepBehind: phone ? 12 : 18,
-          keepAhead: phone ? 32 : 52,
-          parallel: phone ? 3 : 4,
-        });
-        heroWindow.setOnFrame(() => {
-          heroAReady = true;
-          const show = nearestReadyHeroA(heroATarget);
-          if (show >= 0) drawHeroAFrame(show);
+        const parallel = mobileHeroMq.matches ? 3 : 6;
+
+        const finishIfDone = () => {
           if (settled) return;
-          const need = Math.min(heroAFrameCount - 1, phone ? 10 : 16);
-          for (let i = 0; i <= need; i += 1) if (!heroAFrames[i]) return;
+          if (queued.size || loading.size || active) return;
           settled = true;
+          heroAReady = heroAFrames.some(Boolean);
           resolveReady();
           requestSceneUpdate();
-        });
-        heroWindow.setTarget(0);
+        };
+
+        const pump = () => {
+          while (active < parallel && queued.size) {
+            let best = -1;
+            let bestDist = Infinity;
+            queued.forEach((index) => {
+              const dist = Math.abs(index - heroATarget);
+              if (dist < bestDist || (dist === bestDist && (best < 0 || index < best))) {
+                bestDist = dist;
+                best = index;
+              }
+            });
+            if (best < 0) break;
+            const index = best;
+            queued.delete(index);
+            loading.add(index);
+            active += 1;
+            loadFrameBitmap(`assets/hero-a-frames/frame-${pad(index + 1)}.webp`)
+              .then((frame) => {
+                heroAFrames[index] = frame;
+                heroAReady = true;
+                if (index === 0 && heroADrawn < 0) drawHeroAFrame(0);
+                const show = nearestReadyHeroA(heroATarget);
+                if (show >= 0) drawHeroAFrame(show);
+              })
+              .catch((error) => {
+                console.warn("Hero A frame failed", index + 1, error);
+              })
+              .finally(() => {
+                loading.delete(index);
+                active -= 1;
+                if (mobileHeroMq.matches) {
+                  requestAnimationFrame(() => {
+                    pumpHeroA();
+                    finishIfDone();
+                  });
+                } else {
+                  pumpHeroA();
+                  finishIfDone();
+                }
+              });
+          }
+          finishIfDone();
+        };
+
+        pumpHeroA = pump;
+        for (let index = 0; index < heroAFrameCount; index += 1) queued.add(index);
+        pumpHeroA();
         return ready;
       };
 
-      const preloadFrames = () => {
-        if (pelmenWindow) {
-          pelmenWindow.setTarget(currentFrame);
-          return;
+      const preloadFrames = async () => {
+        try {
+          frames[0] = await loadFrameBitmap(`assets/hero-b-frames/frame-0001.png`, {
+            cropCenter: true,
+          });
+          framesReady = true;
+          drawFrame(0);
+          cacheLayout();
+          requestSceneUpdate();
+        } catch (error) {
+          console.warn("Pelmen frame failed", 1, error);
         }
-        const phone = mobileHeroMq.matches;
-        pelmenWindow = createFrameWindow({
-          count: frameCount,
-          store: frames,
-          urlFor: (index) => `assets/hero-b-frames/frame-${pad(index + 1)}.png`,
-          loadOptions: { cropCenter: true },
-          behind: 2,
-          ahead: phone ? 20 : 28,
-          keepBehind: 6,
-          keepAhead: phone ? 28 : 36,
-          parallel: phone ? 2 : 4,
-        });
-        pelmenWindow.setOnFrame((index) => {
-          if (index === 0 && !framesReady) {
-            framesReady = true;
-            if (drawnFrame < 0) drawFrame(0);
-            cacheLayout();
-            requestSceneUpdate();
-          }
-          if (pelmenPlayArmed && pelmenLead()) {
-            pelmenPlayArmed = false;
-            startPlayback();
+
+        await mapPool(frameCount - 1, async (offset) => {
+          const index = offset + 1;
+          try {
+            frames[index] = await loadFrameBitmap(
+              `assets/hero-b-frames/frame-${pad(index + 1)}.png`,
+              { cropCenter: true },
+            );
+          } catch (error) {
+            console.warn("Pelmen frame failed", index + 1, error);
           }
         });
-        pelmenWindow.setTarget(0);
+
+        framesReady = frames.some(Boolean);
+        cacheLayout();
+        requestSceneUpdate();
       };
 
       cacheLayout();
@@ -1451,21 +1389,11 @@
         }
       };
 
-      let khinkaliWindow = null;
-      const khinkaliLead = (from) => {
-        const end = Math.min(khinkaliFrameCount - 1, from + 8);
-        for (let i = from; i <= end; i += 1) if (!khinkaliFrames[i]) return false;
-        return true;
-      };
-
       const playKhinkaliRange = (from, to) => {
-        if (khinkaliWindow) khinkaliWindow.setTarget(from);
-        if (!khinkaliLead(from)) {
+        if (!khinkaliReady) {
           pendingKhinkaliRange = [from, to];
-          preloadKhinkaliFrames();
           return;
         }
-        khinkaliReady = true;
 
         stopKhinkaliPlayback();
 
@@ -1480,18 +1408,13 @@
           const elapsed = timestamp - khinkaliLastPlay;
 
           if (elapsed >= 1000 / khinkaliFps) {
+            khinkaliLastPlay = timestamp - (elapsed % (1000 / khinkaliFps));
             const next = Math.min(khinkaliPlayTo, khinkaliFrame + 1);
-            if (!khinkaliFrames[next]) {
-              khinkaliLastPlay = timestamp;
-              if (khinkaliWindow) khinkaliWindow.setTarget(khinkaliFrame);
-            } else {
-              khinkaliLastPlay = timestamp - (elapsed % (1000 / khinkaliFps));
-              drawKhinkaliFrame(next);
-              if (khinkaliWindow) khinkaliWindow.setTarget(khinkaliFrame);
-              if (khinkaliFrame >= khinkaliPlayTo) {
-                stopKhinkaliPlayback();
-                return;
-              }
+            drawKhinkaliFrame(next);
+
+            if (next >= khinkaliPlayTo) {
+              stopKhinkaliPlayback();
+              return;
             }
           }
 
@@ -1502,30 +1425,58 @@
       };
 
       const preloadKhinkaliFrames = () => {
-        if (!khinkaliWindow) {
-          const phone = mobileHeroMq.matches;
-          khinkaliWindow = createFrameWindow({
-            count: khinkaliFrameCount,
-            store: khinkaliFrames,
-            urlFor: (index) => `assets/khinkali-frames/frame-${pad(index + 1)}.png`,
-            behind: 4,
-            ahead: phone ? 18 : 28,
-            keepBehind: 8,
-            keepAhead: phone ? 26 : 40,
-            parallel: phone ? 2 : 4,
+        if (khinkaliReady) return Promise.resolve();
+        if (khinkaliLoading) return khinkaliLoading;
+
+        khinkaliLoading = (async () => {
+          await mapPool(khinkaliIntroEnd + 1, async (index) => {
+            try {
+              khinkaliFrames[index] = await loadFrameBitmap(
+                `assets/khinkali-frames/frame-${pad(index + 1)}.png`,
+              );
+            } catch (error) {
+              console.warn("Khinkali frame failed", index + 1, error);
+            }
+
+            if (index === 0 && khinkaliFrames[0] && khinkaliDrawn < 0) {
+              drawKhinkaliFrame(0);
+            }
           });
-          khinkaliWindow.setOnFrame((index) => {
-            if (index === 0 && khinkaliDrawn < 0 && khinkaliFrames[0]) drawKhinkaliFrame(0);
-            if (!pendingKhinkaliRange) return;
-            const [from, to] = pendingKhinkaliRange;
-            if (!khinkaliLead(from)) return;
-            pendingKhinkaliRange = null;
+
+          const introReady = khinkaliFrames.slice(0, khinkaliIntroEnd + 1).every(Boolean);
+          if (introReady) {
             khinkaliReady = true;
-            playKhinkaliRange(from, to);
+            if (pendingKhinkaliRange) {
+              const [from, to] = pendingKhinkaliRange;
+              if (to <= khinkaliIntroEnd) {
+                pendingKhinkaliRange = null;
+                playKhinkaliRange(from, to);
+              }
+            }
+          }
+
+          await mapPool(khinkaliFrameCount - (khinkaliIntroEnd + 1), async (offset) => {
+            const index = offset + khinkaliIntroEnd + 1;
+            try {
+              khinkaliFrames[index] = await loadFrameBitmap(
+                `assets/khinkali-frames/frame-${pad(index + 1)}.png`,
+              );
+            } catch (error) {
+              console.warn("Khinkali frame failed", index + 1, error);
+            }
           });
-        }
-        const focus = pendingKhinkaliRange ? pendingKhinkaliRange[0] : khinkaliFrame;
-        khinkaliWindow.setTarget(focus);
+
+          khinkaliReady = khinkaliFrames.some(Boolean);
+          if (khinkaliReady && khinkaliDrawn < 0) drawKhinkaliFrame(0);
+
+          if (pendingKhinkaliRange) {
+            const [from, to] = pendingKhinkaliRange;
+            pendingKhinkaliRange = null;
+            playKhinkaliRange(from, to);
+          }
+        })();
+
+        return khinkaliLoading;
       };
 
       const ensureKhinkaliLoaded = () => {
