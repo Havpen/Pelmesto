@@ -1,5 +1,17 @@
 /* Shared shell behaviour for inner pages: burger nav + analytics goals. */
 (function () {
+  if (/CriOS/.test(navigator.userAgent)) {
+    var probe = document.createElement("div");
+    probe.style.cssText =
+      "position:fixed;left:0;top:0;width:0;visibility:hidden;pointer-events:none;height:100lvh";
+    document.documentElement.appendChild(probe);
+    var large = probe.offsetHeight;
+    probe.style.height = "100svh";
+    var small = probe.offsetHeight;
+    probe.remove();
+    var max = large > small + 2 ? large : Math.max(large, window.screen.height || 0);
+    if (max) document.documentElement.style.setProperty("--pattern-lock", max + "px");
+  }
   var navToggle = document.querySelector("[data-nav-toggle]");
   var siteNav = document.querySelector("[data-nav]");
   var navBackdrop = document.querySelector("[data-nav-backdrop]");

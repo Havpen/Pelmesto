@@ -16,7 +16,22 @@
       crossorigin
     />
     <link rel="preload" href="assets/hero-a-frames/frame-0001.webp" as="image" type="image/webp" />
-    <link rel="stylesheet" href="styles.css?v=114" />
+    <link rel="stylesheet" href="styles.css?v=115" />
+    <script>
+      (function () {
+        if (!/CriOS/.test(navigator.userAgent)) return;
+        var probe = document.createElement("div");
+        probe.style.cssText =
+          "position:fixed;left:0;top:0;width:0;visibility:hidden;pointer-events:none;height:100lvh";
+        document.documentElement.appendChild(probe);
+        var large = probe.offsetHeight;
+        probe.style.height = "100svh";
+        var small = probe.offsetHeight;
+        probe.remove();
+        var max = large > small + 2 ? large : Math.max(large, window.screen.height || 0);
+        if (max) document.documentElement.style.setProperty("--pattern-lock", max + "px");
+      })();
+    </script>
   </head>
   <body>
     <div class="bg-pattern-balloons" data-bg-balloons aria-hidden="true"></div>
@@ -97,7 +112,7 @@
                     <p class="hero__label">Меню зала</p>
                     <h2>Пельмени ручной лепки</h2>
                     <p class="hero__text">
-                      Делаем из лучшего свежего фарша и тонкого теста — без лишнего,<br />
+                      <span class="hero__text-line">Готовим только из лучшего свежего фарша и тонкого теста – ничего лишнего,</span><br />
                       только вкус, который хочется повторить.
                     </p>
                     <div class="menu__dish-block">
@@ -299,8 +314,8 @@
           <p class="band__eyebrow">Купить домой</p>
           <h2 id="shop-title" class="band__title">Заморозка ручной лепки</h2>
           <p class="band__text">
-            Те же начинки, что в зале. Самовывоз на Советской, 44 до 21:40. Заказ — в зале или по
-            телефону.
+            Вкус, который хочется забрать с собой. Заказ – в зале или по телефону. Самовывоз на
+            Советской, 44.
           </p>
           <div class="shop-rail" data-shop-rail>
             <button
