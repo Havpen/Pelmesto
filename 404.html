@@ -16,7 +16,7 @@
       crossorigin
     />
     <link rel="preload" href="assets/hero-a-frames/frame-0001.webp" as="image" type="image/webp" />
-    <link rel="stylesheet" href="styles.css?v=109" />
+    <link rel="stylesheet" href="styles.css?v=114" />
   </head>
   <body>
     <div class="bg-pattern-balloons" data-bg-balloons aria-hidden="true"></div>
@@ -1773,8 +1773,13 @@
           const cards = [...track.querySelectorAll(cardSelector)];
           if (!cards.length) return [];
           const origin = track.getBoundingClientRect().left;
+          // scrollLeft 0 is the resting inset: padding keeps the first card
+          // clear of the arrow. Snap every card to that same line.
+          const inset = parseFloat(getComputedStyle(track).paddingLeft) || 0;
           return cards.map((card) => {
-            return track.scrollLeft + (card.getBoundingClientRect().left - origin);
+            const edge =
+              track.scrollLeft + (card.getBoundingClientRect().left - origin);
+            return Math.max(0, edge - inset);
           });
         };
         let settling = false;
