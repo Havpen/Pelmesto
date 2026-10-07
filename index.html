@@ -16,7 +16,7 @@
       crossorigin
     />
     <link rel="preload" href="assets/hero-a-frames/frame-0001.webp" as="image" type="image/webp" />
-    <link rel="stylesheet" href="styles.css?v=119" />
+    <link rel="stylesheet" href="styles.css?v=122" />
     <script>
       (function () {
         if (!/CriOS/.test(navigator.userAgent)) return;
@@ -1696,15 +1696,17 @@
       const syncBalloonsBg = () => {
         const footerCut = footerEl ? footerEl.offsetHeight : 0;
         document.documentElement.style.setProperty("--footer-h", `${footerCut}px`);
+        const footerTop = footerEl
+          ? footerEl.getBoundingClientRect().top
+          : contactsSection
+            ? contactsSection.getBoundingClientRect().bottom
+            : 0;
         let afterContacts = 0;
-        if (contactsSection) {
+        if (footerEl || contactsSection) {
           const patternH =
             parseFloat(getComputedStyle(document.body, "::before").height) ||
             window.innerHeight;
-          afterContacts = Math.max(
-            0,
-            patternH - contactsSection.getBoundingClientRect().bottom
-          );
+          afterContacts = Math.max(0, patternH - footerTop);
         }
         document.documentElement.style.setProperty(
           "--after-contacts",
@@ -1713,11 +1715,10 @@
         if (!shopSection || !balloonsBg) return;
         const top = Math.max(0, shopSection.getBoundingClientRect().top);
         let balloonsBottom = 0;
-        if (contactsSection) {
+        if (footerEl || contactsSection) {
           balloonsBottom = Math.max(
             0,
-            balloonsBg.getBoundingClientRect().bottom -
-              contactsSection.getBoundingClientRect().bottom
+            balloonsBg.getBoundingClientRect().bottom - footerTop
           );
         }
         balloonsBg.style.clipPath = `inset(${top}px 0 ${balloonsBottom}px 0)`;

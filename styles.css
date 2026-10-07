@@ -341,15 +341,16 @@ body.nav-open .nav-toggle__bars::after {
   pointer-events: none;
 }
 
-/* Top-right teal: full width under the header, same 30° as before.
-   The flat cap sits behind the header; the slope starts at the left edge. */
+/* Top-right teal stays the original corner. The 30° side continues
+   up through the header to the top of the page, and no farther left. */
 .decor--teal {
   top: 0;
   right: 0;
-  width: 100vw;
-  height: calc(100vw * tan(30deg) + var(--header-height));
+  --teal-extend: calc(var(--header-height) / tan(30deg));
+  width: calc(var(--decor-size) + var(--teal-extend));
+  height: calc(var(--decor-height) + var(--header-height));
   background: var(--decor-teal);
-  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 var(--header-height));
+  clip-path: polygon(0 0, 100% 0, 100% 100%);
 }
 
 /* Bottom-left pink on home — exact 30°. Shift 2px down to overlap menu (angle unchanged). */
@@ -1869,10 +1870,11 @@ body::after {
   clip-path: inset(0 0 var(--after-contacts, 0px) 0);
 }
 
-/* Same size and color as the footer, glued behind it on the fixed pattern layer. */
+/* Same size and color as the footer, sitting in the footer's own box.
+   Kept under the teal (z-index 0) so it cannot cover the page above. */
 .bg-footer-band {
   position: relative;
-  z-index: 1;
+  z-index: 0;
   height: var(--footer-h, 0px);
   margin-top: calc(-1 * var(--footer-h, 0px));
   background: #171717;
@@ -2196,15 +2198,6 @@ body::after {
   .hero__stage {
     height: var(--hero-stage-h, 100svh);
     overflow: visible;
-  }
-
-  /* Same full-width 30° cap under the header as on desktop. */
-  .decor--teal {
-    top: 0;
-    right: 0;
-    width: 100vw;
-    height: calc(100vw * tan(30deg) + var(--header-height));
-    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 var(--header-height));
   }
 
   /*
@@ -2846,7 +2839,8 @@ body::after {
   .menu__media--pelmen {
     aspect-ratio: 16 / 9;
     margin-top: 0;
-    margin-bottom: 0;
+    /* Scale hangs below the box; the margin keeps that tail inside the slide. */
+    margin-bottom: calc(min(520px, 92vw) * 0.13);
   }
 
   .menu__media--pelmen .pelmen-fly:not(.is-flying) {
@@ -2859,6 +2853,7 @@ body::after {
     width: 100%;
     max-width: min(520px, 92vw);
     margin: 0 auto;
+    margin-bottom: calc(min(520px, 92vw) * 0.13);
   }
 
   .menu__media--khinkali .menu__khinkali-canvas {
@@ -2872,7 +2867,7 @@ body::after {
   /* Over the pelmen media. Khinkali recenters when that slide is active. */
   .menu__arrow {
     top: auto;
-    bottom: calc(min(520px, 92vw) * 9 / 32 - 24px);
+    bottom: calc(min(520px, 92vw) * 9 / 32 - 24px + min(520px, 92vw) * 0.13);
     width: 48px;
     height: 48px;
     min-width: 48px;
@@ -2894,7 +2889,7 @@ body::after {
   }
 
   .menu__carousel:has([data-menu-slide="khinkali"].is-active) .menu__arrow {
-    bottom: calc(min(520px, 92vw) * 9 / 32 - 24px);
+    bottom: calc(min(520px, 92vw) * 9 / 32 - 24px + min(520px, 92vw) * 0.13);
   }
 }
 

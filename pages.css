@@ -93,12 +93,12 @@ body.page .site-footer {
   position: absolute;
   z-index: 0;
   top: calc(-1 * var(--header-height));
-  right: 0;
+  right: calc(-1 * var(--header-height) / tan(30deg));
   left: 0;
   height: calc(100vw * tan(30deg) + var(--header-height));
   background: var(--decor-pink);
-  /* Top edge is behind the header. Hypotenuse stays 30° and reaches the left edge. */
-  clip-path: polygon(0 0, 100% 0, 0 calc(100% - var(--header-height)));
+  /* Same wedge as before. The 30° side continues up under the header. */
+  clip-path: polygon(0 0, 100% 0, 0 100%);
   content: "";
   pointer-events: none;
 }
