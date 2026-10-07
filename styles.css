@@ -387,12 +387,15 @@ body.nav-open .nav-toggle__bars::after {
 .decor--pink-menu::after {
   position: absolute;
   top: 0;
-  left: var(--decor-size);
-  width: 300vmax;
-  height: 300vmax;
+  left: calc(var(--decor-size) - 1px);
+  width: auto;
+  height: 100%;
+  aspect-ratio: calc(1 / tan(30deg));
   background: var(--decor-pink);
-  transform: rotate(30deg);
-  transform-origin: 0 0;
+  /* A rotated 300vmax sheet is tiled while scrolling and the 30° edge
+     breaks into a sawtooth on some laptop GPUs. This is the same cut. */
+  transform: none;
+  clip-path: polygon(0 0, 100% 100%, 0 100%);
   content: "";
 }
 
@@ -2268,9 +2271,11 @@ body::after {
     left: 0;
     width: 300vmax;
     height: 300vmax;
+    aspect-ratio: auto;
     background: var(--decor-pink);
     transform: rotate(30deg);
     transform-origin: 0 0;
+    clip-path: none;
     content: "";
   }
 
