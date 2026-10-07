@@ -52,20 +52,15 @@
   });
 
   var footerEl = document.querySelector(".site-footer");
-  var footerBandMq = window.matchMedia("(max-width: 900px)");
   var footerSyncRaf = 0;
   function syncFooterBand() {
     footerSyncRaf = 0;
     if (!footerEl) return;
-    var mobile = footerBandMq.matches;
-    var h = mobile ? footerEl.offsetHeight : 0;
+    var h = footerEl.offsetHeight;
     document.documentElement.style.setProperty("--footer-h", h + "px");
-    var after = 0;
-    if (mobile) {
-      var patternH =
-        parseFloat(getComputedStyle(document.body, "::before").height) || window.innerHeight;
-      after = Math.max(0, patternH - footerEl.getBoundingClientRect().top);
-    }
+    var patternH =
+      parseFloat(getComputedStyle(document.body, "::before").height) || window.innerHeight;
+    var after = Math.max(0, patternH - footerEl.getBoundingClientRect().top);
     document.documentElement.style.setProperty("--after-contacts", after + "px");
   }
   function scheduleFooterBand() {

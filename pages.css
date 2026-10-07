@@ -92,12 +92,13 @@ body.page .site-footer {
 .page-head::before {
   position: absolute;
   z-index: 0;
-  top: 0;
+  top: calc(-1 * var(--header-height));
   right: 0;
   left: 0;
-  aspect-ratio: 1 / 0.57735; /* tan(30deg) */
+  height: calc(100vw * tan(30deg) + var(--header-height));
   background: var(--decor-pink);
-  clip-path: polygon(0 0, 100% 0, 0 100%);
+  /* Top edge is behind the header. Hypotenuse stays 30° and reaches the left edge. */
+  clip-path: polygon(0 0, 100% 0, 0 calc(100% - var(--header-height)));
   content: "";
   pointer-events: none;
 }
@@ -1020,6 +1021,25 @@ body.cart-open .cart {
   color: #6b6b6b;
   font-size: 12.5px;
   line-height: 1.45;
+}
+
+.cart__clear {
+  display: block;
+  width: 100%;
+  margin: 0 0 12px;
+  padding: 10px 16px;
+  color: #171717;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 650;
+  background: rgba(255, 255, 255, 0.55);
+  border: 1px solid rgba(23, 23, 23, 0.16);
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.cart__clear:hover {
+  background: #fff;
 }
 
 .order-submit {

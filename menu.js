@@ -733,6 +733,21 @@
     });
   }
 
+  document.querySelectorAll("[data-cart-clear]").forEach(function (el) {
+    el.addEventListener("click", function () {
+      if (!Object.keys(cart).length) return;
+      if (!window.confirm("Очистить корзину?")) return;
+      var ids = {};
+      Object.keys(cart).forEach(function (key) {
+        if (cart[key]) ids[cart[key].itemId] = true;
+      });
+      cart = {};
+      saveCart();
+      Object.keys(ids).forEach(renderDish);
+      renderCart();
+    });
+  });
+
   document.querySelectorAll("[data-cart-open]").forEach(function (el) {
     el.addEventListener("click", function () {
       setCartOpen(true);
