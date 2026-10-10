@@ -48,6 +48,7 @@
 }
 
 :root {
+  color-scheme: light only;
   color: #171717;
   font-family:
     Inter, Arial, Helvetica, sans-serif;
@@ -1315,13 +1316,50 @@ h2 {
   aspect-ratio: 3 / 4;
 }
 
+.band--kids .band__media--corner {
+  aspect-ratio: 4 / 5;
+}
+
 .band--breakfast .band__media {
   aspect-ratio: 4 / 3;
 }
 
 @media (min-width: 901px) {
   .band--kids .band__copy {
-    padding-right: clamp(160px, 26vw, 300px);
+    --kids-photo: 240px;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) var(--kids-photo);
+    column-gap: 28px;
+    align-items: stretch;
+    padding-right: clamp(24px, 3.2vw, 40px);
+  }
+
+  .band--kids .band__story {
+    display: flex;
+    flex-direction: column;
+    min-height: 100%;
+  }
+
+  .band--kids .band__photos {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    gap: 12px;
+  }
+
+  .band--kids .band__photos .band__media {
+    position: relative;
+    top: auto;
+    right: auto;
+    bottom: auto;
+    width: 100%;
+    height: auto;
+    margin: 0;
+  }
+
+  .band--kids .band__actions {
+    margin-top: auto;
+    padding-top: 28px;
   }
 
   .band--breakfast .band__copy {
@@ -1339,6 +1377,10 @@ h2 {
 
 .band--kids .band__media img {
   object-position: center 20%;
+}
+
+.band--kids .band__media--corner img {
+  object-position: center 30%;
 }
 
 .band--breakfast .band__media img {
@@ -1398,6 +1440,13 @@ h2 {
   letter-spacing: -0.02em;
   line-height: 1.25;
   text-shadow: 0 1px 0 rgba(255, 255, 255, 0.45);
+}
+
+@media (min-width: 901px) {
+  .band--kids .band__subtitle--corner {
+    max-width: none;
+    margin: 36px 0 12px;
+  }
 }
 
 .band--kids .band__text,
@@ -2149,9 +2198,9 @@ body::after {
     z-index: 5;
   }
 
-  /* Above the menu track (3) so the box stays in front while the page scrolls. */
+  /* Above the title so the open box covers the tagline. */
   .hero__video-shell {
-    z-index: 4;
+    z-index: 6;
   }
 
   .hero__title-stack {
@@ -2638,6 +2687,37 @@ body::after {
     border-radius: 22px;
   }
 
+  .band--kids .band__copy {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .band--kids .band__story,
+  .band--kids .band__photos {
+    display: contents;
+  }
+
+  .band--kids .band__lead {
+    order: 1;
+  }
+
+  .band--kids .band__photos .band__media:not(.band__media--corner) {
+    order: 2;
+  }
+
+  .band--kids .band__subtitle--corner,
+  .band--kids .band__story > .band__text {
+    order: 3;
+  }
+
+  .band--kids .band__media--corner {
+    order: 4;
+  }
+
+  .band--kids .band__actions {
+    order: 5;
+  }
+
   .band--kids .band__media,
   .band--breakfast .band__media {
     position: relative;
@@ -2652,6 +2732,10 @@ body::after {
 
   .band--kids .band__media {
     aspect-ratio: 3 / 4;
+  }
+
+  .band--kids .band__media--corner {
+    aspect-ratio: 4 / 5;
   }
 
   .band--breakfast .band__media {
@@ -2712,19 +2796,18 @@ body::after {
   }
 
   .shop-rail {
-    /* No full-bleed: gutters hold the arrows; teaser is inset so cards can't sit under them. */
-    width: 100%;
-    margin-right: 0;
-    margin-left: 0;
+    /* Scrollport is the screen, so a swipe leaves at the edge instead of a gutter. */
     box-sizing: border-box;
-    /* 48px arrows at ~4px inset need ≥52px; leave a small gap so cards don't sit under them. */
-    padding-right: 56px;
-    padding-left: 56px;
-    overflow: hidden;
+    width: calc(100% + 40px);
+    margin-right: -20px;
+    margin-left: -20px;
+    padding: 0;
+    overflow: visible;
   }
 
   .shop-teaser {
     --shop-card-gap: 16px;
+    --shop-edge: 56px;
     box-sizing: border-box;
     width: 100%;
     padding-top: 8px;
@@ -2732,17 +2815,17 @@ body::after {
     padding-bottom: 16px;
     padding-left: 0;
     gap: var(--shop-card-gap);
-    /* Both axes stay with the browser: sideways moves the rail, vertical moves the page. */
+    /* Horizontal swipe follows the finger. A vertical drag still scrolls the page. */
     overflow-y: hidden;
-    touch-action: pan-x pan-y;
-    scroll-snap-type: x mandatory;
-    scroll-padding-inline: 0;
+    touch-action: pan-x;
+    scroll-snap-type: x proximity;
+    scroll-padding-inline: var(--shop-edge);
     -webkit-overflow-scrolling: touch;
   }
 
   .shop-card {
     box-sizing: border-box;
-    flex: 0 0 calc((100% - var(--shop-card-gap)) / 2);
+    flex: 0 0 calc((100% - 2 * var(--shop-edge) - var(--shop-card-gap)) / 2);
     width: auto;
     min-width: 0;
     max-width: none;
@@ -2753,6 +2836,14 @@ body::after {
     border-radius: 999px;
     scroll-snap-align: start;
     scroll-snap-stop: normal;
+  }
+
+  .shop-card:first-child {
+    margin-left: var(--shop-edge);
+  }
+
+  .shop-card:last-child {
+    margin-right: var(--shop-edge);
   }
 
   .shop-card__copy {
@@ -2975,18 +3066,21 @@ body::after {
   }
 
   .shop-rail {
-    width: 100%;
-    margin-right: 0;
-    margin-left: 0;
-    padding-right: 40px;
-    padding-left: 40px;
+    width: calc(100% + 28px);
+    margin-right: -14px;
+    margin-left: -14px;
+    padding: 0;
+  }
+
+  .shop-teaser {
+    --shop-edge: 44px;
   }
 
   .shop-card {
-    flex: 0 0 100%;
-    width: 100%;
-    min-width: 100%;
-    max-width: 100%;
+    flex: 0 0 calc(100% - 2 * var(--shop-edge));
+    width: calc(100% - 2 * var(--shop-edge));
+    min-width: calc(100% - 2 * var(--shop-edge));
+    max-width: none;
     gap: 8px;
     padding: 12px 16px;
   }
@@ -3012,6 +3106,7 @@ body::after {
     max-width: 100%;
   }
 
+  .menu__arrow,
   .shop-rail__arrow {
     width: 36px;
     height: 36px;
@@ -3217,15 +3312,17 @@ body::after {
   }
 
   .band--kids .band__copy {
-    min-height: 520px;
-    padding-right: 320px;
+    --kids-photo: 220px;
+    min-height: 0;
+    padding-right: clamp(24px, 3.2vw, 40px);
   }
 
   .band--kids .band__media {
-    top: 28px;
+    position: relative;
+    top: auto;
     bottom: auto;
-    width: 240px;
-    height: 320px;
+    width: var(--kids-photo);
+    height: auto;
     max-height: none;
   }
 
@@ -3245,6 +3342,12 @@ body::after {
 
 /* Wider laptops still use the desktop hero. Only the price card and shop
    pills get tighter so prices stay inside and photos clear the titles. */
+@media (min-width: 1681px) {
+  .band--kids .band__copy {
+    --kids-photo: 320px;
+  }
+}
+
 @media (min-width: 1681px) and (max-width: 2200px) {
   .menu__layout {
     grid-template-columns: minmax(0, 1.4fr) minmax(200px, 0.7fr);
@@ -3308,5 +3411,297 @@ body::after {
 
   .promo-card.is-expanded {
     animation: none;
+  }
+
+  .pl-cap > *,
+  .pl-print {
+    animation: none;
+    transition: none;
+  }
+}
+
+.band--gallery {
+  position: relative;
+  z-index: 2;
+  margin-right: calc(-1 * clamp(88px, 9vw, 120px));
+  margin-left: calc(-1 * clamp(88px, 9vw, 120px));
+  padding: 4px clamp(88px, 9vw, 120px) 8px;
+  background: transparent;
+}
+
+.polaroid {
+  position: relative;
+  width: 100%;
+  height: clamp(620px, 64vh, 740px);
+  overflow: hidden;
+  color: #171717;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: pan-y;
+  outline: none;
+  cursor: grab;
+  --pl-cw: 280px;
+  --pl-muted: rgba(23, 23, 23, 0.62);
+}
+
+.polaroid[data-drag="1"] {
+  cursor: grabbing;
+}
+
+.polaroid:focus-visible {
+  box-shadow: inset 0 0 0 2px #171717;
+}
+
+.pl-string {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.pl-card {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: var(--pl-cw);
+  visibility: hidden;
+  transform-origin: 50% 0;
+  will-change: transform;
+  cursor: inherit;
+}
+
+.pl-print {
+  margin-top: 10px;
+  padding: 10px 10px 0;
+  transform-origin: 50% 0;
+  background: #fbfaf7;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.12), 0 18px 30px -16px rgba(0, 0, 0, 0.4);
+  transition: transform 0.5s cubic-bezier(0.2, 0.7, 0.2, 1), filter 0.5s ease;
+}
+
+.pl-card[data-on="0"] .pl-print {
+  transform: scale(0.9);
+  filter: saturate(0.7) brightness(0.96);
+}
+
+.pl-shot {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 1;
+  background: #d9d5cc;
+}
+
+.pl-shot img {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  object-fit: cover;
+  pointer-events: none;
+}
+
+.pl-note {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 46px;
+  padding: 0 6px;
+  overflow: hidden;
+  color: #3b3833;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 15px;
+  font-style: italic;
+  font-weight: 400;
+  line-height: 1.1;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.pl-peg {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 10px;
+  height: 26px;
+  margin-left: -5px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, #c9a67a, #e3c9a1 45%, #b8915f);
+  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.25);
+}
+
+.pl-peg::after {
+  content: "";
+  position: absolute;
+  top: 8px;
+  left: 4px;
+  width: 2px;
+  height: 7px;
+  border-radius: 1px;
+  background: rgba(80, 60, 30, 0.45);
+}
+
+.pl-bar {
+  position: absolute;
+  right: clamp(8px, 2vw, 24px);
+  bottom: clamp(8px, 2vh, 20px);
+  left: clamp(8px, 2vw, 24px);
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  gap: clamp(12px, 2vw, 24px);
+  padding: 10px 12px 10px 16px;
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.55);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  cursor: default;
+  backdrop-filter: blur(14px) saturate(1.15);
+  -webkit-backdrop-filter: blur(14px) saturate(1.15);
+}
+
+.pl-cap {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  padding-bottom: 0.15em;
+}
+
+.pl-cap > * {
+  display: block;
+  animation: pl-in 0.55s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+.pl-title {
+  overflow: hidden;
+  font-family: "Roboto Slab", Georgia, serif;
+  font-size: clamp(18px, 2.2vw, 26px);
+  font-weight: 600;
+  line-height: 1.15;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.pl-sub {
+  margin-top: 4px;
+  color: var(--pl-muted);
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.pl-count {
+  color: var(--pl-muted);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  line-height: 1;
+}
+
+.pl-count b {
+  color: #171717;
+  font-weight: 500;
+}
+
+.pl-btn {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  margin: 0;
+  padding: 0;
+  border: 1px solid rgba(23, 23, 23, 0.18);
+  border-radius: 50%;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  appearance: none;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.pl-btn:hover {
+  background: #171717;
+  color: #f7f1ea;
+}
+
+.pl-btn:focus-visible {
+  outline: 2px solid #171717;
+  outline-offset: 2px;
+}
+
+.pl-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+@keyframes pl-in {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: none;
+    opacity: 1;
+  }
+}
+
+@media (max-width: 900px) {
+  .band--gallery {
+    margin-right: -20px;
+    margin-left: -20px;
+    padding-right: 0;
+    padding-left: 0;
+  }
+
+  .polaroid {
+    height: 500px;
+  }
+
+  .pl-bar {
+    right: 20px;
+    left: 20px;
+  }
+
+  .pl-count {
+    display: none;
+  }
+
+  .pl-card[data-on="0"] .pl-print {
+    transform: none;
+    filter: none;
+  }
+}
+
+@media (max-width: 600px) {
+  .band--gallery {
+    margin-right: -14px;
+    margin-left: -14px;
+    padding-right: 0;
+    padding-left: 0;
+  }
+
+  .pl-bar {
+    right: 14px;
+    left: 14px;
+  }
+}
+
+@media (min-width: 901px) {
+  .band--gallery {
+    padding-right: 0;
+    padding-left: 0;
+  }
+
+  .pl-bar {
+    right: clamp(88px, 9vw, 120px);
+    left: clamp(88px, 9vw, 120px);
   }
 }

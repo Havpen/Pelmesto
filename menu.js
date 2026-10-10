@@ -733,20 +733,59 @@
     });
   }
 
+  var confirmEl = document.querySelector("[data-cart-confirm]");
+  var confirmOk = document.querySelector("[data-cart-confirm-ok]");
+  var confirmCancel = document.querySelector("[data-cart-confirm-cancel]");
+  var confirmReturn = null;
+
+  function setConfirmOpen(open) {
+    if (!confirmEl) return;
+    confirmEl.hidden = !open;
+    if (open) {
+      if (confirmCancel) confirmCancel.focus();
+      return;
+    }
+    if (confirmReturn && confirmReturn.focus) confirmReturn.focus();
+    confirmReturn = null;
+  }
+
+  function clearCart() {
+    var ids = {};
+    Object.keys(cart).forEach(function (key) {
+      if (cart[key]) ids[cart[key].itemId] = true;
+    });
+    cart = {};
+    saveCart();
+    Object.keys(ids).forEach(renderDish);
+    renderCart();
+  }
+
   document.querySelectorAll("[data-cart-clear]").forEach(function (el) {
     el.addEventListener("click", function () {
       if (!Object.keys(cart).length) return;
-      if (!window.confirm("Очистить корзину?")) return;
-      var ids = {};
-      Object.keys(cart).forEach(function (key) {
-        if (cart[key]) ids[cart[key].itemId] = true;
-      });
-      cart = {};
-      saveCart();
-      Object.keys(ids).forEach(renderDish);
-      renderCart();
+      confirmReturn = el;
+      setConfirmOpen(true);
     });
   });
+
+  if (confirmOk) {
+    confirmOk.addEventListener("click", function () {
+      setConfirmOpen(false);
+      clearCart();
+    });
+  }
+
+  if (confirmCancel) {
+    confirmCancel.addEventListener("click", function () {
+      setConfirmOpen(false);
+    });
+  }
+
+  if (confirmEl) {
+    confirmEl.addEventListener("click", function (event) {
+      if (event.target === confirmEl) setConfirmOpen(false);
+    });
+  }
 
   document.querySelectorAll("[data-cart-open]").forEach(function (el) {
     el.addEventListener("click", function () {
@@ -761,7 +800,12 @@
   });
 
   window.addEventListener("keydown", function (event) {
-    if (event.key === "Escape") setCartOpen(false);
+    if (event.key !== "Escape") return;
+    if (confirmEl && !confirmEl.hidden) {
+      setConfirmOpen(false);
+      return;
+    }
+    setCartOpen(false);
   });
 
   if (orderForm) {

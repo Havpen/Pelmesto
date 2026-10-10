@@ -3,6 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="color-scheme" content="light only" />
+    <meta name="supported-color-schemes" content="light" />
     <meta
       name="description"
       content="Меню пельменной ПельМесто в Гомеле: пельмени, хинкали, вареники, чебуреки, блинчики и сырники ручной лепки. Заморозка домой, самовынос и доставка. Советская, 44."
@@ -15,8 +17,8 @@
       type="font/woff2"
       crossorigin
     />
-    <link rel="stylesheet" href="/Pelmesto/styles.css?v=123" />
-    <link rel="stylesheet" href="/Pelmesto/pages.css?v=14" />
+    <link rel="stylesheet" href="/Pelmesto/styles.css?v=143" />
+    <link rel="stylesheet" href="/Pelmesto/pages.css?v=16" />
   </head>
   <body class="page">
     <header class="header">
@@ -177,6 +179,10 @@
           <p class="order-hint">
             Оплата при получении. Официант позвонит, чтобы подтвердить заказ и время.
           </p>
+          <p class="order-hint">
+            Имя и телефон мы берём, чтобы принять заказ и перезвонить: так исполняется договор с вами.
+            <a href="/Pelmesto/privacy">Политика персональных данных</a>.
+          </p>
         </form>
       </div>
 
@@ -190,7 +196,23 @@
       </div>
     </aside>
 
+    <div class="confirm" data-cart-confirm hidden>
+      <div
+        class="confirm__card"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="cart-confirm-title"
+      >
+        <h2 id="cart-confirm-title" class="confirm__title">Очистить корзину?</h2>
+        <p class="confirm__text">Все позиции из заказа будут удалены.</p>
+        <div class="confirm__actions">
+          <button class="confirm__ok" type="button" data-cart-confirm-ok>Очистить</button>
+          <button class="confirm__cancel" type="button" data-cart-confirm-cancel>Отмена</button>
+        </div>
+      </div>
+    </div>
+
     <script src="/Pelmesto/site.js?v=8" defer></script>
-    <script src="/Pelmesto/menu.js?v=11" defer></script>
+    <script src="/Pelmesto/menu.js?v=12" defer></script>
   </body>
 </html>
