@@ -786,7 +786,7 @@ body.nav-open .nav-toggle__bars::after {
 .menu__media--pelmen .pelmen-fly:not(.is-flying),
 .menu__khinkali-canvas,
 .menu__blin-video,
-.menu__blin-still {
+.menu__blin-canvas {
   display: block;
   position: absolute;
   top: 50%;
@@ -818,7 +818,7 @@ body.nav-open .nav-toggle__bars::after {
 }
 
 .menu__blin-video,
-.menu__blin-still {
+.menu__blin-canvas {
   width: auto;
   height: auto;
   max-width: 100%;
@@ -829,8 +829,8 @@ body.nav-open .nav-toggle__bars::after {
   transform-origin: center center;
 }
 
-/* iPhone paints the transparent webm as a black box. The still is the open frame. */
-.menu__blin-still {
+/* iPhone paints the transparent webm as a black box, so it gets the frame canvas. */
+.menu__blin-canvas {
   display: none;
 }
 
@@ -838,7 +838,7 @@ body.nav-open .nav-toggle__bars::after {
   display: none;
 }
 
-.menu__media--blin.is-still .menu__blin-still {
+.menu__media--blin.is-still .menu__blin-canvas {
   display: block;
 }
 
@@ -3030,7 +3030,7 @@ body::after {
   .menu__media--blin,
   .menu__khinkali-canvas,
   .menu__blin-video,
-  .menu__blin-still,
+  .menu__blin-canvas,
   .menu__media--pelmen .pelmen-fly {
     background: transparent !important;
     background-color: transparent !important;
@@ -3075,17 +3075,16 @@ body::after {
     width: 100%;
     max-width: min(520px, 92vw);
     margin: 0 auto;
-    /* The open blin hangs below the 16:9 box; this keeps the shell above «Всё меню». */
-    margin-bottom: calc(min(520px, 92vw) * 0.13 + 28px);
+    margin-bottom: calc(min(520px, 92vw) * 0.13);
   }
 
   .menu__media--blin .menu__blin-video,
-  .menu__media--blin .menu__blin-still {
+  .menu__media--blin .menu__blin-canvas {
     width: auto;
     height: 100%;
     max-width: none;
     max-height: 100%;
-    transform: translate(-50%, calc(-50% + 56px)) scale(1.42);
+    transform: translate(-50%, calc(-50% + 12px)) scale(1.42);
   }
 
   /* Over the pelmen media. Khinkali recenters when that slide is active. */
@@ -3379,7 +3378,7 @@ body::after {
   }
 
   .menu__blin-video,
-  .menu__blin-still {
+  .menu__blin-canvas {
     transform: translate(-36%, -50%) scale(1.25);
     max-height: min(100%, calc((100svh - var(--header-height) - 200px) / 1.25));
   }

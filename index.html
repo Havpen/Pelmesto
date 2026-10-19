@@ -18,7 +18,7 @@
       crossorigin
     />
     <link rel="preload" href="assets/hero-a-frames/frame-0001.webp" as="image" type="image/webp" />
-    <link rel="stylesheet" href="styles.css?v=160" />
+    <link rel="stylesheet" href="styles.css?v=162" />
     <script>
       (function () {
         if (!/CriOS/.test(navigator.userAgent)) return;
@@ -302,11 +302,7 @@
                       preload="none"
                       aria-label="Анимация блинчика"
                     ></video>
-                    <img
-                      class="menu__blin-still"
-                      data-src="assets/menu-hall/blin-open.webp"
-                      alt=""
-                    />
+                    <canvas class="menu__blin-canvas" width="540" height="960" aria-hidden="true"></canvas>
                   </div>
                 </div>
               </article>
@@ -1946,26 +1942,127 @@
           carouselViewport.style.height = "";
           return;
         }
-        const slide = carouselSlides[carouselIndex] || carouselSlides[0];
+        const slide = carouselSlides[0];
         if (!slide) return;
         carouselViewport.style.height = `${slide.offsetHeight}px`;
       };
 
-      let blinVideo = document.querySelector("video.menu__blin-video");
-      const blinBox = blinVideo && blinVideo.parentElement;
+      const blinEl = document.querySelector("video.menu__blin-video");
+      const blinBox = blinEl && blinEl.parentElement;
+      const blinCanvas = blinBox && blinBox.querySelector(".menu__blin-canvas");
       const blinUa = navigator.userAgent || "";
       const blinNoAlpha =
         /iPhone|iPad|iPod/i.test(blinUa) ||
         (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1) ||
         (/Safari\//.test(blinUa) && !/Chrome|Chromium|CriOS|Edg|OPR|Android|Firefox|FxiOS/.test(blinUa));
-      if (blinVideo && blinNoAlpha && blinBox) {
-        const blinStill = blinBox.querySelector(".menu__blin-still");
-        if (blinStill && blinStill.dataset.src) blinStill.src = blinStill.dataset.src;
+      const BLIN_FRAME_FPS = 12;
+      const BLIN_FRAME_COUNT = 48;
+      const createBlinFrames = (canvas) => {
+        const images = new Array(BLIN_FRAME_COUNT);
+        const listeners = {};
+        const ctx = canvas.getContext("2d");
+        let time = 0;
+        let playing = false;
+        let raf = 0;
+        let last = 0;
+        let ready = 0;
+        const duration = BLIN_FRAME_COUNT / BLIN_FRAME_FPS;
+        const emit = (type) => {
+          const list = listeners[type];
+          if (!list) return;
+          listeners[type] = list.filter((entry) => {
+            entry.fn();
+            return !entry.once;
+          });
+        };
+        const draw = () => {
+          const index = Math.max(0, Math.min(BLIN_FRAME_COUNT - 1, Math.round(time * BLIN_FRAME_FPS)));
+          const img = images[index] || images[0];
+          if (!img) return;
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        };
+        const loop = (now) => {
+          if (!playing) return;
+          if (!last) last = now;
+          time += (now - last) / 1000;
+          last = now;
+          if (time >= duration) {
+            time = duration;
+            playing = false;
+            draw();
+            emit("timeupdate");
+            emit("ended");
+            return;
+          }
+          draw();
+          emit("timeupdate");
+          raf = requestAnimationFrame(loop);
+        };
+        const loadOne = (index) => new Promise((resolve) => {
+          const img = new Image();
+          const name = String(index + 1).padStart(2, "0");
+          img.onload = () => {
+            images[index] = img;
+            resolve();
+          };
+          img.onerror = () => resolve();
+          img.src = `assets/menu-hall/blin-frames/f${name}.webp`;
+        });
+        loadOne(0).then(() => {
+          ready = 1;
+          draw();
+          emit("loadedmetadata");
+          const rest = [];
+          for (let index = 1; index < BLIN_FRAME_COUNT; index += 1) rest.push(loadOne(index));
+          Promise.all(rest).then(() => {
+            ready = 2;
+          });
+        });
+        return {
+          get currentTime() { return time; },
+          set currentTime(value) {
+            time = Math.max(0, Math.min(duration, Number(value) || 0));
+            playing = false;
+            if (raf) cancelAnimationFrame(raf);
+            raf = 0;
+            draw();
+            emit("seeked");
+          },
+          get duration() { return duration; },
+          get paused() { return !playing; },
+          get ended() { return time >= duration - 0.02; },
+          get readyState() { return ready; },
+          play() {
+            if (time >= duration - 0.02) time = 0;
+            playing = true;
+            last = 0;
+            if (raf) cancelAnimationFrame(raf);
+            raf = requestAnimationFrame(loop);
+            return Promise.resolve();
+          },
+          pause() {
+            playing = false;
+            if (raf) cancelAnimationFrame(raf);
+            raf = 0;
+            emit("pause");
+          },
+          load() {},
+          addEventListener(type, fn, opts) {
+            (listeners[type] = listeners[type] || []).push({ fn, once: !!(opts && opts.once) });
+          },
+          removeEventListener(type, fn) {
+            listeners[type] = (listeners[type] || []).filter((entry) => entry.fn !== fn);
+          },
+        };
+      };
+      let blinVideo = blinEl;
+      if (blinEl && blinNoAlpha && blinBox && blinCanvas) {
         blinBox.classList.add("is-still");
-        blinVideo = null;
-      } else if (blinVideo && blinVideo.dataset.src) {
-        blinVideo.src = blinVideo.dataset.src;
-        blinVideo.preload = "auto";
+        blinVideo = createBlinFrames(blinCanvas);
+      } else if (blinEl && blinEl.dataset.src) {
+        blinEl.src = blinEl.dataset.src;
+        blinEl.preload = "auto";
       }
       /* Open holds still; the file closes again after this plateau. */
       const BLIN_OPEN_AT = 1.45;
@@ -2104,7 +2201,8 @@
       };
 
       if (blinVideo) {
-        const blinSlide = blinVideo.closest("[data-menu-slide]");
+        const blinWatch = blinBox && blinBox.classList.contains("is-still") ? blinCanvas : blinEl;
+        const blinSlide = blinWatch && blinWatch.closest("[data-menu-slide]");
         const replayBlinOpen = () => {
           if (!blinSlide || !blinSlide.classList.contains("is-active")) return;
           if (blinWantPlay || blinArming || !blinVideo.paused) return;
@@ -2113,7 +2211,7 @@
         const blinView = new IntersectionObserver((entries) => {
           if (entries.some((entry) => entry.isIntersecting)) replayBlinOpen();
         }, { threshold: 0.35 });
-        blinView.observe(blinVideo);
+        if (blinWatch) blinView.observe(blinWatch);
         window.addEventListener("pageshow", replayBlinOpen);
       }
 
