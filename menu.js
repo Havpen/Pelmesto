@@ -20,6 +20,16 @@
   var menu = { categories: [], items: [] };
   var itemsById = {};
   var kind = "hall";
+  var headCopy = {
+    hall: {
+      lead: "ПельМесто — и в кафе, и дома",
+      text: "Пельмени, вареники, хинкали, чебуреки, блинчики, сырники и другие блюда нашего приготовления. Выбирайте, что хочется попробовать сегодня.",
+    },
+    frozen: {
+      lead: "Любимые блюда — в вашей морозилке",
+      text: "Наши пельмени, вареники, хинкали и другие полуфабрикаты ручной работы. Выбирайте любимые начинки, заказывайте домой и готовьте тогда, когда удобно вам.",
+    },
+  };
   /** cart: { key: { itemId, variantId, qty } } — key is itemId or itemId:variantId. */
   var cart = {};
   /** Chosen variant per item id, so the card remembers the selected chip. */
@@ -301,7 +311,19 @@
     });
   }
 
+  function paintHead() {
+    var copy = headCopy[kind] || headCopy.hall;
+    var lead = document.querySelector("[data-menu-lead]");
+    var text = document.querySelector("[data-menu-text]");
+    if (lead) {
+      lead.textContent = copy.lead;
+      lead.classList.toggle("page-head__lead--single", kind === "frozen");
+    }
+    if (text) text.textContent = copy.text;
+  }
+
   function render() {
+    paintHead();
     var categories = visibleCategories();
 
     chipsEl.innerHTML = categories

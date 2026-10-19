@@ -88,6 +88,7 @@ body {
   margin: 0;
   background: transparent;
   overflow-x: clip;
+  text-wrap: pretty;
 }
 
 /* Fixed full-screen photo behind the page (stays put while the hero scrubs).
@@ -519,7 +520,7 @@ body.nav-open .nav-toggle__bars::after {
   position: relative;
   z-index: 1;
   width: 100%;
-  flex: 1 1 auto;
+  flex: 0 0 auto;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -576,10 +577,17 @@ body.nav-open .nav-toggle__bars::after {
   width: 100%;
   min-width: 100%;
   content-visibility: auto;
-  contain-intrinsic-size: auto 100svh;
+  /* Skipped slides must not reserve a full screen, or «Всё меню» drops on first paint. */
+  contain-intrinsic-size: auto 0px;
 }
 
 .menu__slide.is-active {
+  content-visibility: visible;
+}
+
+/* The blin clip must decode before the first swipe. A skipped slide
+   never starts the video, so the first visit stays on the closed frame. */
+.menu__slide[data-menu-slide="blinchiki"] {
   content-visibility: visible;
 }
 
@@ -763,7 +771,8 @@ body.nav-open .nav-toggle__bars::after {
 }
 
 .menu__media--pelmen,
-.menu__media--khinkali {
+.menu__media--khinkali,
+.menu__media--blin {
   position: relative;
   overflow: visible;
   border: 0;
@@ -771,7 +780,8 @@ body.nav-open .nav-toggle__bars::after {
 }
 
 .menu__media--pelmen .pelmen-fly:not(.is-flying),
-.menu__khinkali-canvas {
+.menu__khinkali-canvas,
+.menu__blin-video {
   display: block;
   position: absolute;
   top: 50%;
@@ -799,6 +809,17 @@ body.nav-open .nav-toggle__bars::after {
   max-height: min(100%, calc((100svh - var(--header-height) - 140px) / 1.5625));
   aspect-ratio: 9 / 16;
   transform: translate(-50%, -50%) scale(1.5625);
+  transform-origin: center center;
+}
+
+.menu__blin-video {
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  pointer-events: none;
+  transform: translate(-50%, -50%) scale(1.25);
   transform-origin: center center;
 }
 
@@ -1123,6 +1144,7 @@ h2 {
   line-height: 1.4;
   color: #2a2a2a;
   white-space: pre-line;
+  text-wrap: pretty;
   text-shadow: 0 1px 0 rgba(255, 255, 255, 0.45);
 }
 
@@ -1230,6 +1252,7 @@ h2 {
   display: block;
   max-width: none;
   white-space: pre-line;
+  text-wrap: pretty;
   overflow: visible;
   text-overflow: unset;
 }
@@ -1328,7 +1351,7 @@ h2 {
   .band--kids .band__copy {
     --kids-photo: 240px;
     display: grid;
-    grid-template-columns: minmax(0, 1fr) var(--kids-photo);
+    grid-template-columns: minmax(0, 1fr) auto;
     column-gap: 28px;
     align-items: stretch;
     padding-right: clamp(24px, 3.2vw, 40px);
@@ -1341,10 +1364,18 @@ h2 {
   }
 
   .band--kids .band__photos {
+    display: grid;
+    grid-template-columns: var(--kids-photo) var(--kids-photo);
+    column-gap: 12px;
+    align-items: end;
+  }
+
+  .band--kids .band__photos-col {
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
     gap: 12px;
+    min-width: 0;
   }
 
   .band--kids .band__photos .band__media {
@@ -1429,6 +1460,15 @@ h2 {
   text-shadow: 0 1px 0 rgba(255, 255, 255, 0.55);
 }
 
+.band--kids .band__lead {
+  container-type: inline-size;
+}
+
+.band--kids .band__title {
+  white-space: nowrap;
+  font-size: clamp(28px, 8.4cqi, 68px);
+}
+
 .band--kids .band__subtitle,
 .band--breakfast .band__subtitle,
 .band--delivery .band__subtitle {
@@ -1442,10 +1482,27 @@ h2 {
   text-shadow: 0 1px 0 rgba(255, 255, 255, 0.45);
 }
 
+.band--delivery h3.band__subtitle {
+  margin-top: 22px;
+}
+
+.band__heart {
+  display: inline-block;
+  width: 0.78em;
+  height: 0.72em;
+  margin-left: 0.18em;
+  vertical-align: -0.08em;
+  color: #c45362;
+}
+
 @media (min-width: 901px) {
   .band--kids .band__subtitle--corner {
     max-width: none;
     margin: 36px 0 12px;
+  }
+
+  .band--delivery h3.band__subtitle {
+    margin-top: 28px;
   }
 }
 
@@ -2431,7 +2488,8 @@ body::after {
   }
 
   .menu__media--pelmen,
-  .menu__media--khinkali {
+  .menu__media--khinkali,
+  .menu__media--blin {
     overflow: visible;
     /* Extra air under the scaled canvas so it clears «Всё меню». */
     margin-bottom: clamp(20px, 6vw, 36px);
@@ -2458,11 +2516,12 @@ body::after {
   }
 
   .menu__content--dish h2 {
-    font-size: clamp(30px, 8vw, 48px);
+    font-size: clamp(26px, 7.5vw, 44px);
   }
 
   .menu__slide[data-menu-slide="pelmeni"] .hero__text,
-  .menu__slide[data-menu-slide="khinkali"] .hero__text {
+  .menu__slide[data-menu-slide="khinkali"] .hero__text,
+  .menu__slide[data-menu-slide="blinchiki"] .hero__text {
     display: none;
   }
 
@@ -2471,7 +2530,8 @@ body::after {
     display: none;
   }
 
-  .menu__slide[data-menu-slide="khinkali"] .menu-list > li:nth-child(n + 3):not(.menu-list__more) {
+  .menu__slide[data-menu-slide="khinkali"] .menu-list > li:nth-child(n + 3):not(.menu-list__more),
+  .menu__slide[data-menu-slide="blinchiki"] .menu-list > li:nth-child(n + 3):not(.menu-list__more) {
     display: none;
   }
 
@@ -2493,7 +2553,11 @@ body::after {
   }
 
   .menu__slide[data-menu-slide="pelmeni"] .menu__dish-block,
-  .menu__slide[data-menu-slide="pelmeni"] .menu-list {
+  .menu__slide[data-menu-slide="pelmeni"] .menu-list,
+  .menu__slide[data-menu-slide="blinchiki"] .menu__dish-block,
+  .menu__slide[data-menu-slide="blinchiki"] .menu-list,
+  .menu__slide[data-menu-slide="khinkali"] .menu__dish-block,
+  .menu__slide[data-menu-slide="khinkali"] .menu-list {
     width: 100%;
   }
 
@@ -2667,6 +2731,11 @@ body::after {
     font-size: clamp(30px, 8vw, 48px);
   }
 
+  .band--kids .band__title {
+    white-space: nowrap;
+    font-size: clamp(22px, 8.6cqi, 40px);
+  }
+
   .band--kids .band__subtitle,
   .band--breakfast .band__subtitle,
   .band--delivery .band__subtitle {
@@ -2693,8 +2762,13 @@ body::after {
   }
 
   .band--kids .band__story,
-  .band--kids .band__photos {
+  .band--kids .band__photos,
+  .band--kids .band__photos-col {
     display: contents;
+  }
+
+  .band--kids .band__photos-col--extra {
+    display: none;
   }
 
   .band--kids .band__lead {
@@ -2920,7 +2994,9 @@ body::after {
   .menu__media,
   .menu__media--pelmen,
   .menu__media--khinkali,
+  .menu__media--blin,
   .menu__khinkali-canvas,
+  .menu__blin-video,
   .menu__media--pelmen .pelmen-fly {
     background: transparent !important;
     background-color: transparent !important;
@@ -2958,6 +3034,22 @@ body::after {
     max-width: none;
     max-height: 100%;
     transform: translate(-50%, -50%) scale(1.42);
+  }
+
+  .menu__media--blin {
+    aspect-ratio: 16 / 9;
+    width: 100%;
+    max-width: min(520px, 92vw);
+    margin: 0 auto;
+    margin-bottom: calc(min(520px, 92vw) * 0.13);
+  }
+
+  .menu__media--blin .menu__blin-video {
+    width: auto;
+    height: 100%;
+    max-width: none;
+    max-height: 100%;
+    transform: translate(-50%, calc(-50% + 56px)) scale(1.42);
   }
 
   /* Over the pelmen media. Khinkali recenters when that slide is active. */
@@ -3250,6 +3342,11 @@ body::after {
     max-height: min(100%, calc((100svh - var(--header-height) - 200px) / 1.28));
   }
 
+  .menu__blin-video {
+    transform: translate(-36%, -50%) scale(1.25);
+    max-height: min(100%, calc((100svh - var(--header-height) - 200px) / 1.25));
+  }
+
   .menu__content--dish h2 {
     font-size: clamp(32px, 3.3vw, 48px);
   }
@@ -3337,6 +3434,12 @@ body::after {
     width: 340px;
     height: 255px;
     max-height: none;
+  }
+}
+
+@media (min-width: 901px) and (max-width: 1100px) {
+  .band--kids .band__copy {
+    --kids-photo: clamp(132px, 16vw, 176px);
   }
 }
 
@@ -3509,17 +3612,16 @@ body::after {
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 46px;
-  padding: 0 6px;
+  height: 52px;
+  padding: 0 8px;
   overflow: hidden;
   color: #3b3833;
   font-family: Georgia, "Times New Roman", serif;
-  font-size: 15px;
+  font-size: 13px;
   font-style: italic;
   font-weight: 400;
-  line-height: 1.1;
-  white-space: nowrap;
-  text-overflow: ellipsis;
+  line-height: 1.15;
+  text-align: center;
 }
 
 .pl-peg {
@@ -3577,13 +3679,10 @@ body::after {
 }
 
 .pl-title {
-  overflow: hidden;
   font-family: "Roboto Slab", Georgia, serif;
-  font-size: clamp(18px, 2.2vw, 26px);
+  font-size: clamp(16px, 2vw, 22px);
   font-weight: 600;
-  line-height: 1.15;
-  white-space: nowrap;
-  text-overflow: ellipsis;
+  line-height: 1.2;
 }
 
 .pl-sub {

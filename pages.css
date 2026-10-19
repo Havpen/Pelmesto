@@ -132,6 +132,24 @@ body.page .site-footer {
   text-shadow: 0 1px 0 rgba(255, 255, 255, 0.55);
 }
 
+.page-head__lead {
+  max-width: 18em;
+  margin: 14px 0 0;
+  color: #1f1f1f;
+  font-family: "Roboto Slab", serif;
+  font-size: clamp(22px, 2.4vw, 32px);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.2;
+}
+
+.page-head__lead--single {
+  max-width: none;
+  font-size: clamp(14px, 4.5vw, 32px);
+  letter-spacing: -0.045em;
+  white-space: nowrap;
+}
+
 .page-head__text {
   max-width: 44em;
   margin: 16px 0 0;
@@ -1239,7 +1257,7 @@ body.cart-open .cart {
   font-family: "Roboto Slab", serif;
   font-size: clamp(20px, 2vw, 24px);
   font-weight: 700;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.04em;
   line-height: 1.25;
 }
 
@@ -1276,6 +1294,18 @@ body.cart-open .cart {
   display: block;
   width: 100%;
   height: auto;
+}
+
+.story-photos {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: start;
+  gap: clamp(14px, 2vw, 20px);
+  margin-top: clamp(22px, 3vw, 40px);
+}
+
+.story-photos .story__photo {
+  margin: 0;
 }
 
 .story__fact {
@@ -1335,11 +1365,22 @@ body.cart-open .cart {
 }
 
 .story-cta__text {
-  margin: 0 0 24px;
+  margin: 0 0 14px;
   max-width: 34em;
   color: rgba(255, 255, 255, 0.9);
   font-size: clamp(16px, 1.6vw, 20px);
   line-height: 1.5;
+}
+
+.story-cta__sign {
+  margin: 0 0 24px;
+  max-width: 34em;
+  color: #ffffff;
+  font-family: "Roboto Slab", serif;
+  font-size: clamp(18px, 1.8vw, 22px);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.3;
 }
 
 .story-cta .button {
@@ -1456,7 +1497,8 @@ body.cart-open .cart {
     text-align: center;
   }
 
-  .story-cta__text {
+  .story-cta__text,
+  .story-cta__sign {
     margin-inline: auto;
   }
 
@@ -1468,6 +1510,10 @@ body.cart-open .cart {
 }
 
 @media (max-width: 900px) {
+  .page-head__title {
+    font-size: clamp(26px, 7vw, 44px);
+  }
+
   .menu-switch {
     top: var(--header-height);
     padding-block: 10px;
@@ -1492,6 +1538,10 @@ body.cart-open .cart {
   }
 
   .story__aside {
+    grid-template-columns: 1fr;
+  }
+
+  .story-photos {
     grid-template-columns: 1fr;
   }
 

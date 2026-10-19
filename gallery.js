@@ -25,7 +25,7 @@
   const layout = { y0: 18, sag: 22 };
   const size = { w: 1200, h: 600, cw: 280 };
   let lastTouch = 0;
-  const autoplay = 4500;
+  const autoplay = 9000;
 
   function clamp(v, a, b) {
     return Math.min(b, Math.max(a, v));
