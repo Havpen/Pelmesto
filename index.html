@@ -1955,8 +1955,8 @@
         /iPhone|iPad|iPod/i.test(blinUa) ||
         (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1) ||
         (/Safari\//.test(blinUa) && !/Chrome|Chromium|CriOS|Edg|OPR|Android|Firefox|FxiOS/.test(blinUa));
-      const BLIN_FRAME_FPS = 12;
-      const BLIN_FRAME_COUNT = 48;
+      const BLIN_FRAME_FPS = 24;
+      const BLIN_FRAME_COUNT = 97;
       const createBlinFrames = (canvas) => {
         const images = new Array(BLIN_FRAME_COUNT);
         const listeners = {};
@@ -1966,6 +1966,8 @@
         let raf = 0;
         let last = 0;
         let ready = 0;
+        let wantsPlay = false;
+        let shown = null;
         const duration = BLIN_FRAME_COUNT / BLIN_FRAME_FPS;
         const emit = (type) => {
           const list = listeners[type];
@@ -1976,9 +1978,10 @@
           });
         };
         const draw = () => {
-          const index = Math.max(0, Math.min(BLIN_FRAME_COUNT - 1, Math.round(time * BLIN_FRAME_FPS)));
-          const img = images[index] || images[0];
+          const index = Math.max(0, Math.min(BLIN_FRAME_COUNT - 1, Math.floor(time * BLIN_FRAME_FPS)));
+          const img = images[index] || shown;
           if (!img) return;
+          shown = img;
           ctx.clearRect(0, 0, canvas.width, canvas.height);
           ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
         };
@@ -2007,17 +2010,21 @@
             resolve();
           };
           img.onerror = () => resolve();
-          img.src = `assets/menu-hall/blin-frames/f${name}.webp`;
+          img.src = `assets/menu-hall/blin-frames/f${name}.webp?v=24`;
         });
-        loadOne(0).then(() => {
-          ready = 1;
+        const pending = [];
+        for (let index = 0; index < BLIN_FRAME_COUNT; index += 1) pending.push(loadOne(index));
+        Promise.all(pending).then(() => {
+          ready = 2;
           draw();
+          const queued = wantsPlay;
+          wantsPlay = false;
           emit("loadedmetadata");
-          const rest = [];
-          for (let index = 1; index < BLIN_FRAME_COUNT; index += 1) rest.push(loadOne(index));
-          Promise.all(rest).then(() => {
-            ready = 2;
-          });
+          if (queued && !playing) {
+            playing = true;
+            last = 0;
+            raf = requestAnimationFrame(loop);
+          }
         });
         return {
           get currentTime() { return time; },
@@ -2034,6 +2041,10 @@
           get ended() { return time >= duration - 0.02; },
           get readyState() { return ready; },
           play() {
+            if (ready < 2) {
+              wantsPlay = true;
+              return Promise.resolve();
+            }
             if (time >= duration - 0.02) time = 0;
             playing = true;
             last = 0;
@@ -2042,6 +2053,7 @@
             return Promise.resolve();
           },
           pause() {
+            wantsPlay = false;
             playing = false;
             if (raf) cancelAnimationFrame(raf);
             raf = 0;
