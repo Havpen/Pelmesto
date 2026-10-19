@@ -111,7 +111,7 @@
       "title": "Чай",
       "kind": "hall",
       "order": 14,
-      "note": "Лимон и мята — 50 коп."
+      "note": "Лимон и мята - 50 коп."
     },
     {
       "id": "605d056e50ff",
@@ -168,6 +168,14 @@
       "kind": "frozen",
       "order": 22,
       "note": "Полуфабрикат творожный шоковой заморозки. Цена за 500 г"
+    },
+    {
+      "id": "c0tle7e19a01",
+      "slug": "frozen-kotlety",
+      "title": "Котлеты, тефтели, голубцы",
+      "kind": "frozen",
+      "order": 23,
+      "note": ""
     }
   ],
   "items": [
@@ -1560,7 +1568,7 @@
       "id": "32bbaa65c8e0",
       "categoryId": "605d056e50ff",
       "slug": "limonad-yagody-lavanda",
-      "title": "Лимонад «Лесные ягоды — Лаванда»",
+      "title": "Лимонад «Лесные ягоды - Лаванда»",
       "description": "",
       "weight": "400 мл",
       "price": 8,
@@ -2308,7 +2316,7 @@
       "categoryId": "9896a263bcf1",
       "slug": "frozen-syrniki-vanilnye",
       "title": "Ванильные",
-      "description": "Творог 5%, рисовая мука — без глютена",
+      "description": "Творог 5%, рисовая мука - без глютена",
       "weight": "500 г",
       "price": null,
       "unit": "g",
@@ -2348,6 +2356,74 @@
         "kcal": 172.11
       },
       "createdAt": "2026-09-13T00:00:00.000Z"
+    },
+    {
+      "id": "c0tle7e10001",
+      "categoryId": "c0tle7e19a01",
+      "slug": "frozen-kotlety-chicken",
+      "title": "Котлеты куриные",
+      "description": "Мясо цыплёнка, лук, яйцо",
+      "weight": "",
+      "price": null,
+      "unit": "g",
+      "step": 500,
+      "priceUnit": 500,
+      "badge": "",
+      "orderable": true,
+      "imageUrl": "",
+      "variants": [],
+      "createdAt": "2026-10-07T00:00:00.000Z"
+    },
+    {
+      "id": "c0tle7e10002",
+      "categoryId": "c0tle7e19a01",
+      "slug": "frozen-kotlety-fish",
+      "title": "Котлеты рыбные",
+      "description": "Филе белой рыбы, лук, морковь",
+      "weight": "",
+      "price": null,
+      "unit": "g",
+      "step": 500,
+      "priceUnit": 500,
+      "badge": "",
+      "orderable": true,
+      "imageUrl": "",
+      "variants": [],
+      "createdAt": "2026-10-07T00:00:00.000Z"
+    },
+    {
+      "id": "c0tle7e10003",
+      "categoryId": "c0tle7e19a01",
+      "slug": "frozen-tefteli-turkey",
+      "title": "Тефтели из индейки",
+      "description": "Филе индейки, рис, лук, яйцо",
+      "weight": "",
+      "price": null,
+      "unit": "g",
+      "step": 500,
+      "priceUnit": 500,
+      "badge": "",
+      "orderable": true,
+      "imageUrl": "",
+      "variants": [],
+      "createdAt": "2026-10-07T00:00:00.000Z"
+    },
+    {
+      "id": "c0tle7e10004",
+      "categoryId": "c0tle7e19a01",
+      "slug": "frozen-golubcy",
+      "title": "Голубцы",
+      "description": "",
+      "weight": "",
+      "price": null,
+      "unit": "g",
+      "step": 500,
+      "priceUnit": 500,
+      "badge": "",
+      "orderable": true,
+      "imageUrl": "",
+      "variants": [],
+      "createdAt": "2026-10-07T00:00:00.000Z"
     }
   ]
 }

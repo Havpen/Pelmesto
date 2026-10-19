@@ -31,6 +31,7 @@ async function copyDir(src, dest) {
   for (const entry of entries) {
     const from = path.join(src, entry.name);
     const to = path.join(dest, entry.name);
+    if (entry.name.startsWith("_")) continue;
     if (entry.isDirectory()) await copyDir(from, to);
     else await fsp.copyFile(from, to);
   }
@@ -160,7 +161,7 @@ async function main() {
   await fsp.writeFile(path.join(dist, "data", "menu.json"), menuOut, "utf8");
   await fsp.writeFile(path.join(dist, "data", "promos.json"), promosOut, "utf8");
 
-  for (const name of ["styles.css", "pages.css", "site.js", "map.js"]) {
+  for (const name of ["styles.css", "pages.css", "site.js", "map.js", "sw.js", "gallery.js"]) {
     const text = await fsp.readFile(path.join(root, name), "utf8");
     await fsp.writeFile(path.join(dist, name), text, "utf8");
   }

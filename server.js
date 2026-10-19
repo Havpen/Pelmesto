@@ -58,24 +58,85 @@ function parseCookies(header) {
   return out;
 }
 
-function readBody(req) {
+const JSON_BODY_LIMIT = 256 * 1024;
+const IMAGE_BYTE_LIMIT = 10 * 1024 * 1024;
+/* A 10 MB file in a data-URL is about 4/3 that size, plus the JSON wrapper. */
+const UPLOAD_BODY_LIMIT = Math.ceil((IMAGE_BYTE_LIMIT * 4) / 3) + 256;
+
+function payloadTooLarge() {
+  const error = new Error("payload too large");
+  error.code = "PAYLOAD_TOO_LARGE";
+  return error;
+}
+
+function readBody(req, maxBytes = JSON_BODY_LIMIT) {
   return new Promise((resolve, reject) => {
+    let settled = false;
+    const fail = (error) => {
+      if (settled) return;
+      settled = true;
+      reject(error);
+    };
+    const ok = (value) => {
+      if (settled) return;
+      settled = true;
+      resolve(value);
+    };
+
+    const declared = Number(req.headers["content-length"]);
+    if (Number.isFinite(declared) && declared > maxBytes) {
+      fail(payloadTooLarge());
+      return;
+    }
+
     const chunks = [];
-    req.on("data", (chunk) => chunks.push(chunk));
+    let received = 0;
+    req.on("data", (chunk) => {
+      if (settled) return;
+      received += chunk.length;
+      if (received > maxBytes) {
+        if (req.socket) req.socket.pause();
+        fail(payloadTooLarge());
+        return;
+      }
+      chunks.push(chunk);
+    });
     req.on("end", () => {
-      const raw = Buffer.concat(chunks).toString("utf8");
+      if (settled) return;
+      const raw = received ? Buffer.concat(chunks).toString("utf8") : "";
       if (!raw) {
-        resolve({});
+        ok({});
         return;
       }
       try {
-        resolve(JSON.parse(raw));
+        ok(JSON.parse(raw));
       } catch (error) {
-        reject(error);
+        fail(error);
       }
     });
-    req.on("error", reject);
+    req.on("error", fail);
   });
+}
+
+function rejectBody(res, req, error) {
+  if (error && error.code === "PAYLOAD_TOO_LARGE") {
+    const payload = JSON.stringify({ error: "Слишком большой запрос" });
+    res.writeHead(413, {
+      "Content-Type": "application/json; charset=utf-8",
+      "Cache-Control": "no-store",
+      "Content-Length": Buffer.byteLength(payload),
+      Connection: "close",
+    });
+    res.end(payload);
+    /* Close the socket itself. Pausing the request and waiting for it to end
+       leaves a huge upload stuck in the kernel buffer. */
+    const socket = req.socket;
+    setImmediate(() => {
+      if (socket && !socket.destroyed) socket.destroy();
+    });
+    return;
+  }
+  sendJson(res, 400, { error: "Некорректный JSON" });
 }
 
 function createSession() {
@@ -308,8 +369,8 @@ async function handleApi(req, res, urlPath) {
     let body;
     try {
       body = await readBody(req);
-    } catch {
-      sendJson(res, 400, { error: "Некорректный JSON" });
+    } catch (error) {
+      rejectBody(res, req, error);
       return true;
     }
     if (String(body.password || "") !== ADMIN_PASSWORD) {
@@ -348,9 +409,9 @@ async function handleApi(req, res, urlPath) {
     }
     let body;
     try {
-      body = await readBody(req);
-    } catch {
-      sendJson(res, 400, { error: "Некорректный JSON" });
+      body = await readBody(req, UPLOAD_BODY_LIMIT);
+    } catch (error) {
+      rejectBody(res, req, error);
       return true;
     }
     const dataUrl = String(body.image || "");
@@ -362,7 +423,7 @@ async function handleApi(req, res, urlPath) {
     let ext = match[1].toLowerCase();
     if (ext === "jpeg") ext = "jpg";
     const buf = Buffer.from(match[2], "base64");
-    if (!buf.length || buf.length > 10 * 1024 * 1024) {
+    if (!buf.length || buf.length > IMAGE_BYTE_LIMIT) {
       sendJson(res, 400, { error: "Файл слишком большой (макс. 10 МБ)" });
       return true;
     }
@@ -381,9 +442,9 @@ async function handleApi(req, res, urlPath) {
     }
     let body;
     try {
-      body = await readBody(req);
-    } catch {
-      sendJson(res, 400, { error: "Некорректный JSON" });
+      body = await readBody(req, UPLOAD_BODY_LIMIT);
+    } catch (error) {
+      rejectBody(res, req, error);
       return true;
     }
     const dataUrl = String(body.image || "");
@@ -395,7 +456,7 @@ async function handleApi(req, res, urlPath) {
     let ext = match[1].toLowerCase();
     if (ext === "jpeg") ext = "jpg";
     const buf = Buffer.from(match[2], "base64");
-    if (!buf.length || buf.length > 10 * 1024 * 1024) {
+    if (!buf.length || buf.length > IMAGE_BYTE_LIMIT) {
       sendJson(res, 400, { error: "Файл слишком большой (макс. 10 МБ)" });
       return true;
     }
@@ -420,8 +481,8 @@ async function handleApi(req, res, urlPath) {
     let body;
     try {
       body = await readBody(req);
-    } catch {
-      sendJson(res, 400, { error: "Некорректный JSON" });
+    } catch (error) {
+      rejectBody(res, req, error);
       return true;
     }
     const title = String(body.title || "").trim();
@@ -469,8 +530,8 @@ async function handleApi(req, res, urlPath) {
     let body;
     try {
       body = await readBody(req);
-    } catch {
-      sendJson(res, 400, { error: "Некорректный JSON" });
+    } catch (error) {
+      rejectBody(res, req, error);
       return true;
     }
     const title = String(body.title || "").trim();
@@ -498,8 +559,8 @@ async function handleApi(req, res, urlPath) {
     let body;
     try {
       body = await readBody(req);
-    } catch {
-      sendJson(res, 400, { error: "Некорректный JSON" });
+    } catch (error) {
+      rejectBody(res, req, error);
       return true;
     }
     const menu = await readMenu();
@@ -543,8 +604,8 @@ async function handleApi(req, res, urlPath) {
     let body;
     try {
       body = await readBody(req);
-    } catch {
-      sendJson(res, 400, { error: "Некорректный JSON" });
+    } catch (error) {
+      rejectBody(res, req, error);
       return true;
     }
     const next = normalizeItem(body, menu.items[index]);
@@ -566,8 +627,8 @@ async function handleApi(req, res, urlPath) {
     let body;
     try {
       body = await readBody(req);
-    } catch {
-      sendJson(res, 400, { error: "Некорректный JSON" });
+    } catch (error) {
+      rejectBody(res, req, error);
       return true;
     }
 
@@ -632,8 +693,8 @@ async function handleApi(req, res, urlPath) {
     let body;
     try {
       body = await readBody(req);
-    } catch {
-      sendJson(res, 400, { error: "Некорректный JSON" });
+    } catch (error) {
+      rejectBody(res, req, error);
       return true;
     }
     const status = String(body.status || "");
@@ -690,8 +751,8 @@ async function handleApi(req, res, urlPath) {
     let body;
     try {
       body = await readBody(req);
-    } catch {
-      sendJson(res, 400, { error: "Некорректный JSON" });
+    } catch (error) {
+      rejectBody(res, req, error);
       return true;
     }
     const title = String(body.title || "").trim();
@@ -715,6 +776,41 @@ async function handleApi(req, res, urlPath) {
     return true;
   }
 
+  const promoLockMatch = urlPath.match(/^\/api\/promos\/([^/]+)\/lock$/);
+  if (promoLockMatch && req.method === "POST") {
+    if (!isAuthed(req)) {
+      sendJson(res, 401, { error: "Нужен вход" });
+      return true;
+    }
+    let body;
+    try {
+      body = await readBody(req);
+    } catch (error) {
+      rejectBody(res, req, error);
+      return true;
+    }
+    if (String(body.password || "") !== ADMIN_PASSWORD) {
+      sendJson(res, 403, { error: "Неверный пароль" });
+      return true;
+    }
+    const id = decodeURIComponent(promoLockMatch[1]);
+    const list = await readList(promosFile);
+    const index = list.findIndex((item) => item.id === id);
+    if (index === -1) {
+      sendJson(res, 404, { error: "Не найдено" });
+      return true;
+    }
+    const nextLocked = !(list[index].locked || list[index].seo);
+    list[index] = {
+      ...list[index],
+      locked: nextLocked,
+      seo: nextLocked,
+    };
+    await writeList(promosFile, list);
+    sendJson(res, 200, list[index]);
+    return true;
+  }
+
   if (promoMatch && req.method === "PUT") {
     if (!isAuthed(req)) {
       sendJson(res, 401, { error: "Нужен вход" });
@@ -723,8 +819,8 @@ async function handleApi(req, res, urlPath) {
     let body;
     try {
       body = await readBody(req);
-    } catch {
-      sendJson(res, 400, { error: "Некорректный JSON" });
+    } catch (error) {
+      rejectBody(res, req, error);
       return true;
     }
     const id = decodeURIComponent(promoMatch[1]);
@@ -813,6 +909,12 @@ function serveStatic(req, res, urlPath) {
     res.end("Forbidden");
     return;
   }
+  /* Orders stay behind /api/orders. The file on disk is not a public page. */
+  if (path.resolve(target) === path.resolve(ordersFile)) {
+    res.writeHead(404, { "Content-Type": "text/html; charset=utf-8" });
+    res.end("<!doctype html><meta charset=utf-8><title>404</title><p>Страница не найдена. <a href=\"/\">На главную</a>");
+    return;
+  }
 
   fs.stat(target, (error, stat) => {
     if (error || !stat.isFile()) {
@@ -869,9 +971,16 @@ function serveStatic(req, res, urlPath) {
 ensureDataFiles()
   .then(() => {
     const server = http.createServer(async (req, res) => {
-      const rawUrl = req.url || "/";
-      const parsed = new URL(rawUrl, `http://${req.headers.host || "127.0.0.1"}`);
-      const urlPath = decodeURIComponent(parsed.pathname);
+      let urlPath = "/";
+      try {
+        const rawUrl = req.url || "/";
+        const parsed = new URL(rawUrl, `http://${req.headers.host || "127.0.0.1"}`);
+        urlPath = decodeURIComponent(parsed.pathname);
+      } catch {
+        res.writeHead(400, { "Content-Type": "text/html; charset=utf-8" });
+        res.end("<!doctype html><meta charset=utf-8><title>400</title><p>Некорректный адрес.");
+        return;
+      }
 
       try {
         if (urlPath.startsWith("/api/")) {

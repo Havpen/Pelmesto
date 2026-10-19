@@ -20,6 +20,16 @@
   var menu = { categories: [], items: [] };
   var itemsById = {};
   var kind = "hall";
+  var headCopy = {
+    hall: {
+      lead: "ПельМесто — и в кафе, и дома",
+      text: "Пельмени, вареники, хинкали, чебуреки, блинчики, сырники и другие блюда нашего приготовления. Выбирайте, что хочется попробовать сегодня.",
+    },
+    frozen: {
+      lead: "Любимые блюда — в вашей морозилке",
+      text: "Наши пельмени, вареники, хинкали и другие полуфабрикаты ручной работы. Выбирайте любимые начинки, заказывайте домой и готовьте тогда, когда удобно вам.",
+    },
+  };
   /** cart: { key: { itemId, variantId, qty } } — key is itemId or itemId:variantId. */
   var cart = {};
   /** Chosen variant per item id, so the card remembers the selected chip. */
@@ -199,6 +209,7 @@
       : "";
     var price = unitPrice(item, variantId);
     var entry = cart[lineKey(item.id, variantId)];
+    var inCart = !!(entry && entry.qty > 0);
 
     var priceHtml =
       price === null || price === undefined
@@ -214,21 +225,24 @@
     var action;
     if (price === null || price === undefined) {
       action = '<button class="dish__add" type="button" disabled aria-label="Недоступно">+</button>';
-    } else if (entry && entry.qty > 0) {
+    } else if (inCart) {
+      var qtyLabel = item.unit === "g" ? grams(entry.qty) : entry.qty + " шт";
       action =
-        '<span class="dish__in-cart">' +
-        (item.unit === "g" ? grams(entry.qty) : entry.qty + " шт") +
+        '<div class="dish__in-cart" role="group" aria-label="Количество">' +
         '<button type="button" data-step="-1" data-item="' +
         escapeHtml(item.id) +
         '" data-variant="' +
         escapeHtml(variantId) +
         '" aria-label="Убрать">−</button>' +
+        '<span class="dish__in-cart-qty">' +
+        qtyLabel +
+        "</span>" +
         '<button type="button" data-step="1" data-item="' +
         escapeHtml(item.id) +
         '" data-variant="' +
         escapeHtml(variantId) +
         '" aria-label="Добавить">+</button>' +
-        "</span>";
+        "</div>";
     } else {
       action =
         '<button class="dish__add" type="button" data-add="' +
@@ -240,7 +254,14 @@
         '">+</button>';
     }
 
-    return '<div class="dish__foot">' + priceHtml + action + "</div>";
+    return (
+      '<div class="dish__foot' +
+      (inCart ? " is-active" : "") +
+      '">' +
+      priceHtml +
+      action +
+      "</div>"
+    );
   }
 
   function dishHtml(item) {
@@ -290,7 +311,19 @@
     });
   }
 
+  function paintHead() {
+    var copy = headCopy[kind] || headCopy.hall;
+    var lead = document.querySelector("[data-menu-lead]");
+    var text = document.querySelector("[data-menu-text]");
+    if (lead) {
+      lead.textContent = copy.lead;
+      lead.classList.toggle("page-head__lead--single", kind === "frozen");
+    }
+    if (text) text.textContent = copy.text;
+  }
+
   function render() {
+    paintHead();
     var categories = visibleCategories();
 
     chipsEl.innerHTML = categories
@@ -495,11 +528,23 @@
     );
   }
 
-  /** Re-renders one card so changing quantity does not rebuild the whole page. */
+  /** Re-renders card body only so quantity/variant updates do not reload the photo. */
   function renderDish(itemId) {
     var item = itemsById[itemId];
     var node = groupsEl.querySelector('[data-dish="' + itemId + '"]');
     if (!item || !node) return;
+
+    var body = node.querySelector(".dish__body");
+    if (body) {
+      var tmp = document.createElement("div");
+      tmp.innerHTML = dishHtml(item);
+      var nextBody = tmp.querySelector(".dish__body");
+      if (nextBody) {
+        body.replaceWith(nextBody);
+        return;
+      }
+    }
+
     node.outerHTML = dishHtml(item);
   }
 
@@ -599,8 +644,31 @@
   }
 
   function setCartOpen(open) {
-    document.body.classList.toggle("cart-open", open);
-    if (open) resetOrderView();
+    var root = document.documentElement;
+    if (open) {
+      if (!document.body.classList.contains("cart-open")) {
+        document.body.dataset.cartScrollY = String(window.scrollY || window.pageYOffset || 0);
+      }
+      document.body.classList.add("cart-open");
+      document.body.style.position = "fixed";
+      document.body.style.top = "-" + (document.body.dataset.cartScrollY || "0") + "px";
+      document.body.style.left = "0";
+      document.body.style.right = "0";
+      document.body.style.width = "100%";
+      root.style.overflow = "hidden";
+      resetOrderView();
+    } else {
+      var y = Number(document.body.dataset.cartScrollY || 0);
+      document.body.classList.remove("cart-open");
+      document.body.style.position = "";
+      document.body.style.top = "";
+      document.body.style.left = "";
+      document.body.style.right = "";
+      document.body.style.width = "";
+      root.style.overflow = "";
+      window.scrollTo(0, y);
+      delete document.body.dataset.cartScrollY;
+    }
   }
 
   function resetOrderView() {
@@ -687,6 +755,60 @@
     });
   }
 
+  var confirmEl = document.querySelector("[data-cart-confirm]");
+  var confirmOk = document.querySelector("[data-cart-confirm-ok]");
+  var confirmCancel = document.querySelector("[data-cart-confirm-cancel]");
+  var confirmReturn = null;
+
+  function setConfirmOpen(open) {
+    if (!confirmEl) return;
+    confirmEl.hidden = !open;
+    if (open) {
+      if (confirmCancel) confirmCancel.focus();
+      return;
+    }
+    if (confirmReturn && confirmReturn.focus) confirmReturn.focus();
+    confirmReturn = null;
+  }
+
+  function clearCart() {
+    var ids = {};
+    Object.keys(cart).forEach(function (key) {
+      if (cart[key]) ids[cart[key].itemId] = true;
+    });
+    cart = {};
+    saveCart();
+    Object.keys(ids).forEach(renderDish);
+    renderCart();
+  }
+
+  document.querySelectorAll("[data-cart-clear]").forEach(function (el) {
+    el.addEventListener("click", function () {
+      if (!Object.keys(cart).length) return;
+      confirmReturn = el;
+      setConfirmOpen(true);
+    });
+  });
+
+  if (confirmOk) {
+    confirmOk.addEventListener("click", function () {
+      setConfirmOpen(false);
+      clearCart();
+    });
+  }
+
+  if (confirmCancel) {
+    confirmCancel.addEventListener("click", function () {
+      setConfirmOpen(false);
+    });
+  }
+
+  if (confirmEl) {
+    confirmEl.addEventListener("click", function (event) {
+      if (event.target === confirmEl) setConfirmOpen(false);
+    });
+  }
+
   document.querySelectorAll("[data-cart-open]").forEach(function (el) {
     el.addEventListener("click", function () {
       setCartOpen(true);
@@ -700,7 +822,12 @@
   });
 
   window.addEventListener("keydown", function (event) {
-    if (event.key === "Escape") setCartOpen(false);
+    if (event.key !== "Escape") return;
+    if (confirmEl && !confirmEl.hidden) {
+      setConfirmOpen(false);
+      return;
+    }
+    setCartOpen(false);
   });
 
   if (orderForm) {

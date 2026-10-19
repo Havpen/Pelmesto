@@ -3,9 +3,11 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="light only" />
+    <meta name="supported-color-schemes" content="light" />
     <meta name="robots" content="noindex,nofollow" />
     <title>ПельМесто — админка</title>
-    <link rel="stylesheet" href="/admin/admin.css?v=7" />
+    <link rel="stylesheet" href="/admin/admin.css?v=11" />
     <style>
       #app-view[hidden],
       #login-view[hidden] {
@@ -21,7 +23,7 @@
         <p class="eyebrow">ПельМесто</p>
         <h1 class="login__title">Админ-панель</h1>
         <p class="login__hint">
-          После входа откроются три вкладки: «Заказы», «Меню» и «Акции / новости».
+          После входа откроются вкладки: «Заказы», «Статистика», «Меню» и «Акции / новости».
         </p>
         <label class="field">
           <span>Пароль</span>
@@ -48,6 +50,7 @@
         <button class="tabs__btn is-active" type="button" data-tab="orders">
           Заказы<span class="tabs__badge" id="orders-badge" hidden>0</span>
         </button>
+        <button class="tabs__btn" type="button" data-tab="stats">Статистика</button>
         <button class="tabs__btn" type="button" data-tab="menu">Меню</button>
         <button class="tabs__btn" type="button" data-tab="promos">Акции / новости</button>
       </nav>
@@ -72,6 +75,35 @@
               <summary>История заказов (<span id="orders-history-count">0</span>)</summary>
               <ul class="order-history__list" id="orders-history"></ul>
             </details>
+          </div>
+        </section>
+
+        <!-- --------------------------------------------------------- Статистика -->
+        <section class="panel" id="panel-stats">
+          <div class="list-wrap glass stats">
+            <div class="stats__head">
+              <div>
+                <h2 class="panel__title" style="margin: 0">Статистика</h2>
+                <p class="stats__note" id="stats-note">
+                  Подтверждённые заказы. Стрелка сравнивает срок с предыдущим таким же.
+                </p>
+              </div>
+              <div class="stats__ranges" id="stats-ranges">
+                <button class="stats__range" type="button" data-stats-range="day">Сутки</button>
+                <button class="stats__range is-active" type="button" data-stats-range="week">
+                  Неделя
+                </button>
+                <button class="stats__range" type="button" data-stats-range="month">Месяц</button>
+                <button class="stats__range" type="button" data-stats-range="half">6 месяцев</button>
+              </div>
+            </div>
+            <div class="stats__cats" id="stats-cats" aria-label="Категории"></div>
+            <div class="stats-kpis" id="stats-kpis"></div>
+            <div class="stats-chart" id="stats-trend"></div>
+            <div class="stats-split">
+              <div class="stats-chart" id="stats-money"></div>
+              <div class="stats-chart" id="stats-freq"></div>
+            </div>
           </div>
         </section>
 
@@ -276,15 +308,18 @@
                   <span class="file-name" id="promo-file-name">Файл не выбран</span>
                 </div>
                 <p class="field-hint">
-                  Рекомендуемый размер: <strong>1550 × 350</strong>. Можно загрузить любое фото и
-                  обрезать под карточку.
+                  Рекомендуемый размер: <strong>1550 × 350</strong>. Выберите фото и сами отметьте
+                  кадр карточки.
                 </p>
-                <div class="crop" id="promo-crop" hidden>
+                <div class="crop crop--frame" id="promo-crop" hidden>
+                  <p class="field-hint crop__hint">
+                    Потяните рамку, чтобы сдвинуть кадр, и белый угол — чтобы приблизить.
+                  </p>
                   <div class="crop__stage">
-                    <canvas id="promo-crop-canvas" width="775" height="175"></canvas>
+                    <canvas id="promo-crop-canvas" width="775" height="420"></canvas>
                   </div>
                   <label class="crop__zoom">
-                    <span>Масштаб</span>
+                    <span>Масштаб кадра</span>
                     <input type="range" id="promo-crop-zoom" min="100" max="300" value="100" />
                   </label>
                   <div class="form-actions">
@@ -292,12 +327,15 @@
                       Обрезать и загрузить
                     </button>
                     <button class="btn btn--glass" type="button" id="promo-crop-cancel">
-                      Сбросить фото
+                      Отмена
                     </button>
                   </div>
                   <p class="form-error" id="promo-crop-error" hidden></p>
                 </div>
                 <img class="card__thumb" id="promo-image-preview" alt="" hidden />
+                <button class="btn btn--glass" type="button" id="promo-recrop" hidden>
+                  Обрезать кадр
+                </button>
               </div>
               <p class="form-error" id="promo-error" hidden></p>
               <div class="form-actions">
@@ -314,6 +352,6 @@
       </main>
     </div>
 
-    <script src="/admin/admin.js?v=2" defer></script>
+    <script src="/admin/admin.js?v=5" defer></script>
   </body>
 </html>

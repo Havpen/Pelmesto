@@ -1,4 +1,54 @@
+@font-face {
+  font-family: "Roboto Slab";
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("assets/fonts/roboto-slab-cyrillic.woff2") format("woff2");
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+@font-face {
+  font-family: "Roboto Slab";
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("assets/fonts/roboto-slab-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "Roboto Slab";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("assets/fonts/roboto-slab-cyrillic.woff2") format("woff2");
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+@font-face {
+  font-family: "Roboto Slab";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("assets/fonts/roboto-slab-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "Roboto Slab";
+  font-style: normal;
+  font-weight: 900;
+  font-display: swap;
+  src: url("assets/fonts/roboto-slab-cyrillic.woff2") format("woff2");
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+@font-face {
+  font-family: "Roboto Slab";
+  font-style: normal;
+  font-weight: 900;
+  font-display: swap;
+  src: url("assets/fonts/roboto-slab-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
 :root {
+  color-scheme: light only;
   color: #171717;
   font-family:
     Inter, Arial, Helvetica, sans-serif;
@@ -16,8 +66,8 @@
   --shadow-glass-inset: inset 0 1px 0 rgba(255, 255, 255, 0.78);
   --decor-size: min(68vw, 860px);
   --decor-height: calc(var(--decor-size) * tan(30deg));
-  --bg-pattern: url("assets/pattern-dumplings.png");
-  --bg-pattern-balloons: url("assets/pattern-khinkali-balloons.png");
+  --bg-pattern: url("assets/pattern-dumplings.webp");
+  --bg-pattern-balloons: url("assets/pattern-khinkali-balloons.webp");
   --bg-pattern-balloons-size: 2200px;
   --bg-pattern-balloons-size-y: calc(2200px * 689 / 1024);
   /* 50% right + 50% up for each layered copy of the tile. */
@@ -38,21 +88,27 @@ body {
   margin: 0;
   background: transparent;
   overflow-x: clip;
+  text-wrap: pretty;
 }
 
-/* Fixed full-screen photo behind the page (stays put while the hero scrubs). */
+/* Fixed full-screen photo behind the page (stays put while the hero scrubs).
+   Height is the large viewport (toolbar hidden), not the live visual viewport,
+   so iOS does not rescale background-size:cover when the address bar collapses. */
 body::before {
   position: fixed;
-  inset: 0;
+  top: 0;
+  left: 0;
   z-index: -1;
+  width: 100%;
+  height: 100vh;
+  /* Pixel lock from the page (Chrome on iPhone). Safari keeps 100lvh. */
+  height: var(--pattern-lock, 100lvh);
   pointer-events: none;
   background-color: #ffffff;
   background-image: var(--bg-pattern);
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
-  /* Soften so it stays a backdrop, not a competing photo. */
-  filter: blur(1.2px) saturate(0.72) brightness(1.08) contrast(0.94);
   content: "";
 }
 
@@ -84,7 +140,6 @@ body::after {
   background-position:
     0 0,
     var(--bg-pattern-balloons-ox) var(--bg-pattern-balloons-oy);
-  filter: blur(2.6px) saturate(0.64) brightness(1.14) contrast(0.9);
   clip-path: inset(100% 0 0 0);
 }
 
@@ -102,9 +157,8 @@ body::after {
   padding-top: max(12px, env(safe-area-inset-top));
   padding-right: max(clamp(24px, 6vw, 96px), env(safe-area-inset-right));
   padding-left: max(16px, env(safe-area-inset-left));
-  background: rgba(255, 255, 255, 0.88);
+  background: #ffffff;
   border-bottom: 1px solid rgba(23, 23, 23, 0.06);
-  backdrop-filter: blur(14px) saturate(1.1);
 }
 
 .logo {
@@ -289,14 +343,16 @@ body.nav-open .nav-toggle__bars::after {
   pointer-events: none;
 }
 
-/* Top-right teal: runs under the header to the top of the viewport; 30° hypotenuse unchanged. */
+/* Top-right teal stays the original corner. The 30° side continues
+   up through the header to the top of the page, and no farther left. */
 .decor--teal {
   top: 0;
   right: 0;
-  width: var(--decor-size);
+  --teal-extend: calc(var(--header-height) / tan(30deg));
+  width: calc(var(--decor-size) + var(--teal-extend));
   height: calc(var(--decor-height) + var(--header-height));
   background: var(--decor-teal);
-  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 var(--header-height));
+  clip-path: polygon(0 0, 100% 0, 100% 100%);
 }
 
 /* Bottom-left pink on home — exact 30°. Shift 2px down to overlap menu (angle unchanged). */
@@ -333,12 +389,15 @@ body.nav-open .nav-toggle__bars::after {
 .decor--pink-menu::after {
   position: absolute;
   top: 0;
-  left: var(--decor-size);
-  width: 300vmax;
-  height: 300vmax;
+  left: calc(var(--decor-size) - 1px);
+  width: auto;
+  height: 100%;
+  aspect-ratio: calc(1 / tan(30deg));
   background: var(--decor-pink);
-  transform: rotate(30deg);
-  transform-origin: 0 0;
+  /* A rotated 300vmax sheet is tiled while scrolling and the 30° edge
+     breaks into a sawtooth on some laptop GPUs. This is the same cut. */
+  transform: none;
+  clip-path: polygon(0 0, 100% 100%, 0 100%);
   content: "";
 }
 
@@ -461,7 +520,7 @@ body.nav-open .nav-toggle__bars::after {
   position: relative;
   z-index: 1;
   width: 100%;
-  flex: 1 1 auto;
+  flex: 0 0 auto;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -518,10 +577,17 @@ body.nav-open .nav-toggle__bars::after {
   width: 100%;
   min-width: 100%;
   content-visibility: auto;
-  contain-intrinsic-size: auto 100svh;
+  /* Skipped slides must not reserve a full screen, or «Всё меню» drops on first paint. */
+  contain-intrinsic-size: auto 0px;
 }
 
 .menu__slide.is-active {
+  content-visibility: visible;
+}
+
+/* The blin clip must decode before the first swipe. A skipped slide
+   never starts the video, so the first visit stays on the closed frame. */
+.menu__slide[data-menu-slide="blinchiki"] {
   content-visibility: visible;
 }
 
@@ -549,14 +615,20 @@ body.nav-open .nav-toggle__bars::after {
 
 .menu__content--dish h2 {
   max-width: none;
+  margin-left: -0.045em;
   font-size: clamp(calc(38px + 2pt), calc(5.5vw + 2pt), calc(74px + 2pt));
 }
 
 .menu__content--dish .hero__text {
-  max-width: 36em;
+  max-width: none;
   margin: 16px 0 0;
   color: #3d3d3d;
   font-size: clamp(calc(20px + 2pt), calc(2vw + 2pt), calc(26px + 2pt));
+  text-align: left;
+}
+
+.hero__text-line {
+  white-space: nowrap;
 }
 
 .menu__dish-block {
@@ -699,7 +771,8 @@ body.nav-open .nav-toggle__bars::after {
 }
 
 .menu__media--pelmen,
-.menu__media--khinkali {
+.menu__media--khinkali,
+.menu__media--blin {
   position: relative;
   overflow: visible;
   border: 0;
@@ -707,7 +780,8 @@ body.nav-open .nav-toggle__bars::after {
 }
 
 .menu__media--pelmen .pelmen-fly:not(.is-flying),
-.menu__khinkali-canvas {
+.menu__khinkali-canvas,
+.menu__blin-video {
   display: block;
   position: absolute;
   top: 50%;
@@ -735,6 +809,17 @@ body.nav-open .nav-toggle__bars::after {
   max-height: min(100%, calc((100svh - var(--header-height) - 140px) / 1.5625));
   aspect-ratio: 9 / 16;
   transform: translate(-50%, -50%) scale(1.5625);
+  transform-origin: center center;
+}
+
+.menu__blin-video {
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  pointer-events: none;
+  transform: translate(-50%, -50%) scale(1.25);
   transform-origin: center center;
 }
 
@@ -1059,6 +1144,7 @@ h2 {
   line-height: 1.4;
   color: #2a2a2a;
   white-space: pre-line;
+  text-wrap: pretty;
   text-shadow: 0 1px 0 rgba(255, 255, 255, 0.45);
 }
 
@@ -1080,15 +1166,18 @@ h2 {
   display: none;
 }
 
-.promo-card:hover .promo-card__media img,
-.promo-card:focus-visible .promo-card__media img {
-  filter: blur(14px) saturate(0.9);
-  transform: scale(1.08);
-}
+/* Hover promo reveal — only on devices that actually hover (not touch). */
+@media (hover: hover) and (pointer: fine) {
+  .promo-card:hover .promo-card__media img,
+  .promo-card:focus-visible .promo-card__media img {
+    filter: blur(14px) saturate(0.9);
+    transform: scale(1.08);
+  }
 
-.promo-card:hover .promo-card__copy,
-.promo-card:focus-visible .promo-card__copy {
-  opacity: 1;
+  .promo-card:hover .promo-card__copy,
+  .promo-card:focus-visible .promo-card__copy {
+    opacity: 1;
+  }
 }
 
 .promo-teaser.is-dragging .promo-card__media img {
@@ -1163,6 +1252,7 @@ h2 {
   display: block;
   max-width: none;
   white-space: pre-line;
+  text-wrap: pretty;
   overflow: visible;
   text-overflow: unset;
 }
@@ -1249,13 +1339,58 @@ h2 {
   aspect-ratio: 3 / 4;
 }
 
+.band--kids .band__media--corner {
+  aspect-ratio: 4 / 5;
+}
+
 .band--breakfast .band__media {
   aspect-ratio: 4 / 3;
 }
 
 @media (min-width: 901px) {
   .band--kids .band__copy {
-    padding-right: clamp(160px, 26vw, 300px);
+    --kids-photo: 240px;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    column-gap: 28px;
+    align-items: stretch;
+    padding-right: clamp(24px, 3.2vw, 40px);
+  }
+
+  .band--kids .band__story {
+    display: flex;
+    flex-direction: column;
+    min-height: 100%;
+  }
+
+  .band--kids .band__photos {
+    display: grid;
+    grid-template-columns: var(--kids-photo) var(--kids-photo);
+    column-gap: 12px;
+    align-items: end;
+  }
+
+  .band--kids .band__photos-col {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    gap: 12px;
+    min-width: 0;
+  }
+
+  .band--kids .band__photos .band__media {
+    position: relative;
+    top: auto;
+    right: auto;
+    bottom: auto;
+    width: 100%;
+    height: auto;
+    margin: 0;
+  }
+
+  .band--kids .band__actions {
+    margin-top: auto;
+    padding-top: 28px;
   }
 
   .band--breakfast .band__copy {
@@ -1273,6 +1408,10 @@ h2 {
 
 .band--kids .band__media img {
   object-position: center 20%;
+}
+
+.band--kids .band__media--corner img {
+  object-position: center 30%;
 }
 
 .band--breakfast .band__media img {
@@ -1321,6 +1460,15 @@ h2 {
   text-shadow: 0 1px 0 rgba(255, 255, 255, 0.55);
 }
 
+.band--kids .band__lead {
+  container-type: inline-size;
+}
+
+.band--kids .band__title {
+  white-space: nowrap;
+  font-size: clamp(28px, 8.4cqi, 68px);
+}
+
 .band--kids .band__subtitle,
 .band--breakfast .band__subtitle,
 .band--delivery .band__subtitle {
@@ -1332,6 +1480,30 @@ h2 {
   letter-spacing: -0.02em;
   line-height: 1.25;
   text-shadow: 0 1px 0 rgba(255, 255, 255, 0.45);
+}
+
+.band--delivery h3.band__subtitle {
+  margin-top: 22px;
+}
+
+.band__heart {
+  display: inline-block;
+  width: 0.78em;
+  height: 0.72em;
+  margin-left: 0.18em;
+  vertical-align: -0.08em;
+  color: #c45362;
+}
+
+@media (min-width: 901px) {
+  .band--kids .band__subtitle--corner {
+    max-width: none;
+    margin: 36px 0 12px;
+  }
+
+  .band--delivery h3.band__subtitle {
+    margin-top: 28px;
+  }
 }
 
 .band--kids .band__text,
@@ -1797,6 +1969,37 @@ h2 {
   background: #171717;
 }
 
+/* Fixed patterns stop where the footer starts. Below that, the page is the footer color. */
+html {
+  background-color: #171717;
+}
+
+body::before,
+body::after {
+  clip-path: inset(0 0 var(--after-contacts, 0px) 0);
+}
+
+/* Same size and color as the footer, sitting in the footer's own box.
+   Kept under the teal (z-index 0) so it cannot cover the page above. */
+.bg-footer-band {
+  position: relative;
+  z-index: 0;
+  height: var(--footer-h, 0px);
+  margin-top: calc(-1 * var(--footer-h, 0px));
+  background: #171717;
+  pointer-events: none;
+}
+
+/* Desktop: continuous pink rail unused (classic tip + menu plane). */
+.pink-host {
+  display: contents;
+}
+
+.decor--pink-span,
+.decor--pink-rail {
+  display: none;
+}
+
 .site-footer__inner {
   width: min(1080px, 100%);
   margin: 0 auto;
@@ -1874,16 +2077,16 @@ h2 {
   opacity: 0.92;
 }
 
-/* Touch: promo text always readable (no hover). */
+/* Touch: collapsed promo is image-only until tap (no sticky “hover” overlay). */
 @media (hover: none) {
   .promo-card:not(.is-expanded) .promo-card__media img {
-    filter: blur(10px) saturate(0.92);
-    transform: scale(1.06);
+    filter: none;
+    transform: scale(1.02);
   }
 
   .promo-card:not(.is-expanded) .promo-card__copy {
-    opacity: 1;
-    background: rgba(255, 255, 255, 0.42);
+    opacity: 0;
+    background: transparent;
   }
 }
 
@@ -2033,36 +2236,57 @@ h2 {
     display: none;
   }
 
-  /* Title + tagline sit just above the jewelry box; box is vertically centered.
-     Same layer (z-index:1) under the video shell (z-index:2) so the lid covers text.
-     Video frames have huge empty margins — scale the canvas so the box
-     reads ~3× larger than the unscaled contain fit. */
+  /* Title immediately above the jewelry box, optically centered. */
   .hero__title {
     top: auto;
-    bottom: calc(50% + min(48vw, 220px) + 12px);
+    right: 0;
+    bottom: calc(50% + min(24vw, 108px));
+    left: 0;
+    display: flex;
     height: auto;
     max-height: none;
-    padding: 0 16px;
-    font-size: clamp(42px, 12.5vw, 92px);
+    align-items: flex-end;
+    justify-content: center;
+    padding: 0 12px;
+    font-size: clamp(40px, 11vw, 68px);
     line-height: 0.92;
+    text-align: center;
     transform: none;
-    z-index: 1;
+    z-index: 5;
+  }
+
+  /* Above the title so the open box covers the tagline. */
+  .hero__video-shell {
+    z-index: 6;
   }
 
   .hero__title-stack {
     gap: 8px;
+    width: min(100%, 22em);
+    margin: 0 auto;
+    align-items: center;
+    text-align: center;
+  }
+
+  .hero__title-text,
+  .hero__title-tagline {
+    display: block;
+    width: 100%;
+    text-align: center;
   }
 
   .hero__title-tagline {
-    font-size: clamp(18px, 5vw, 26px);
-    max-width: 22em;
+    font-size: clamp(15px, 4.2vw, 22px);
+    max-width: none;
   }
 
   .hero__video-shell {
-    width: min(78vw, 360px);
-    height: min(78vw, 360px);
+    width: min(68vw, 300px);
+    height: min(68vw, 300px);
     align-self: center;
     justify-self: center;
+    margin-top: 0;
+    margin-bottom: 0;
     overflow: visible;
   }
 
@@ -2070,41 +2294,202 @@ h2 {
   .hero__video--a {
     object-fit: contain;
     object-position: center center;
-    transform: scale(3);
+    transform: scale(2.15);
     transform-origin: center center;
   }
 
-  /* Fly canvas is fixed on <body>. .menu__carousel used to sit at z-index:1,
-     which trapped .menu__content below the dumpling (z-index:2). Raise the
-     whole carousel so copy + dish card paint above the flight. */
+  .hero#home {
+    height: calc(var(--hero-stage-h, 100svh) * 1.85625);
+    /* Anchor for the continuous pink span under the sticky stage. */
+    isolation: auto;
+  }
+
+  .hero__stage {
+    height: var(--hero-stage-h, 100svh);
+    overflow: visible;
+  }
+
+  /*
+   * Tip stays on the sticky stage (moves with the box, not on its own).
+   * Menu pink is clipped to #menu: same 30° line, but it must not stick out
+   * above the menu or it scrolls across the hero while the box animation plays.
+   */
+  .pink-host {
+    display: contents;
+  }
+
+  .decor--pink-span,
+  .decor--pink-rail {
+    display: none !important;
+  }
+
+  .decor--pink-home {
+    top: calc(100% - var(--decor-height));
+    bottom: auto;
+    left: 0;
+    z-index: 0;
+    width: 100%;
+    /* Same 30° cut, continued through the rest of the sticky first page
+       (the scrub length below the stage) so that strip is pink, not pattern. */
+    height: calc(var(--decor-height) + (var(--hero-stage-h, 100svh) * 0.85625));
+    overflow: hidden;
+    background: transparent;
+    clip-path: none;
+  }
+
+  .decor--pink-home::before {
+    content: none;
+    display: none;
+  }
+
+  .decor--pink-home::after {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 300vmax;
+    height: 300vmax;
+    background: var(--decor-pink);
+    transform: rotate(30deg);
+    transform-origin: 0 0;
+    content: "";
+  }
+
+  .decor--pink-menu {
+    display: block;
+    top: 0;
+    left: 0;
+    z-index: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: transparent;
+  }
+
+  .decor--pink-menu::before {
+    content: none;
+    display: none;
+  }
+
+  /* Origin = tip apex, one decor-height above the menu. Clipped to the menu. */
+  .decor--pink-menu::after {
+    position: absolute;
+    top: calc(-1 * var(--decor-height));
+    left: 0;
+    width: 300vmax;
+    height: 300vmax;
+    aspect-ratio: auto;
+    background: var(--decor-pink);
+    transform: rotate(30deg);
+    transform-origin: 0 0;
+    clip-path: none;
+    content: "";
+  }
+
+  .menu {
+    position: relative;
+    z-index: auto;
+    overflow: visible;
+    background: transparent;
+  }
+
+  .decor--teal {
+    transform: translateZ(0);
+    backface-visibility: hidden;
+  }
+
+  /* Promo expand: no scaleY on mobile (it turns round buttons into ellipses). */
+  .promo-card.is-expanded {
+    animation: promo-grow-mobile 400ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  .promo-card.is-expanded .promo-card__close {
+    box-sizing: border-box;
+    width: 36px;
+    height: 36px;
+    min-width: 36px;
+    min-height: 36px;
+    max-width: 36px;
+    max-height: 36px;
+    aspect-ratio: 1 / 1;
+    flex: 0 0 36px;
+    padding: 0;
+    overflow: hidden;
+    font-size: 22px;
+    transform: none;
+  }
+
+  @keyframes promo-grow-mobile {
+    from {
+      opacity: 0.88;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  /* Keep circular controls circular on iOS (equal box + aspect-ratio). */
+  .menu__arrow,
+  .shop-rail__arrow {
+    box-sizing: border-box;
+    width: 48px;
+    height: 48px;
+    min-width: 48px;
+    min-height: 48px;
+    max-width: 48px;
+    max-height: 48px;
+    padding: 0;
+    aspect-ratio: 1 / 1;
+    flex-shrink: 0;
+    overflow: hidden;
+    font-size: 28px;
+  }
+
+  /* The flying canvas is moved to <body>, so it is a later root sibling.
+     .menu must not be its own layer, or that canvas paints over the whole
+     section. The track (transform) sits above the fly; transparent parts
+     still show the dumpling on the pink, opaque copy and the dish card cover it. */
   .pelmen-fly.is-flying {
     z-index: 1;
   }
 
   .menu__carousel {
-    z-index: 5;
+    z-index: auto;
+  }
+
+  .menu__track {
+    position: relative;
+    z-index: 3;
+    align-items: flex-start;
   }
 
   .menu__content {
     position: relative;
-    z-index: 2;
+    z-index: 1;
   }
 
   .menu__media {
     position: relative;
-    z-index: 1;
+    z-index: auto;
   }
 
   /* overflow-x: clip + overflow-y: visible → browsers force y to auto/clip too,
      so the scale(1.25) dumpling was shaved at the bottom. Keep bleed on mobile. */
   .menu,
-  .menu__viewport,
   .menu__carousel {
     overflow: visible;
   }
 
+  /* Taller inactive slide must not leave empty pink under the open pelmen.
+     clip, not hidden: hidden is a scroll container and the browser was
+     anchoring it so the pelmen sat above a blank band. */
+  .menu__viewport {
+    overflow: clip;
+    overflow-anchor: none;
+  }
+
   .menu__media--pelmen,
-  .menu__media--khinkali {
+  .menu__media--khinkali,
+  .menu__media--blin {
     overflow: visible;
     /* Extra air under the scaled canvas so it clears «Всё меню». */
     margin-bottom: clamp(20px, 6vw, 36px);
@@ -2131,7 +2516,23 @@ h2 {
   }
 
   .menu__content--dish h2 {
-    font-size: clamp(30px, 8vw, 48px);
+    font-size: clamp(26px, 7.5vw, 44px);
+  }
+
+  .menu__slide[data-menu-slide="pelmeni"] .hero__text,
+  .menu__slide[data-menu-slide="khinkali"] .hero__text,
+  .menu__slide[data-menu-slide="blinchiki"] .hero__text {
+    display: none;
+  }
+
+  /* One fewer price row so the card can shrink to the remaining names. */
+  .menu__slide[data-menu-slide="pelmeni"] .menu-list > li:nth-child(3) {
+    display: none;
+  }
+
+  .menu__slide[data-menu-slide="khinkali"] .menu-list > li:nth-child(n + 3):not(.menu-list__more),
+  .menu__slide[data-menu-slide="blinchiki"] .menu-list > li:nth-child(n + 3):not(.menu-list__more) {
+    display: none;
   }
 
   .menu__content--dish .hero__text {
@@ -2142,17 +2543,92 @@ h2 {
     display: none;
   }
 
-  .menu__dish-block,
-  .menu-list {
-    width: 100%;
-    max-width: 100%;
+  .menu__layout {
+    grid-template-columns: minmax(0, 1fr);
   }
-
   .menu__dish-block {
+    width: max-content;
+    max-width: 100%;
     padding: 14px 14px;
   }
 
-  /* Compact card: 3 dishes + teaser → list + pelmen fit one mobile screen. */
+  .menu__slide[data-menu-slide="pelmeni"] .menu__dish-block,
+  .menu__slide[data-menu-slide="pelmeni"] .menu-list,
+  .menu__slide[data-menu-slide="blinchiki"] .menu__dish-block,
+  .menu__slide[data-menu-slide="blinchiki"] .menu-list,
+  .menu__slide[data-menu-slide="khinkali"] .menu__dish-block,
+  .menu__slide[data-menu-slide="khinkali"] .menu-list {
+    width: 100%;
+  }
+
+  /* Name on the first line. Weight sits next to it — or next to the
+     parenthetical on the second line — then a dotted leader to the price. */
+  .menu__slide[data-menu-slide="pelmeni"] .menu-list__row {
+    display: grid;
+    grid-template-columns: auto auto minmax(12px, 1fr) auto;
+    align-items: baseline;
+    column-gap: 8px;
+    row-gap: 2px;
+    width: 100%;
+  }
+
+  .menu__slide[data-menu-slide="pelmeni"] .menu-list__name {
+    display: contents;
+  }
+
+  .menu__slide[data-menu-slide="pelmeni"] .menu-list__badge {
+    grid-column: 2;
+    grid-row: 1;
+    justify-self: start;
+    margin-left: 2px;
+  }
+
+  .menu__slide[data-menu-slide="pelmeni"] .menu-list__note {
+    grid-column: 1;
+    grid-row: 2;
+  }
+
+  .menu__slide[data-menu-slide="pelmeni"] .menu-list__weight {
+    grid-column: 2;
+    grid-row: 1;
+    margin-left: 6px;
+  }
+
+  .menu__slide[data-menu-slide="pelmeni"] .menu-list__row:has(.menu-list__note) .menu-list__weight {
+    grid-row: 2;
+    margin-left: 8px;
+  }
+
+  .menu__slide[data-menu-slide="pelmeni"] .menu-list__dots--meta {
+    grid-column: 3;
+    grid-row: 1;
+    min-width: 12px;
+    align-self: center;
+  }
+
+  .menu__slide[data-menu-slide="pelmeni"] .menu-list__price {
+    grid-column: 4;
+    grid-row: 1;
+    min-width: 0;
+  }
+
+  .menu__slide[data-menu-slide="pelmeni"] .menu-list__row:has(.menu-list__note) .menu-list__dots--meta,
+  .menu__slide[data-menu-slide="pelmeni"] .menu-list__row:has(.menu-list__note) .menu-list__price {
+    grid-row: 2;
+  }
+
+  .menu-list {
+    width: max-content;
+    max-width: 100%;
+  }
+
+  .menu-list__name {
+    flex: 1 0 auto;
+    width: max-content;
+    max-width: 100%;
+    white-space: nowrap;
+  }
+
   .menu-list__extra {
     display: none;
   }
@@ -2168,13 +2644,6 @@ h2 {
     font-size: 15px;
   }
 
-  .menu-list__name {
-    flex: 1 1 100%;
-    max-width: 100%;
-    white-space: normal;
-  }
-
-  /* Name on its own row; dotted leader between weight and price. */
   .menu-list__dots {
     display: none;
   }
@@ -2262,6 +2731,11 @@ h2 {
     font-size: clamp(30px, 8vw, 48px);
   }
 
+  .band--kids .band__title {
+    white-space: nowrap;
+    font-size: clamp(22px, 8.6cqi, 40px);
+  }
+
   .band--kids .band__subtitle,
   .band--breakfast .band__subtitle,
   .band--delivery .band__subtitle {
@@ -2282,6 +2756,42 @@ h2 {
     border-radius: 22px;
   }
 
+  .band--kids .band__copy {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .band--kids .band__story,
+  .band--kids .band__photos,
+  .band--kids .band__photos-col {
+    display: contents;
+  }
+
+  .band--kids .band__photos-col--extra {
+    display: none;
+  }
+
+  .band--kids .band__lead {
+    order: 1;
+  }
+
+  .band--kids .band__photos .band__media:not(.band__media--corner) {
+    order: 2;
+  }
+
+  .band--kids .band__subtitle--corner,
+  .band--kids .band__story > .band__text {
+    order: 3;
+  }
+
+  .band--kids .band__media--corner {
+    order: 4;
+  }
+
+  .band--kids .band__actions {
+    order: 5;
+  }
+
   .band--kids .band__media,
   .band--breakfast .band__media {
     position: relative;
@@ -2296,6 +2806,10 @@ h2 {
 
   .band--kids .band__media {
     aspect-ratio: 3 / 4;
+  }
+
+  .band--kids .band__media--corner {
+    aspect-ratio: 4 / 5;
   }
 
   .band--breakfast .band__media {
@@ -2356,19 +2870,18 @@ h2 {
   }
 
   .shop-rail {
-    /* No full-bleed: gutters hold the arrows; teaser is inset so cards can't sit under them. */
-    width: 100%;
-    margin-right: 0;
-    margin-left: 0;
+    /* Scrollport is the screen, so a swipe leaves at the edge instead of a gutter. */
     box-sizing: border-box;
-    /* 48px arrows at ~4px inset need ≥52px; leave a small gap so cards don't sit under them. */
-    padding-right: 56px;
-    padding-left: 56px;
-    overflow: hidden;
+    width: calc(100% + 40px);
+    margin-right: -20px;
+    margin-left: -20px;
+    padding: 0;
+    overflow: visible;
   }
 
   .shop-teaser {
     --shop-card-gap: 16px;
+    --shop-edge: 56px;
     box-sizing: border-box;
     width: 100%;
     padding-top: 8px;
@@ -2376,44 +2889,74 @@ h2 {
     padding-bottom: 16px;
     padding-left: 0;
     gap: var(--shop-card-gap);
-    /* JS owns the settle animation — CSS snap fights it and feels harsh. */
-    scroll-snap-type: none;
+    /* Horizontal swipe follows the finger. A vertical drag still scrolls the page. */
+    overflow-y: hidden;
+    touch-action: pan-x;
+    scroll-snap-type: x proximity;
+    scroll-padding-inline: var(--shop-edge);
+    -webkit-overflow-scrolling: touch;
   }
 
   .shop-card {
     box-sizing: border-box;
-    flex: 0 0 100%;
-    width: 100%;
-    min-width: 100%;
-    max-width: 100%;
-    min-height: 112px;
-    padding: 12px 12px 12px 28px;
+    flex: 0 0 calc((100% - 2 * var(--shop-edge) - var(--shop-card-gap)) / 2);
+    width: auto;
+    min-width: 0;
+    max-width: none;
+    min-height: 0;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 18px;
+    border-radius: 999px;
+    scroll-snap-align: start;
+    scroll-snap-stop: normal;
+  }
+
+  .shop-card:first-child {
+    margin-left: var(--shop-edge);
+  }
+
+  .shop-card:last-child {
+    margin-right: var(--shop-edge);
+  }
+
+  .shop-card__copy {
+    justify-content: center;
+  }
+
+  .shop-card:last-child .shop-card__copy {
+    padding-left: 22px;
   }
 
   .shop-card__title {
-    font-size: clamp(22px, 6vw, 30px);
+    font-size: clamp(18px, 2.4vw, 26px);
+    line-height: 1.08;
   }
 
   .shop-card__more {
-    margin-top: 10px;
-    min-width: 6.5em;
-    padding: 6px 28px;
-    font-size: 16px;
+    margin-top: 8px;
+    min-width: 0;
+    padding: 6px 16px;
+    font-size: clamp(14px, 1.8vw, 16px);
   }
 
-  .shop-card__media {
-    width: 78px;
-    height: 78px;
-  }
-
+  .shop-card__media,
   .shop-card--pelmeni .shop-card__media {
-    width: 88px;
-    height: 88px;
+    width: clamp(96px, 14vw, 132px);
+    height: clamp(96px, 14vw, 132px);
+    transform: none;
   }
 
   .shop-rail__arrow {
     width: 48px;
     height: 48px;
+    min-width: 48px;
+    min-height: 48px;
+    max-width: 48px;
+    max-height: 48px;
+    padding: 0;
+    aspect-ratio: 1 / 1;
+    font-size: 28px;
   }
 
   .shop-rail__arrow--prev {
@@ -2441,17 +2984,19 @@ h2 {
   }
 
   .site-footer {
-    padding: 32px 20px max(96px, calc(72px + env(safe-area-inset-bottom)));
+    padding: 28px 20px max(20px, env(safe-area-inset-bottom));
   }
 
   .menu__layout {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .menu__media,
   .menu__media--pelmen,
   .menu__media--khinkali,
+  .menu__media--blin,
   .menu__khinkali-canvas,
+  .menu__blin-video,
   .menu__media--pelmen .pelmen-fly {
     background: transparent !important;
     background-color: transparent !important;
@@ -2462,12 +3007,64 @@ h2 {
     margin: 8px auto 0;
   }
 
-  /* Over the pelmen/khinkali media, vertically centered on it — not by «Всё меню». */
+  /* 16:9 frame, scale 1, so the open pelmen is fully inside the box. */
+  .menu__media--pelmen {
+    aspect-ratio: 16 / 9;
+    margin-top: 0;
+    /* Scale hangs below the box; the margin keeps that tail inside the slide. */
+    margin-bottom: calc(min(520px, 92vw) * 0.13);
+  }
+
+  .menu__media--pelmen .pelmen-fly:not(.is-flying) {
+    transform: translate(-50%, -50%) scale(1);
+  }
+
+  /* Same stage as the pelmen slide, so both gallery pages are one height. */
+  .menu__media--khinkali {
+    aspect-ratio: 16 / 9;
+    width: 100%;
+    max-width: min(520px, 92vw);
+    margin: 0 auto;
+    margin-bottom: calc(min(520px, 92vw) * 0.13);
+  }
+
+  .menu__media--khinkali .menu__khinkali-canvas {
+    width: auto;
+    height: 100%;
+    max-width: none;
+    max-height: 100%;
+    transform: translate(-50%, -50%) scale(1.42);
+  }
+
+  .menu__media--blin {
+    aspect-ratio: 16 / 9;
+    width: 100%;
+    max-width: min(520px, 92vw);
+    margin: 0 auto;
+    margin-bottom: calc(min(520px, 92vw) * 0.13);
+  }
+
+  .menu__media--blin .menu__blin-video {
+    width: auto;
+    height: 100%;
+    max-width: none;
+    max-height: 100%;
+    transform: translate(-50%, calc(-50% + 56px)) scale(1.42);
+  }
+
+  /* Over the pelmen media. Khinkali recenters when that slide is active. */
   .menu__arrow {
     top: auto;
-    bottom: calc(min(520px, 92vw) / 2 - 24px);
+    bottom: calc(min(520px, 92vw) * 9 / 32 - 24px + min(520px, 92vw) * 0.13);
     width: 48px;
     height: 48px;
+    min-width: 48px;
+    min-height: 48px;
+    max-width: 48px;
+    max-height: 48px;
+    padding: 0;
+    aspect-ratio: 1 / 1;
+    font-size: 28px;
     transform: none;
   }
 
@@ -2477,6 +3074,10 @@ h2 {
 
   .menu__arrow--next {
     right: max(8px, calc(50% - min(260px, 46vw) - 56px));
+  }
+
+  .menu__carousel:has([data-menu-slide="khinkali"].is-active) .menu__arrow {
+    bottom: calc(min(520px, 92vw) * 9 / 32 - 24px + min(520px, 92vw) * 0.13);
   }
 }
 
@@ -2509,18 +3110,23 @@ h2 {
   }
 
   .hero#home {
-    height: 170svh;
+    height: calc(var(--hero-stage-h, 100svh) * 1.7);
   }
 
   .hero__title {
-    font-size: clamp(36px, 13vw, 64px);
+    bottom: calc(50% + min(26vw, 100px));
+    font-size: clamp(34px, 10.5vw, 56px);
     max-height: none;
-    bottom: calc(50% + min(50vw, 200px) + 10px);
+  }
+
+  .hero__title-tagline {
+    font-size: clamp(14px, 4vw, 18px);
   }
 
   .hero__video-shell {
-    width: min(82vw, 340px);
-    height: min(82vw, 340px);
+    width: min(70vw, 290px);
+    height: min(70vw, 290px);
+    margin-top: 0;
   }
 
   .menu {
@@ -2552,11 +3158,33 @@ h2 {
   }
 
   .shop-rail {
-    width: 100%;
-    margin-right: 0;
-    margin-left: 0;
-    padding-right: 54px;
-    padding-left: 54px;
+    width: calc(100% + 28px);
+    margin-right: -14px;
+    margin-left: -14px;
+    padding: 0;
+  }
+
+  .shop-teaser {
+    --shop-edge: 44px;
+  }
+
+  .shop-card {
+    flex: 0 0 calc(100% - 2 * var(--shop-edge));
+    width: calc(100% - 2 * var(--shop-edge));
+    min-width: calc(100% - 2 * var(--shop-edge));
+    max-width: none;
+    gap: 8px;
+    padding: 12px 16px;
+  }
+
+  .shop-card__title {
+    font-size: clamp(17px, 4.8vw, 22px);
+  }
+
+  .shop-card__media,
+  .shop-card--pelmeni .shop-card__media {
+    width: clamp(92px, 28vw, 120px);
+    height: clamp(92px, 28vw, 120px);
   }
 
   .promo-teaser {
@@ -2570,11 +3198,15 @@ h2 {
     max-width: 100%;
   }
 
-  .shop-card {
-    flex: 0 0 100%;
-    width: 100%;
-    min-width: 100%;
-    max-width: 100%;
+  .menu__arrow,
+  .shop-rail__arrow {
+    width: 36px;
+    height: 36px;
+    min-width: 36px;
+    min-height: 36px;
+    max-width: 36px;
+    max-height: 36px;
+    font-size: 24px;
   }
 
   .shop-rail__arrow--prev {
@@ -2599,7 +3231,7 @@ h2 {
   }
 
   .site-footer {
-    padding: 32px 20px max(72px, calc(48px + env(safe-area-inset-bottom)));
+    padding: 28px 20px max(20px, env(safe-area-inset-bottom));
   }
 }
 
@@ -2616,15 +3248,244 @@ h2 {
     font-size: 14px;
   }
 
-  .shop-card__media {
-    width: 64px;
-    height: 64px;
-    transform: translateX(-12%);
+  .shop-card {
+    padding: 8px 10px;
+    gap: 8px;
   }
 
+  .shop-card__media,
   .shop-card--pelmeni .shop-card__media {
-    width: 72px;
-    height: 72px;
+    width: 84px;
+    height: 84px;
+    transform: none;
+  }
+
+  .shop-card__title {
+    font-size: 15px;
+  }
+}
+
+/* Laptops: the desktop composition, scaled so the hero, menu, shop pills
+   and kids copy fit without colliding. Full monitors stay on the rules above. */
+@media (min-width: 901px) and (max-width: 1680px) {
+  :root {
+    --decor-size: min(46vw, 560px);
+  }
+
+  .hero__title {
+    top: auto;
+    bottom: 51%;
+    height: auto;
+    align-items: flex-end;
+    font-size: clamp(64px, 7vw, 104px);
+    transform: none;
+  }
+
+  .hero__title-stack {
+    gap: 6px;
+    max-width: min(720px, 76vw);
+  }
+
+  .hero__title-tagline {
+    max-width: 24em;
+    font-size: clamp(16px, 1.7vw, 22px);
+  }
+
+  .hero__video-shell {
+    width: 68%;
+    height: 64%;
+  }
+
+  .menu {
+    /* Side gutter matches the arrow: the circle stays 8px inside the screen. */
+    padding: 72px calc(clamp(56px, 5.5vw, 72px) + 16px) 28px;
+  }
+
+  .menu__arrow--prev {
+    left: calc(-1 * clamp(56px, 5.5vw, 72px) - 8px);
+  }
+
+  .menu__arrow--next {
+    right: calc(-1 * clamp(56px, 5.5vw, 72px) - 8px);
+  }
+
+  .menu__carousel {
+    justify-content: center;
+  }
+
+  .menu__layout {
+    gap: 20px;
+    align-items: center;
+    grid-template-columns: max-content minmax(220px, 1fr);
+  }
+
+  .menu__content {
+    max-width: none;
+    padding-left: 36px;
+  }
+
+  .menu__media {
+    width: min(100%, 460px);
+    max-width: min(460px, 38vw);
+    margin-right: 0;
+    margin-left: auto;
+    justify-self: end;
+    align-self: center;
+  }
+
+  .menu__media--pelmen .pelmen-fly:not(.is-flying) {
+    transform: translate(-36%, -50%) scale(1.05);
+  }
+
+  .menu__khinkali-canvas {
+    transform: translate(-36%, -50%) scale(1.28);
+    max-height: min(100%, calc((100svh - var(--header-height) - 200px) / 1.28));
+  }
+
+  .menu__blin-video {
+    transform: translate(-36%, -50%) scale(1.25);
+    max-height: min(100%, calc((100svh - var(--header-height) - 200px) / 1.25));
+  }
+
+  .menu__content--dish h2 {
+    font-size: clamp(32px, 3.3vw, 48px);
+  }
+
+  .menu__content--dish .hero__text {
+    margin-top: 8px;
+    font-size: 16px;
+  }
+
+  .menu__dish-block {
+    width: max-content;
+    max-width: none;
+    margin-top: 14px;
+    padding: 12px 18px;
+  }
+
+  .menu-list {
+    width: max-content;
+    max-width: none;
+    gap: 6px;
+    margin-top: 0;
+  }
+
+  .menu-list__row {
+    font-size: 14px;
+  }
+
+  .menu-list__price {
+    min-width: max-content;
+  }
+
+  .menu__all {
+    margin-top: 16px;
+    padding: 12px 28px;
+  }
+
+  .shop-card {
+    flex: 0 0 calc((100% - (3 * var(--shop-card-gap))) / 3.5);
+    min-height: 118px;
+    padding: 12px 16px 12px 22px;
+    gap: 8px;
+  }
+
+  .shop-card__title {
+    font-size: clamp(16px, 1.35vw, 20px);
+  }
+
+  .shop-card__more {
+    margin-top: 8px;
+    min-width: 0;
+    padding: 6px 16px;
+    font-size: 14px;
+  }
+
+  .shop-card__media,
+  .shop-card--pelmeni .shop-card__media {
+    width: 68px;
+    height: 68px;
+    transform: none;
+  }
+
+  .band--kids .band__copy {
+    --kids-photo: 220px;
+    min-height: 0;
+    padding-right: clamp(24px, 3.2vw, 40px);
+  }
+
+  .band--kids .band__media {
+    position: relative;
+    top: auto;
+    bottom: auto;
+    width: var(--kids-photo);
+    height: auto;
+    max-height: none;
+  }
+
+  .band--breakfast .band__copy {
+    min-height: 420px;
+    padding-right: 400px;
+  }
+
+  .band--breakfast .band__media {
+    top: 28px;
+    bottom: auto;
+    width: 340px;
+    height: 255px;
+    max-height: none;
+  }
+}
+
+@media (min-width: 901px) and (max-width: 1100px) {
+  .band--kids .band__copy {
+    --kids-photo: clamp(132px, 16vw, 176px);
+  }
+}
+
+/* Wider laptops still use the desktop hero. Only the price card and shop
+   pills get tighter so prices stay inside and photos clear the titles. */
+@media (min-width: 1681px) {
+  .band--kids .band__copy {
+    --kids-photo: 320px;
+  }
+}
+
+@media (min-width: 1681px) and (max-width: 2200px) {
+  .menu__layout {
+    grid-template-columns: minmax(0, 1.4fr) minmax(200px, 0.7fr);
+  }
+
+  .menu__dish-block {
+    width: max-content;
+    max-width: none;
+  }
+
+  .menu-list {
+    width: max-content;
+    max-width: none;
+  }
+
+  .menu-list__price {
+    min-width: 5.6em;
+  }
+
+  .shop-card__title {
+    font-size: clamp(20px, 1.45vw, 28px);
+  }
+
+  .shop-card__more {
+    margin-top: 8px;
+    min-width: 0;
+    padding: 6px 16px;
+    font-size: 15px;
+  }
+
+  .shop-card__media,
+  .shop-card--pelmeni .shop-card__media {
+    width: 92px;
+    height: 92px;
+    transform: none;
   }
 }
 
@@ -2653,5 +3514,293 @@ h2 {
 
   .promo-card.is-expanded {
     animation: none;
+  }
+
+  .pl-cap > *,
+  .pl-print {
+    animation: none;
+    transition: none;
+  }
+}
+
+.band--gallery {
+  position: relative;
+  z-index: 2;
+  margin-right: calc(-1 * clamp(88px, 9vw, 120px));
+  margin-left: calc(-1 * clamp(88px, 9vw, 120px));
+  padding: 4px clamp(88px, 9vw, 120px) 8px;
+  background: transparent;
+}
+
+.polaroid {
+  position: relative;
+  width: 100%;
+  height: clamp(620px, 64vh, 740px);
+  overflow: hidden;
+  color: #171717;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: pan-y;
+  outline: none;
+  cursor: grab;
+  --pl-cw: 280px;
+  --pl-muted: rgba(23, 23, 23, 0.62);
+}
+
+.polaroid[data-drag="1"] {
+  cursor: grabbing;
+}
+
+.polaroid:focus-visible {
+  box-shadow: inset 0 0 0 2px #171717;
+}
+
+.pl-string {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.pl-card {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: var(--pl-cw);
+  visibility: hidden;
+  transform-origin: 50% 0;
+  will-change: transform;
+  cursor: inherit;
+}
+
+.pl-print {
+  margin-top: 10px;
+  padding: 10px 10px 0;
+  transform-origin: 50% 0;
+  background: #fbfaf7;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.12), 0 18px 30px -16px rgba(0, 0, 0, 0.4);
+  transition: transform 0.5s cubic-bezier(0.2, 0.7, 0.2, 1), filter 0.5s ease;
+}
+
+.pl-card[data-on="0"] .pl-print {
+  transform: scale(0.9);
+  filter: saturate(0.7) brightness(0.96);
+}
+
+.pl-shot {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 1;
+  background: #d9d5cc;
+}
+
+.pl-shot img {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  object-fit: cover;
+  pointer-events: none;
+}
+
+.pl-note {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 52px;
+  padding: 0 8px;
+  overflow: hidden;
+  color: #3b3833;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 13px;
+  font-style: italic;
+  font-weight: 400;
+  line-height: 1.15;
+  text-align: center;
+}
+
+.pl-peg {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 10px;
+  height: 26px;
+  margin-left: -5px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, #c9a67a, #e3c9a1 45%, #b8915f);
+  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.25);
+}
+
+.pl-peg::after {
+  content: "";
+  position: absolute;
+  top: 8px;
+  left: 4px;
+  width: 2px;
+  height: 7px;
+  border-radius: 1px;
+  background: rgba(80, 60, 30, 0.45);
+}
+
+.pl-bar {
+  position: absolute;
+  right: clamp(8px, 2vw, 24px);
+  bottom: clamp(8px, 2vh, 20px);
+  left: clamp(8px, 2vw, 24px);
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  gap: clamp(12px, 2vw, 24px);
+  padding: 10px 12px 10px 16px;
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.55);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  cursor: default;
+  backdrop-filter: blur(14px) saturate(1.15);
+  -webkit-backdrop-filter: blur(14px) saturate(1.15);
+}
+
+.pl-cap {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  padding-bottom: 0.15em;
+}
+
+.pl-cap > * {
+  display: block;
+  animation: pl-in 0.55s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+.pl-title {
+  font-family: "Roboto Slab", Georgia, serif;
+  font-size: clamp(16px, 2vw, 22px);
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.pl-sub {
+  margin-top: 4px;
+  color: var(--pl-muted);
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.pl-count {
+  color: var(--pl-muted);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  line-height: 1;
+}
+
+.pl-count b {
+  color: #171717;
+  font-weight: 500;
+}
+
+.pl-btn {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  margin: 0;
+  padding: 0;
+  border: 1px solid rgba(23, 23, 23, 0.18);
+  border-radius: 50%;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  appearance: none;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.pl-btn:hover {
+  background: #171717;
+  color: #f7f1ea;
+}
+
+.pl-btn:focus-visible {
+  outline: 2px solid #171717;
+  outline-offset: 2px;
+}
+
+.pl-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+@keyframes pl-in {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: none;
+    opacity: 1;
+  }
+}
+
+@media (max-width: 900px) {
+  .band--gallery {
+    margin-right: -20px;
+    margin-left: -20px;
+    padding-right: 0;
+    padding-left: 0;
+  }
+
+  .polaroid {
+    height: 500px;
+  }
+
+  .pl-bar {
+    right: 20px;
+    left: 20px;
+  }
+
+  .pl-count {
+    display: none;
+  }
+
+  .pl-card[data-on="0"] .pl-print {
+    transform: none;
+    filter: none;
+  }
+}
+
+@media (max-width: 600px) {
+  .band--gallery {
+    margin-right: -14px;
+    margin-left: -14px;
+    padding-right: 0;
+    padding-left: 0;
+  }
+
+  .pl-bar {
+    right: 14px;
+    left: 14px;
+  }
+}
+
+@media (min-width: 901px) {
+  .band--gallery {
+    padding-right: 0;
+    padding-left: 0;
+  }
+
+  .pl-bar {
+    right: clamp(88px, 9vw, 120px);
+    left: clamp(88px, 9vw, 120px);
   }
 }
