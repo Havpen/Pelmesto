@@ -18,7 +18,7 @@
       crossorigin
     />
     <link rel="preload" href="assets/hero-a-frames/frame-0001.webp" as="image" type="image/webp" />
-    <link rel="stylesheet" href="styles.css?v=158" />
+    <link rel="stylesheet" href="styles.css?v=160" />
     <script>
       (function () {
         if (!/CriOS/.test(navigator.userAgent)) return;
@@ -233,45 +233,55 @@
                         <a class="menu-list__row" href="/menu#cat-blinchiki">
                           <span class="menu-list__name">С мясным фаршем «Болоньезе»</span>
                           <span class="menu-list__dots" aria-hidden="true"></span>
-                          <span class="menu-list__weight">200&nbsp;г</span>
-                          <span class="menu-list__dots menu-list__dots--meta" aria-hidden="true"></span>
-                          <span class="menu-list__price">11,90<span class="byn" role="img" aria-label="белорусский рубль"></span></span>
+                          <span class="menu-list__meta">
+                            <span class="menu-list__weight">200&nbsp;г</span>
+                            <span class="menu-list__dots menu-list__dots--meta" aria-hidden="true"></span>
+                            <span class="menu-list__price">11,90<span class="byn" role="img" aria-label="белорусский рубль"></span></span>
+                          </span>
                         </a>
                       </li>
                       <li>
                         <a class="menu-list__row" href="/menu#cat-blinchiki">
                           <span class="menu-list__name">С курицей, грибами и сыром</span>
                           <span class="menu-list__dots" aria-hidden="true"></span>
-                          <span class="menu-list__weight">200&nbsp;г</span>
-                          <span class="menu-list__dots menu-list__dots--meta" aria-hidden="true"></span>
-                          <span class="menu-list__price">11,90<span class="byn" role="img" aria-label="белорусский рубль"></span></span>
+                          <span class="menu-list__meta">
+                            <span class="menu-list__weight">200&nbsp;г</span>
+                            <span class="menu-list__dots menu-list__dots--meta" aria-hidden="true"></span>
+                            <span class="menu-list__price">11,90<span class="byn" role="img" aria-label="белорусский рубль"></span></span>
+                          </span>
                         </a>
                       </li>
                       <li>
                         <a class="menu-list__row" href="/menu#cat-blinchiki">
                           <span class="menu-list__name">С томленой говядиной и соленым огурцом</span>
                           <span class="menu-list__dots" aria-hidden="true"></span>
-                          <span class="menu-list__weight">200&nbsp;г</span>
-                          <span class="menu-list__dots menu-list__dots--meta" aria-hidden="true"></span>
-                          <span class="menu-list__price">11,90<span class="byn" role="img" aria-label="белорусский рубль"></span></span>
+                          <span class="menu-list__meta">
+                            <span class="menu-list__weight">200&nbsp;г</span>
+                            <span class="menu-list__dots menu-list__dots--meta" aria-hidden="true"></span>
+                            <span class="menu-list__price">11,90<span class="byn" role="img" aria-label="белорусский рубль"></span></span>
+                          </span>
                         </a>
                       </li>
                       <li>
                         <a class="menu-list__row" href="/menu#cat-blinchiki">
                           <span class="menu-list__name">С карамелизированными яблоками и корицей</span>
                           <span class="menu-list__dots" aria-hidden="true"></span>
-                          <span class="menu-list__weight">200&nbsp;г</span>
-                          <span class="menu-list__dots menu-list__dots--meta" aria-hidden="true"></span>
-                          <span class="menu-list__price">11,90<span class="byn" role="img" aria-label="белорусский рубль"></span></span>
+                          <span class="menu-list__meta">
+                            <span class="menu-list__weight">200&nbsp;г</span>
+                            <span class="menu-list__dots menu-list__dots--meta" aria-hidden="true"></span>
+                            <span class="menu-list__price">11,90<span class="byn" role="img" aria-label="белорусский рубль"></span></span>
+                          </span>
                         </a>
                       </li>
                       <li>
                         <a class="menu-list__row" href="/menu#cat-blinchiki">
                           <span class="menu-list__name">С творогом и изюмом</span>
                           <span class="menu-list__dots" aria-hidden="true"></span>
-                          <span class="menu-list__weight">200&nbsp;г</span>
-                          <span class="menu-list__dots menu-list__dots--meta" aria-hidden="true"></span>
-                          <span class="menu-list__price">11,90<span class="byn" role="img" aria-label="белорусский рубль"></span></span>
+                          <span class="menu-list__meta">
+                            <span class="menu-list__weight">200&nbsp;г</span>
+                            <span class="menu-list__dots menu-list__dots--meta" aria-hidden="true"></span>
+                            <span class="menu-list__price">11,90<span class="byn" role="img" aria-label="белорусский рубль"></span></span>
+                          </span>
                         </a>
                       </li>
                       <li class="menu-list__more">
@@ -286,12 +296,17 @@
                   <div class="menu__media menu__media--blin" aria-hidden="true">
                     <video
                       class="menu__blin-video"
-                      src="assets/menu-hall/blin-transparent.webm"
+                      data-src="assets/menu-hall/blin-transparent.webm"
                       muted
                       playsinline
-                      preload="auto"
+                      preload="none"
                       aria-label="Анимация блинчика"
                     ></video>
+                    <img
+                      class="menu__blin-still"
+                      data-src="assets/menu-hall/blin-open.webp"
+                      alt=""
+                    />
                   </div>
                 </div>
               </article>
@@ -1931,12 +1946,27 @@
           carouselViewport.style.height = "";
           return;
         }
-        const slide = carouselSlides[0];
+        const slide = carouselSlides[carouselIndex] || carouselSlides[0];
         if (!slide) return;
         carouselViewport.style.height = `${slide.offsetHeight}px`;
       };
 
-      const blinVideo = document.querySelector(".menu__blin-video");
+      let blinVideo = document.querySelector("video.menu__blin-video");
+      const blinBox = blinVideo && blinVideo.parentElement;
+      const blinUa = navigator.userAgent || "";
+      const blinNoAlpha =
+        /iPhone|iPad|iPod/i.test(blinUa) ||
+        (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1) ||
+        (/Safari\//.test(blinUa) && !/Chrome|Chromium|CriOS|Edg|OPR|Android|Firefox|FxiOS/.test(blinUa));
+      if (blinVideo && blinNoAlpha && blinBox) {
+        const blinStill = blinBox.querySelector(".menu__blin-still");
+        if (blinStill && blinStill.dataset.src) blinStill.src = blinStill.dataset.src;
+        blinBox.classList.add("is-still");
+        blinVideo = null;
+      } else if (blinVideo && blinVideo.dataset.src) {
+        blinVideo.src = blinVideo.dataset.src;
+        blinVideo.preload = "auto";
+      }
       /* Open holds still; the file closes again after this plateau. */
       const BLIN_OPEN_AT = 1.45;
       const BLIN_CLOSE_FROM = 2.85;
